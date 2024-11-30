@@ -39,6 +39,7 @@ public class TerminalScript : MonoBehaviour
     private void SetupBaseVariables()
     {
         script = ScriptRunner.Instance.GetScript();
+        script.Globals.Clear();
         foreach (VariablePlatform platform in allLevelPlatforms)
         {
             script.Globals[platform.variableName] = null;
