@@ -52,7 +52,36 @@ public class VariableDice : MonoBehaviour
             handler.UpdateTextValue(text);
         }
     }
+    private void OnTriggerEnter(Collider other)
+    {
+        // Check if the other object is on the correct layer
+        if (other.gameObject.layer == LayerMask.NameToLayer("VariablePlatform"))
+        {
+            // Check if the other object has a VariablePlatform component
+            VariablePlatform platform = other.gameObject.GetComponent<VariablePlatform>();
+            if (platform != null)
+            {
+                // Get the dice's current value and send it to the platform
+                object currentValue = handler?.GetValue();
+                platform.ReceiveValue(currentValue);
+            }
+        }
+    }
 
+    private void OnTriggerExit(Collider other)
+    {
+        // Check if the other object is on the correct layer
+        if (other.gameObject.layer == LayerMask.NameToLayer("VariablePlatform"))
+        {
+            // Check if the other object has a VariablePlatform component
+            VariablePlatform platform = other.gameObject.GetComponent<VariablePlatform>();
+            if (platform != null)
+            {
+                // Clear the value on the platform when the trigger is exited
+                platform.ClearValue();
+            }
+        }
+    }
 
 }
 public interface IVariableTypeHandler

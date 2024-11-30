@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using MoonSharp.Interpreter;
 using UnityEngine;
@@ -11,12 +12,13 @@ public class TerminalScript : MonoBehaviour
     private string luaScript;
     private Script script = new();
 
+    public List<VariablePlatform> allLevelPlatforms = new();
     void Start()
     {
         if (LoadScriptContents())
         {
             SetupBaseVariables();
-            RunScript();
+            //RunScript();
         }
     }
 
@@ -37,9 +39,26 @@ public class TerminalScript : MonoBehaviour
     private void SetupBaseVariables()
     {
         script = ScriptRunner.Instance.GetScript();
-        script.Globals["x_value"] = 1;
-        script.Globals["y_value"] = 1;
+        foreach (VariablePlatform platform in allLevelPlatforms)
+        {
+            script.Globals[platform.variableName] = null;
+            platform.variableAdded.AddListener(UpdateVariable);
+            platform.variableRemoved.AddListener(RemoveVariable);
+        }
         script.Globals["CheckResult"] = (Action<bool>)CheckResult;
+    }
+
+    private void UpdateVariable(string variableName,object value)
+    {
+        script.Globals[variableName] = value;
+        Debug.Log(value);
+        RunScript();
+    }
+
+    private void RemoveVariable(string variableName)
+    {
+        script.Globals[variableName] = null;
+        RunScript();
     }
 
     private void CheckResult(bool check)
