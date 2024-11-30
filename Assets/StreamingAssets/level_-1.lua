@@ -1,1 +1,1 @@
-print("Hello Lua Code")
+CheckResult(x_value)
