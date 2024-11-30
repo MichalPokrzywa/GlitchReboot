@@ -40,7 +40,7 @@ public class PlayerMovement : MonoBehaviour
         // Debug: sprawdzenie, czy Rigidbody zostało poprawnie przypisane
         if (rigidBody == null)
         {
-            Debug.LogError("Rigidbody not found on the player object!");
+            //Debug.LogError("Rigidbody not found on the player object!");
         }
     }
 
