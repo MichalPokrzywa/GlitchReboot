@@ -12,6 +12,8 @@ public class TerminalScript : MonoBehaviour
     private string luaScript;
     private Script script = new();
 
+    public bool result = false; 
+
     public List<VariablePlatform> allLevelPlatforms = new();
     void Start()
     {
@@ -37,7 +39,7 @@ public class TerminalScript : MonoBehaviour
     }
 
     private void SetupBaseVariables()
-    {
+    {        
         script = ScriptRunner.Instance.GetScript();
         script.Globals.Clear();
         foreach (VariablePlatform platform in allLevelPlatforms)
@@ -67,10 +69,12 @@ public class TerminalScript : MonoBehaviour
         if (check)
         {
             Debug.Log("Jest git");
+            result = true;
         }
         else
         {
             Debug.Log("Nie jest git");
+            result = false;
         }
     }
 
