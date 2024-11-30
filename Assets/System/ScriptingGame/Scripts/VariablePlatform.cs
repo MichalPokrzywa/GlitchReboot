@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -7,8 +9,10 @@ public class VariablePlatform : MonoBehaviour
     public string variableName = "x_value";
     public VariableType type;
 
-   [HideInInspector] public UnityEvent<string,object> variableAdded;
-   [HideInInspector] public UnityEvent<string> variableRemoved;
+    [HideInInspector] public UnityEvent<string,object> variableAdded;
+    [HideInInspector] public UnityEvent<string> variableRemoved;
+
+    public List<TMP_Text> textList;
 
     public void ReceiveValue(object value)
     {
@@ -17,11 +21,13 @@ public class VariablePlatform : MonoBehaviour
         {
             Debug.Log($"Platform received integer: {intValue}");
             variableAdded.Invoke(variableName,intValue);
+            UpdateText(true);
         }
         else if (value is bool boolValue && type == VariableType.Boolean)
         {
             Debug.Log($"Platform received boolean: {boolValue}");
             variableAdded.Invoke(variableName, boolValue);
+            UpdateText(true);
         }
         else
         {
@@ -33,5 +39,13 @@ public class VariablePlatform : MonoBehaviour
         // Clear the value stored on the platform
         //currentValue = null;
         Debug.Log("Platform value cleared");
+        UpdateText(false);
+    }
+    private void UpdateText(bool isOn)
+    {
+        foreach (TMP_Text text in textList)
+        {
+            text.color = isOn ? Color.green : Color.grey;
+        }
     }
 }
