@@ -4,8 +4,7 @@ public class Door : MonoBehaviour
 {
     [SerializeField] Condition condition;
     //[SerializeField] Player player;
-    //[SerializeField] GameObject start;
-
+    [SerializeField] GameObject startPosition;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,12 +21,19 @@ public class Door : MonoBehaviour
 
     public bool reset()
     {
-
-        return true;   
+        if (condition.returnCondition())
+        {
+            //end level
+            return true;
+        } else
+        {
+            resetPlayerPosition();
+            return false;
+        }          
     }
 
     public void resetPlayerPosition()
     {
-        //player.transform.position = start.transform.position;
+        //player.transform.position = startPosition.transform.position;
     }
 }
