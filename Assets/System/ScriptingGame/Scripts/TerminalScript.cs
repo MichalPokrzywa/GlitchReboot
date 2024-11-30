@@ -42,13 +42,16 @@ public class TerminalScript : MonoBehaviour
     {        
         script = ScriptRunner.Instance.GetScript();
         script.Globals.Clear();
-        foreach (VariablePlatform platform in allLevelPlatforms)
+        if (allLevelPlatforms.Count > 0)
         {
-            script.Globals[platform.variableName] = null;
-            platform.variableAdded.AddListener(UpdateVariable);
-            platform.variableRemoved.AddListener(RemoveVariable);
+            foreach (VariablePlatform platform in allLevelPlatforms)
+            {
+                script.Globals[platform.variableName] = null;
+                platform.variableAdded.AddListener(UpdateVariable);
+                platform.variableRemoved.AddListener(RemoveVariable);
+            }
+            script.Globals["CheckResult"] = (Action<bool>)CheckResult;
         }
-        script.Globals["CheckResult"] = (Action<bool>)CheckResult;
     }
 
     private void UpdateVariable(string variableName,object value)
