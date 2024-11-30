@@ -13,15 +13,22 @@ public class TerminalScript : MonoBehaviour
     private Script script = new();
 
     public bool result = false; 
-
+    public TerminalCanvas canvas;
     public List<VariablePlatform> allLevelPlatforms = new();
     void Start()
     {
         if (LoadScriptContents())
         {
             SetupBaseVariables();
+            PrepareTerminal();
             //RunScript();
         }
+    }
+
+    private void PrepareTerminal()
+    {
+       canvas.SetCodeText(luaScript);
+       canvas.SetVariableText(script.Globals, allLevelPlatforms);
     }
 
     private bool LoadScriptContents()
@@ -54,6 +61,7 @@ public class TerminalScript : MonoBehaviour
     private void UpdateVariable(string variableName,object value)
     {
         script.Globals[variableName] = value;
+        canvas.SetVariableText(script.Globals,allLevelPlatforms);
         Debug.Log(value);
         RunScript();
     }

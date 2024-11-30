@@ -132,7 +132,6 @@ public class BooleanHandler : IVariableTypeHandler
         text.text = currentValue ? "True" : "False";
     }
 
-
     public object GetValue()
     {
         return currentValue;

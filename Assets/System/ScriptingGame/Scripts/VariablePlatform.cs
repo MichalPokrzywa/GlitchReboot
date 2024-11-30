@@ -14,6 +14,13 @@ public class VariablePlatform : MonoBehaviour
 
     public List<TMP_Text> textList;
 
+    void Start()
+    {
+        foreach (TMP_Text text in textList)
+        {
+            text.text = variableName;
+        }
+    }
     public void ReceiveValue(object value)
     {
         // Handle the received value
