@@ -27,10 +27,10 @@ public class TimeIndicatorHandler : MonoBehaviour
     private void Update()
     {
         // Test: Naciśnij Spację, aby rozpocząć odliczanie
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartCountdown(3.0f);
-        }
+        // if (Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     StartCountdown(3.0f);
+        // }
 
         if (isCounting)
         {
@@ -80,10 +80,10 @@ public class TimeIndicatorHandler : MonoBehaviour
         isRecording = true;
         UpdateIcons();
 
-        if (cooldownCircle != null)
-            cooldownCircle.enabled = false;
-        if (readyDot != null)
-            readyDot.enabled = false;
+        // if (cooldownCircle != null)
+        //     cooldownCircle.enabled = false;
+        // if (readyDot != null)
+        //     readyDot.enabled = false;
     }
 
     public void StopRecording()
@@ -95,7 +95,7 @@ public class TimeIndicatorHandler : MonoBehaviour
     private void UpdateIcons()
     {
         if (cooldownCircle != null)
-            cooldownCircle.enabled = isCounting || isRecording;
+            cooldownCircle.enabled = isCounting;
 
         if (readyDot != null)
             readyDot.enabled = !isRecording;
