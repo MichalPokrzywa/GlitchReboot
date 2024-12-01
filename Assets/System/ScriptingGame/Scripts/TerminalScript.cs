@@ -11,12 +11,14 @@ public class TerminalScript : MonoBehaviour
     
     private string luaScript;
     private Script script = new();
+    private AudioSource audioSource;
 
     public bool result = false; 
     public TerminalCanvas canvas;
     public List<VariablePlatform> allLevelPlatforms = new();
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         if (LoadScriptContents())
         {
             SetupBaseVariables();
@@ -95,6 +97,7 @@ public class TerminalScript : MonoBehaviour
         if (check)
         {
             Debug.Log("Jest git");
+            audioSource.Play();
             result = true;
             canvas.SetImageColor(result);
         }

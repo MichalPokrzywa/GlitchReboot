@@ -10,12 +10,14 @@ public class VariableDice : MonoBehaviour
 
     [SerializeField] private int baseNumberValue = 1; // Initial value for Number
     [SerializeField] private bool baseBooleanValue = false; // Initial value for Boolean
+    private AudioSource audioSource;
 
     private IVariableTypeHandler handler;
 
     void Start()
     {
         InitializeHandler();
+        audioSource = GetComponent<AudioSource>();
     }
 
     void InitializeHandler()
@@ -54,6 +56,7 @@ public class VariableDice : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        audioSource.Play();
         // Check if the other object is on the correct layer
         if (other.gameObject.layer == LayerMask.NameToLayer("VariablePlatform"))
         {
