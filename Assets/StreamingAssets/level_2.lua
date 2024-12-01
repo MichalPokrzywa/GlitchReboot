@@ -1,4 +1,8 @@
-x = platform1
-y = platform2
-z = playform3
-CheckResult ((x + y) == z)
+--
+if not (platform1 == nil or platform2 == nil or platform3 == nil) then
+--
+    result = platform1 + platform2
+    CheckResult(result == platform3)
+--
+end
+--

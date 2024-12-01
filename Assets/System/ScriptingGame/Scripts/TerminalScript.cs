@@ -49,7 +49,7 @@ public class TerminalScript : MonoBehaviour
     private void SetupBaseVariables()
     {        
         script = ScriptRunner.Instance.GetScript();
-        script.Globals.Clear();
+        //script.Globals.Clear();
         if (allLevelPlatforms.Count > 0)
         {
             foreach (VariablePlatform platform in allLevelPlatforms)
@@ -64,8 +64,17 @@ public class TerminalScript : MonoBehaviour
 
     private void UpdateVariable(string variableName,object value)
     {
-        // Convert value to DynValue
-        script.Globals[variableName] = DynValue.FromObject(script, value);
+        switch (value)
+        {
+            case bool newBool:
+                Debug.Log($"{variableName} is a boolean: {value}");
+                script.Globals[variableName] = DynValue.NewBoolean(newBool);
+                break;
+            case int newInt:
+                Debug.Log($"{variableName} is a numeric type: {newInt}");
+                script.Globals[variableName] = DynValue.NewNumber(newInt);
+                break;
+        }
         canvas.SetVariableText(script.Globals, allLevelPlatforms);
         Debug.Log($"{variableName} updated to: {value}, Type: {script.Globals[variableName]}");
         RunScript();
@@ -76,12 +85,13 @@ public class TerminalScript : MonoBehaviour
         // Remove the variable entirely or set it to nil
         script.Globals[variableName] = DynValue.Nil;
         canvas.SetVariableText(script.Globals, allLevelPlatforms);
-        Debug.Log($"{variableName} removed. Exists in globals: {script.Globals.Get(variableName) != null}");
+        Debug.Log($"{variableName} removed.");
         RunScript();
     }
 
     private void CheckResult(bool check)
     {
+        Debug.Log(check);
         if (check)
         {
             Debug.Log("Jest git");
