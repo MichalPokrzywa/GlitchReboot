@@ -6,6 +6,7 @@ public class GhostRecorder : MonoBehaviour
 {
     public List<Ghost> ghost;
     public List<GameObject> gameObjects;
+    public List<TimeIndicatorHandler> indicatorHandlers;
     private int[] state;
     private bool isRecording = false;
     private bool isHeld = false;
@@ -129,6 +130,7 @@ public class GhostRecorder : MonoBehaviour
                     ghost[ghostIndex].setIsRecord(true);
                     isRecording = true;
                     Debug.Log(state[ghostIndex]);
+                    indicatorHandlers[ghostIndex].GetComponent<TimeIndicatorHandler>().StartRecording();
                 }
                 break;
             case 1:
@@ -136,12 +138,20 @@ public class GhostRecorder : MonoBehaviour
                 ghost[ghostIndex].setIsRecord(false);
                 isRecording = false;
                 Debug.Log(state[ghostIndex]);
+                indicatorHandlers[ghostIndex].GetComponent<TimeIndicatorHandler>().StopRecording();
+                this.transform.position = ghost[ghostIndex].position[0];
+                this.transform.eulerAngles = ghost[ghostIndex].rotation[0];
                 break;
             case 2:
                 state[ghostIndex]++;
                 gameObjects[ghostIndex].SetActive(true);
                 ghost[ghostIndex].setIsReplay(true);
+                indicatorHandlers[ghostIndex].GetComponent<TimeIndicatorHandler>().StartCountdown(ghost[ghostIndex].timeStamp[ghost[ghostIndex].timeStamp.Count - 1] - ghost[ghostIndex].timeStamp[0]);
                 StartCoroutine(WaitForSecondsCoroutine(ghost[ghostIndex].timeStamp[ghost[ghostIndex].timeStamp.Count - 1] - ghost[ghostIndex].timeStamp[0], ghostIndex));
+                break;
+            case 3:
+                state[ghostIndex]--;
+                gameObjects[ghostIndex].GetComponent<GhostPlayer>().Reset();
                 break;
         }
     }
