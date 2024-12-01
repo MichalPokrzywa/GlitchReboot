@@ -1,3 +1,10 @@
-x = platform1
-y = platform2
-CheckResult (x == y)
+--
+function While(con)
+    CheckResult(not con)
+end
+----
+if not (x == nil) then
+--
+While(not x)
+--
+end--
