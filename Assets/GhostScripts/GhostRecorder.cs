@@ -7,6 +7,7 @@ public class GhostRecorder : MonoBehaviour
     public List<Ghost> ghost;
     public List<GameObject> gameObjects;
     public List<TimeIndicatorHandler> indicatorHandlers;
+    public List<GameObject> markerPoints;
     private int[] state;
     private bool isRecording = false;
     private bool isHeld = false;
@@ -22,6 +23,7 @@ public class GhostRecorder : MonoBehaviour
         state = new int[4] { 0, 0, 0, 0 };
         for (int i = 0; i < 4; i++)
         {
+            gameObjects[i].SetActive(false);
             ghost[i].RestetData();
             ghost[i].setIsRecord(false);
             ghost[i].setIsReplay(false);
@@ -130,6 +132,7 @@ public class GhostRecorder : MonoBehaviour
                     ghost[ghostIndex].setIsRecord(true);
                     isRecording = true;
                     Debug.Log(state[ghostIndex]);
+                    markerPoints[ghostIndex].GetComponent<MarkerScript>().setActive(transform.position);
                     indicatorHandlers[ghostIndex].GetComponent<TimeIndicatorHandler>().StartRecording();
                 }
                 break;
@@ -163,6 +166,7 @@ public class GhostRecorder : MonoBehaviour
         ghost[ghostIndex].RestetData();
         ghost[ghostIndex].setIsRecord(false);
         ghost[ghostIndex].setIsReplay(false);
+        markerPoints[ghostIndex].GetComponent<MarkerScript>().deactivate();
     }
 
     IEnumerator WaitForSecondsCoroutine(float waitTime, int index_)
