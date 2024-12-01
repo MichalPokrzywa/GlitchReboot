@@ -27,7 +27,7 @@ public class VariablePlatform : MonoBehaviour
         if (value is int intValue && type == VariableType.Number)
         {
             Debug.Log($"Platform received integer: {intValue}");
-            variableAdded.Invoke(variableName,intValue);
+            variableAdded.Invoke(variableName, intValue);
             UpdateText(true);
         }
         else if (value is bool boolValue && type == VariableType.Boolean)
