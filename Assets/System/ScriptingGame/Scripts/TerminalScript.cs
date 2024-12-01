@@ -29,6 +29,7 @@ public class TerminalScript : MonoBehaviour
     {
        canvas.SetCodeText(luaScript);
        canvas.SetVariableText(script.Globals, allLevelPlatforms);
+       canvas.SetImageColor(result);
     }
 
     private bool LoadScriptContents()
@@ -53,7 +54,7 @@ public class TerminalScript : MonoBehaviour
         {
             foreach (VariablePlatform platform in allLevelPlatforms)
             {
-                script.Globals[platform.variableName] = null;
+                script.Globals[platform.variableName] = DynValue.Nil;
                 platform.variableAdded.AddListener(UpdateVariable);
                 platform.variableRemoved.AddListener(RemoveVariable);
             }
@@ -63,15 +64,19 @@ public class TerminalScript : MonoBehaviour
 
     private void UpdateVariable(string variableName,object value)
     {
-        script.Globals[variableName] = value;
-        canvas.SetVariableText(script.Globals,allLevelPlatforms);
-        Debug.Log(value);
+        // Convert value to DynValue
+        script.Globals[variableName] = DynValue.FromObject(script, value);
+        canvas.SetVariableText(script.Globals, allLevelPlatforms);
+        Debug.Log($"{variableName} updated to: {value}, Type: {script.Globals[variableName]}");
         RunScript();
     }
 
     private void RemoveVariable(string variableName)
     {
-        script.Globals[variableName] = null;
+        // Remove the variable entirely or set it to nil
+        script.Globals[variableName] = DynValue.Nil;
+        canvas.SetVariableText(script.Globals, allLevelPlatforms);
+        Debug.Log($"{variableName} removed. Exists in globals: {script.Globals.Get(variableName) != null}");
         RunScript();
     }
 
@@ -81,11 +86,13 @@ public class TerminalScript : MonoBehaviour
         {
             Debug.Log("Jest git");
             result = true;
+            canvas.SetImageColor(result);
         }
         else
         {
             Debug.Log("Nie jest git");
             result = false;
+            canvas.SetImageColor(result);
         }
     }
 

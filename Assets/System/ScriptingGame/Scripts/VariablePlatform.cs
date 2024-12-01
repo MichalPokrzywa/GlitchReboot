@@ -45,6 +45,7 @@ public class VariablePlatform : MonoBehaviour
     {
         // Clear the value stored on the platform
         //currentValue = null;
+        variableRemoved.Invoke(variableName);
         Debug.Log("Platform value cleared");
         UpdateText(false);
     }
