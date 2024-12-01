@@ -1,9 +1,10 @@
+--
+if not (platform1 == nil or platform2 == nil or platform3 == nil) then
+--
 x = platform1
 y = platform2
-z = playform3--
-if not (x == nil or y == nil or z == nil) then
---
-CheckResult (x + y == z)
+z = platform3
+CheckResult(x + y == z)
 --
 end
 --

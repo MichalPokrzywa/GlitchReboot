@@ -19,18 +19,20 @@ public class TerminalCanvas : MonoBehaviour
     {
         prepareText();
         variableText.text = "";
-        /*foreach (var pair in list)
+        foreach (var pair in list)
         {
             Debug.Log(variableTable[pair.variableName]);
             variableText.text += $"{pair.variableName} = {variableTable[pair.variableName] ?? "null"}";
             variableText.text += "\n";
-        }*/
+        }
+        /*
         foreach (var pair in variableTable.Pairs)
         {
             //Debug.Log(variableTable[pair.variableName]);
             variableText.text += $"{pair.Key} = {variableTable[pair.Value] ?? "null"}";
             variableText.text += "\n";
         }
+        */
     }
 
     public void SetImageColor(bool pass)
