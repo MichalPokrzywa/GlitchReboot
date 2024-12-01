@@ -5,8 +5,8 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "Ghost", menuName = "Scriptable Objects/Ghost")]
 public class Ghost : ScriptableObject
 {
-    public bool isRecord;
-    public bool isReplay;
+    private bool isRecord;
+    private bool isReplay;
     public float recordFrequancy;
 
     public List<float> timeStamp;
@@ -18,5 +18,22 @@ public class Ghost : ScriptableObject
         timeStamp.Clear();
         position.Clear();
         rotation.Clear();
+    }
+
+    public void setIsRecord(bool condition)
+    {
+        isRecord = condition;
+    }
+    public void setIsReplay(bool condition)
+    {
+        isReplay = condition;
+    }
+    public bool getIsRecord()
+    {
+        return isRecord;
+    }
+    public bool getIsReplay()
+    {
+        return isReplay;
     }
 }
