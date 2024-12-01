@@ -9,6 +9,7 @@ public class TerminalCanvas : MonoBehaviour
     public TMP_Text codeText;
     public TMP_Text variableText;
     public Image passImage;
+
     public void SetCodeText(string code)
     {
         prepareText();
@@ -64,6 +65,9 @@ public class TerminalCanvas : MonoBehaviour
             if (!comment)
                 result.text = result.text + codeText.text[i];
         }
+        if (result.text[result.text.Length - 2] != '(')
+            result.text = result.text + "   door_loop()";      
         codeText.text = result.text;
+        
     }
 }
