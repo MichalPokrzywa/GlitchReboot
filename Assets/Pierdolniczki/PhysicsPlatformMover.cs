@@ -1,65 +1,67 @@
 using UnityEngine;
-using DG.Tweening; // Import biblioteki DoTween
+using DG.Tweening;
 
 [RequireComponent(typeof(Rigidbody))]
 public class PhysicsPlatformMover : MonoBehaviour
 {
-    // Punkt początkowy platformy
-    public Vector3 startPoint;
+    [Header("Platform Settings")]
+    [Tooltip("Koniec ruchu platformy")]
+    public GameObject end;
 
-    // Punkt końcowy platformy
-    public Vector3 endPoint;
-
-    // Czas ruchu platformy w sekundach
+    [Tooltip("Czas trwania ruchu w sekundach")]
     public float moveDuration = 2f;
 
-    // Czy platforma ma wrócić do punktu początkowego po ruchu
+    [Tooltip("Czy platforma wraca do pozycji początkowej po braku aktywności")]
     public bool returnToStart = true;
 
-    // Komponent Rigidbody
-    private Rigidbody rb;
+    [Tooltip("Opóźnienie przed powrotem na start po braku wywołań (sekundy)")]
+    public float returnDelay = 2f;
 
-    // Czy platforma jest w trakcie ruchu
+    private Vector3 startPoint;
+    private Vector3 endPoint;
+    private Rigidbody rb;
     private bool isMoving = false;
+    private float returnTimer = 0f;
 
     private void Start()
     {
-        // Pobierz komponent Rigidbody
         rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
 
-        // Ustaw platformę w punkcie początkowym
-        rb.isKinematic = true; // Ustaw Rigidbody jako kinematyczne (ruch kontrolowany przez skrypt)
-        transform.position = startPoint;
+        startPoint = transform.position;
+        endPoint = end.transform.position;
     }
 
-    // Funkcja wywoływana przez ProximityTrigger
+    private void Update()
+    {
+        // Jeśli powrót do pozycji początkowej jest włączony, uruchamiamy odliczanie
+        if (returnToStart && !isMoving)
+        {
+            returnTimer -= Time.deltaTime;
+
+            if (returnTimer <= 0f && Vector3.Distance(transform.position, startPoint) > 0.1f)
+            {
+                MoveToPosition(startPoint, null);
+            }
+        }
+    }
+
     public void MovePlatform()
     {
-        if (isMoving) return; // Ignoruj, jeśli platforma już się porusza
+        returnTimer = returnDelay; // Resetuj licznik powrotu
+
+        if (isMoving) return; // Ignoruj, jeśli platforma jest w ruchu
 
         isMoving = true;
 
-        // Przesuń platformę do punktu końcowego z użyciem DoTween
-        rb.DOMove(endPoint, moveDuration).OnComplete(() =>
+        MoveToPosition(endPoint, () =>
         {
-            if (returnToStart)
-            {
-                // Wróć do punktu początkowego
-                rb.DOMove(startPoint, moveDuration).OnComplete(() =>
-                {
-                    isMoving = false; // Ruch zakończony
-                });
-            }
-            else
-            {
-                isMoving = false; // Ruch zakończony
-            }
+            isMoving = false; // Platforma osiągnęła punkt końcowy
         });
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void MoveToPosition(Vector3 targetPosition, TweenCallback onComplete)
     {
-        // Obsługuje interakcję z obiektami, które dotykają platformy
-        // Możesz dodać dodatkową logikę, jeśli chcesz
+        rb.DOMove(targetPosition, moveDuration).OnComplete(onComplete);
     }
 }

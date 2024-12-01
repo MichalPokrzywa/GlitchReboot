@@ -8,6 +8,7 @@ public class GhostRecorder : MonoBehaviour
     public List<GameObject> gameObjects;
     public List<TimeIndicatorHandler> indicatorHandlers;
     public List<GameObject> markerPoints;
+    public moveObject kurtyna;
     private int[] state;
     private bool isRecording = false;
     private bool isHeld = false;
@@ -142,6 +143,7 @@ public class GhostRecorder : MonoBehaviour
                 isRecording = false;
                 Debug.Log(state[ghostIndex]);
                 indicatorHandlers[ghostIndex].GetComponent<TimeIndicatorHandler>().StopRecording();
+                kurtyna.GetComponent<moveObject>().StartMoving();
                 this.transform.position = ghost[ghostIndex].position[0];
                 this.transform.eulerAngles = ghost[ghostIndex].rotation[0];
                 break;

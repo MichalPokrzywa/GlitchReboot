@@ -15,13 +15,13 @@ public class moveObject : MonoBehaviour
 
     private RectTransform rectTransform;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            StartMoving();
-        }
-    }
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        StartMoving();
+    //    }
+    //}
 
     void Start()
     {
@@ -44,7 +44,8 @@ public class moveObject : MonoBehaviour
         rectTransform.DOAnchorPos(endPoint, duration).OnComplete(() =>
         {
             // Po zakończeniu ruchu ukryj obiekt
-            gameObject.SetActive(false);
+            Debug.Log("KURTYNA!");
+            //gameObject.SetActive(false);
         });
     }
 }
