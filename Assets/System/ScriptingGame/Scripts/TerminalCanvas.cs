@@ -9,6 +9,7 @@ public class TerminalCanvas : MonoBehaviour
     public TMP_Text codeText;
     public TMP_Text variableText;
     public Image passImage;
+
     public void SetCodeText(string code)
     {
         prepareText();
@@ -19,25 +20,20 @@ public class TerminalCanvas : MonoBehaviour
     {
         prepareText();
         variableText.text = "";
-        /*foreach (var pair in list)
+        foreach (var pair in list)
         {
             Debug.Log(variableTable[pair.variableName]);
             variableText.text += $"{pair.variableName} = {variableTable[pair.variableName] ?? "null"}";
             variableText.text += "\n";
-        }*/
+        }
+        /*
         foreach (var pair in variableTable.Pairs)
         {
             //Debug.Log(variableTable[pair.variableName]);
             variableText.text += $"{pair.Key} = {variableTable[pair.Value] ?? "null"}";
             variableText.text += "\n";
         }
-        //debug
-/*        foreach (var pair in variableTable.Pairs)
-        {
-            //Debug.Log(variableTable[pair.variableName]);
-            variableText.text += $"{pair.Key} = {variableTable[pair.Value] ?? "null"}";
-            variableText.text += "\n";
-        }*/
+        */
     }
 
     public void SetImageColor(bool pass)
@@ -69,6 +65,9 @@ public class TerminalCanvas : MonoBehaviour
             if (!comment)
                 result.text = result.text + codeText.text[i];
         }
+        if (result.text[result.text.Length - 2] != '(')
+            result.text = result.text + "   door_loop()";      
         codeText.text = result.text;
+        
     }
 }
