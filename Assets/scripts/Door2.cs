@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Door2 : MonoBehaviour
 {
@@ -23,7 +24,11 @@ public class Door2 : MonoBehaviour
     {
         if (condition.returnCondition())
         {
+            Debug.Log(SceneManager.GetActiveScene().name);
             //end level
+            if (SceneManager.GetActiveScene().name.ToString() == "level1") SceneManager.LoadScene("level2");
+            if (SceneManager.GetActiveScene().name.ToString() == "level2") SceneManager.LoadScene("level3");
+            if (SceneManager.GetActiveScene().name.ToString() == "level3") SceneManager.LoadScene("EndScreen");
             return true;
         }
         else
