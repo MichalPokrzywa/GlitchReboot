@@ -1,4 +1,6 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Timeline;
 
 public class GhostPlayer : MonoBehaviour
 {
@@ -7,6 +9,7 @@ public class GhostPlayer : MonoBehaviour
     public int index1;
     public int index2;
     public bool start = false;
+    MeshRenderer meshRenderer;
 
     // Update is called once per frame
     void Update()
@@ -24,11 +27,6 @@ public class GhostPlayer : MonoBehaviour
             timeValue += Time.unscaledDeltaTime;
             GetIndex();
             SetTransform();
-        }
-        if (!ghost.getIsReplay())
-        {
-            Debug.Log("start - false");
-            start = false;
         }
     }
     public void Reset()
