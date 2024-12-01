@@ -97,7 +97,7 @@ public class TerminalScript : MonoBehaviour
         if (check)
         {
             Debug.Log("Jest git");
-            audioSource.Play();
+            //audioSource.Play();
             result = true;
             canvas.SetImageColor(result);
         }
