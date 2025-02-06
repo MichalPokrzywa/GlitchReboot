@@ -53,7 +53,6 @@ public class PlayerMovement : MonoBehaviour
         //Debug.Log($"isGrounded: {isGrounded}, Velocity: {rigidBody.linearVelocity}");
 
         MyInput();
-        SpeedControl();
 
         if (isGrounded)
         {

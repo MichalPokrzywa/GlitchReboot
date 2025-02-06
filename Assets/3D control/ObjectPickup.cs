@@ -38,16 +38,19 @@ public class ObjectPickup : MonoBehaviour
 
     private void PickUpObject(GameObject obj)
     {
+        Debug.Log("dzieckuje obiekt");
+        obj.transform.SetParent(holdPoint); // Parent to the hold point
+        obj.GetComponent<Rigidbody>().detectCollisions = false;
         obj.GetComponent<Rigidbody>().isKinematic = true; // Disable physics
         obj.transform.position = holdPoint.position; // Move to hold point
         obj.transform.rotation = holdPoint.rotation; // Align rotation with hold point
-        obj.transform.SetParent(holdPoint); // Parent to the hold point
     }
 
     private void DropObject()
     {
-        pickedObject.GetComponent<Rigidbody>().isKinematic = false; // Enable physics
         pickedObject.transform.SetParent(null); // Unparent the object
+        pickedObject.GetComponent<Rigidbody>().isKinematic = false; // Enable physics
+        pickedObject.GetComponent<Rigidbody>().detectCollisions = true;
         pickedObject = null; // Clear reference
     }
 }
