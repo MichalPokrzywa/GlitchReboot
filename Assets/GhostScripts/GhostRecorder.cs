@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GhostRecorder : MonoBehaviour
 {
+    public List<GhostPlayer> ghostPlayers;
     public List<Ghost> ghost;
     public List<GameObject> gameObjects;
     public List<TimeIndicatorHandler> indicatorHandlers;
@@ -17,6 +18,8 @@ public class GhostRecorder : MonoBehaviour
     private float[] buttonHoldTimers = new float[4]; // Timery dla ka¿dego przycisku
     private int ghostIndex = 0;
 
+    Vector3 playerPosition;
+    Quaternion playerRotation;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     private void Awake()
@@ -80,20 +83,59 @@ public class GhostRecorder : MonoBehaviour
         }
     }
 
+    void StartRecording(GhostPlayer ghost)
+    {
+        var ghostController = ghost.gameObject.GetComponent<MovementController>();
+        if (ghostController == null)
+            return;
+
+        var ghostInput = ghostController.Input as GhostInput;
+        if (ghostInput == null)
+            return;
+
+        switch (ghostInput.GhostMovementState)
+        {
+            case GhostInput.State.NONE:
+                ghostController.gameObject.SetActive(true);
+                playerPosition = this.transform.position;
+                playerRotation = this.transform.rotation;
+                ghostInput.SetState(GhostInput.State.RECORDING);
+                Debug.Log("Recording");
+                break;
+            case GhostInput.State.RECORDING:
+                ghostInput.SetState(GhostInput.State.RECORDED);
+                Debug.Log("Recorded");
+                break;
+            case GhostInput.State.RECORDED:
+                ghostController.gameObject.transform.position = playerPosition + new Vector3(0, 0.5f, 0);
+                ghostController.gameObject.transform.rotation = playerRotation;
+                ghostController.gameObject.transform.eulerAngles = new Vector3(ghostController.gameObject.transform.eulerAngles.x, ghostController.gameObject.transform.eulerAngles.y, ghostController.gameObject.transform.eulerAngles.z);
+                ghostInput.SetState(GhostInput.State.REPLAY);
+                Debug.Log("Replay");
+                break;
+            case GhostInput.State.REPLAY:
+                ghostInput.SetState(GhostInput.State.NONE);
+                Debug.Log("None");
+                break;
+        }
+    }
+
     // Metody wywo³ywane przy naciœniêciu
-    private void OnButton1Pressed() 
+    private void OnButton1Pressed()
+    {
+        //if (isHeld)
+        //{
+        //    isHeld = false;
+        //    return;
+        //}
+
+        StartRecording(ghostPlayers[ghostIndex]);
+        //ghostIndex = 0;
+        //changeState();
+    }
+    private void OnButton2Pressed()
     {
         if (isHeld)
-        {
-            isHeld = false;
-            return;
-        }
-        ghostIndex = 0;
-        changeState();
-    }
-    private void OnButton2Pressed() 
-    {
-        if (isHeld) 
         {
             isHeld = false;
             return;
@@ -101,7 +143,7 @@ public class GhostRecorder : MonoBehaviour
         ghostIndex = 1;
         changeState();
     }
-    private void OnButton3Pressed() 
+    private void OnButton3Pressed()
     {
         if (isHeld)
         {
@@ -113,7 +155,7 @@ public class GhostRecorder : MonoBehaviour
     }
     private void OnButton4Pressed()
     {
-        if (isHeld) 
+        if (isHeld)
         {
             isHeld = false;
             return;
@@ -162,7 +204,7 @@ public class GhostRecorder : MonoBehaviour
     }
 
     // Metody wywo³ywane przy przytrzymaniu
-    private void OnButton1Held() 
+    private void OnButton1Held()
     {
         state[ghostIndex] = 0;
         ghost[ghostIndex].RestetData();

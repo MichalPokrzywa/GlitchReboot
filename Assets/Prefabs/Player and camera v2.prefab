@@ -256,6 +256,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2642939923283673411}
   - component: {fileID: 4916976174456112422}
+  - component: {fileID: 7273227369403649957}
   - component: {fileID: 5710323869892917875}
   - component: {fileID: 4117688892116596492}
   - component: {fileID: 2922049811997046418}
@@ -292,11 +293,35 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3679901412673172875}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e20c032522960594bac3423736cb8dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  moveSpeed: 40
+  groundDrag: 1
+  jumpForce: 15
+  jumpCooldown: 1
+  airMultiplier: 2
+  jumpKey: 32
+  playerHeight: 2
+  groundCheckLayer:
+    serializedVersion: 2
+    m_Bits: 2147483648
+  orientation: {fileID: 1330167633240382547}
+--- !u!114 &7273227369403649957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3679901412673172875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66b80bb613c2e82498ff4b0a6d730aa2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isGhost: 0
   moveSpeed: 40
   groundDrag: 1
   jumpForce: 15

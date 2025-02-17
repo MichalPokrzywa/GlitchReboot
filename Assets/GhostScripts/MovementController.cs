@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class MovementController : MonoBehaviour
 {
     InputInterface input = new StandardInput();
+
+    public InputInterface Input => input;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -35,6 +35,15 @@ public class PlayerMovement : MonoBehaviour
     static bool isJumping = false;
     public static bool IsJumping => isJumping;
 
+    void Awake()
+    {
+        var ghostInput = gameObject.GetComponent<GhostInput>();
+        if (ghostInput)
+        {
+            input = ghostInput;
+        }
+    }
+
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
@@ -42,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
 
         readyToJump = true;
 
-        // Debug: sprawdzenie, czy Rigidbody zostaÅ‚o poprawnie przypisane
+        // Debug: sprawdzenie, czy Rigidbody zosta³o poprawnie przypisane
         if (rigidBody == null)
         {
             //Debug.LogError("Rigidbody not found on the player object!");
@@ -83,10 +92,10 @@ public class PlayerMovement : MonoBehaviour
         verticalInput = input.GetVerticalInput();
         isJumping = input.IsJumping() && readyToJump && isGrounded;
 
-        // Debug: informacje o wejÅ›ciu
+        // Debug: informacje o wejœciu
         //Debug.Log($"HorizontalInput: {horizontalInput}, VerticalInput: {verticalInput}");
 
-        // Sprawdzenie, czy gracz prÃ³buje skoczyÄ‡
+        // Sprawdzenie, czy gracz próbuje skoczyæ
         if (isJumping)
         {
             readyToJump = false;
@@ -103,7 +112,7 @@ public class PlayerMovement : MonoBehaviour
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        // Debug: wyÅ›wietlenie kierunku ruchu
+        // Debug: wyœwietlenie kierunku ruchu
         //Debug.Log($"MoveDirection: {moveDirection}");
 
         if (isGrounded)
@@ -122,10 +131,10 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector3 flatVel = new Vector3(rigidBody.linearVelocity.x, 0f, rigidBody.linearVelocity.z);
 
-        // Debug: wyÅ›wietlenie prÄ™dkoÅ›ci
+        // Debug: wyœwietlenie prêdkoœci
         //Debug.Log($"Flat velocity: {flatVel.magnitude}");
 
-        // Ograniczenie prÄ™dkoÅ›ci, jeÅ›li potrzeba
+        // Ograniczenie prêdkoœci, jeœli potrzeba
         if (flatVel.magnitude > moveSpeed)
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeed;
@@ -136,7 +145,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        // Resetowanie prÄ™dkoÅ›ci pionowej
+        // Resetowanie prêdkoœci pionowej
         rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, 0f, rigidBody.linearVelocity.z);
 
         rigidBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
