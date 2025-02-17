@@ -54,11 +54,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e20c032522960594bac3423736cb8dd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 40
-  groundDrag: 1
-  jumpForce: 10
-  jumpCooldown: 3
-  airMultiplier: 2
+  moveSpeed: 70
+  moveSpeedLimit: 10
+  groundDrag: 5.5
+  jumpForce: 20
+  jumpCooldown: 0.5
+  airMultiplier: 1
   jumpKey: 32
   playerHeight: 2
   groundCheckLayer:
@@ -73,7 +74,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620051772209329272}
   serializedVersion: 4
-  m_Mass: 2.06
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
