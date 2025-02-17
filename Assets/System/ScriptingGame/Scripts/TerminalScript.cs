@@ -112,6 +112,15 @@ public class TerminalScript : MonoBehaviour
 
     public void RunScript()
     {
+        foreach (VariablePlatform platform in allLevelPlatforms)
+        {
+            if (script.Globals[platform.variableName] == DynValue.Nil)
+            {
+                CheckResult(false);
+                return;
+            }
+                
+        }
         script.DoString(luaScript);
     }
 
