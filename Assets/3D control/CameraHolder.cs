@@ -11,3 +11,4 @@ public class CameraHolder : MonoBehaviour
         transform.position = cameraPosition.position;
     }
 }
+   
