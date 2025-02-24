@@ -13,6 +13,7 @@ public class InteractionTest : MonoBehaviour, IInteractable
     public float floatDistanceY = 30f;
     private Vector3 originalPosition;
     public Camera mainCamera;
+    public GameObject objectWithInteractiveMaterial;
 
     public void Start()
     {
@@ -27,7 +28,7 @@ public class InteractionTest : MonoBehaviour, IInteractable
             AnimateUI();
         }
     }
-
+    
     public void Interact()
     {
         Debug.Log("Interaction");
@@ -46,8 +47,6 @@ public class InteractionTest : MonoBehaviour, IInteractable
        
         UIHoverText.rectTransform.position = Vector3.Lerp(UIHoverText.rectTransform.position, targetPosition, Time.deltaTime * 5f);
     }
-
-
     
     public void ShowUI()
     {
@@ -55,6 +54,9 @@ public class InteractionTest : MonoBehaviour, IInteractable
         UIHoverObject.SetActive(true);
         UIHoverText.text = TooltipText;
         HasShownUI = true;
+        // TODO To chcemy używać rzadko nie za każdym razem i z dopracowanym efektem
+        // if(objectWithInteractiveMaterial != null) objectWithInteractiveMaterial.GetComponent<Renderer>().material.SetFloat("_activate", 1f);
+        // StartCoroutine(EndAnimationAfterDelay(0.125f));
     }
 
     public void HideUI()
@@ -63,5 +65,10 @@ public class InteractionTest : MonoBehaviour, IInteractable
         UIHoverObject.SetActive(false);
         HasShownUI = false;
     }
-
+    
+    private System.Collections.IEnumerator EndAnimationAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if(objectWithInteractiveMaterial != null) objectWithInteractiveMaterial.GetComponent<Renderer>().material.SetFloat("_activate", 0f);
+    }
 }
