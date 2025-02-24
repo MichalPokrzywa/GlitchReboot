@@ -26,4 +26,9 @@ public class StandardInput : InputInterface
     {
         return Input.GetAxisRaw("Mouse Y");
     }
+
+    public void ResetState()
+    {
+        return;
+    }
 }

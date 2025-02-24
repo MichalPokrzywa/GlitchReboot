@@ -8,6 +8,7 @@ public class MovementController : MonoBehaviour
 
     [Header("Movement")]
     public float moveSpeed;
+    public float moveSpeedLimit;
     public float groundDrag;
     public float jumpForce;
     public float jumpCooldown;
@@ -23,7 +24,6 @@ public class MovementController : MonoBehaviour
 
     bool isGrounded;
 
-    public Transform orientation;
     float horizontalInput;
     float verticalInput;
     private bool mounted;
@@ -50,40 +50,42 @@ public class MovementController : MonoBehaviour
         rigidBody.freezeRotation = true;
 
         readyToJump = true;
-
-        // Debug: sprawdzenie, czy Rigidbody zosta³o poprawnie przypisane
-        if (rigidBody == null)
-        {
-            //Debug.LogError("Rigidbody not found on the player object!");
-        }
     }
 
     void Update()
     {
-        // Sprawdzenie, czy gracz jest na ziemi
+        // Check if player is grounded
         isGrounded = Physics.Raycast(transform.position, Vector3.down, playerHeight * 0.5f + 1.2f, groundCheckLayer);
 
-        // Debug: informacje o stanie gracza
-        //Debug.Log($"isGrounded: {isGrounded}, Velocity: {rigidBody.linearVelocity}");
-
-        MyInput();
-        SpeedControl();
-
+        // Set drag based on grounded state (using drag instead of linearDamping)
         if (isGrounded)
         {
             rigidBody.linearDamping = groundDrag;
-            //Debug.Log("Player is grounded. Applying ground drag.");
         }
         else
         {
             rigidBody.linearDamping = 0f;
-            //Debug.Log("Player is in the air. No drag applied.");
         }
+        MyInput();
     }
 
     void FixedUpdate()
     {
         MovePlayer();
+        SpeedControl();
+
+        if (!isGrounded)
+        {
+            float fallMultiplier = 4f;
+            rigidBody.linearVelocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+            print(rigidBody.linearVelocity.y);
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, transform.forward * 2);
     }
 
     private void MyInput()
@@ -92,15 +94,9 @@ public class MovementController : MonoBehaviour
         verticalInput = input.GetVerticalInput();
         isJumping = input.IsJumping() && readyToJump && isGrounded;
 
-        // Debug: informacje o wejœciu
-        //Debug.Log($"HorizontalInput: {horizontalInput}, VerticalInput: {verticalInput}");
-
-        // Sprawdzenie, czy gracz próbuje skoczyæ
         if (isJumping)
         {
             readyToJump = false;
-
-            //Debug.Log("Player is jumping!");
 
             Jump();
 
@@ -110,68 +106,46 @@ public class MovementController : MonoBehaviour
 
     private void MovePlayer()
     {
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
-
-        // Debug: wyœwietlenie kierunku ruchu
-        //Debug.Log($"MoveDirection: {moveDirection}");
+        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
 
         if (isGrounded)
         {
             rigidBody.AddForce(moveDirection * moveSpeed, ForceMode.Force);
-            //Debug.Log("Applying ground movement force.");
         }
-        else if (!isGrounded)
+        else
         {
             rigidBody.AddForce(moveDirection.normalized * moveSpeed * airMultiplier, ForceMode.Force);
-            //Debug.Log("Applying air movement force.");
         }
     }
 
     private void SpeedControl()
     {
+        // Only control horizontal velocity
         Vector3 flatVel = new Vector3(rigidBody.linearVelocity.x, 0f, rigidBody.linearVelocity.z);
 
-        // Debug: wyœwietlenie prêdkoœci
-        //Debug.Log($"Flat velocity: {flatVel.magnitude}");
-
         // Ograniczenie prêdkoœci, jeœli potrzeba
-        if (flatVel.magnitude > moveSpeed)
+        if (flatVel.magnitude > moveSpeedLimit)
         {
-            Vector3 limitedVel = flatVel.normalized * moveSpeed;
+            Vector3 limitedVel = flatVel.normalized * moveSpeedLimit;
             rigidBody.linearVelocity = new Vector3(limitedVel.x, rigidBody.linearVelocity.y, limitedVel.z);
-            //Debug.Log("Velocity limited to moveSpeed.");
         }
+        rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, rigidBody.linearVelocity.y, rigidBody.linearVelocity.z);
     }
 
     private void Jump()
     {
-        // Resetowanie prêdkoœci pionowej
-        rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, 0f, rigidBody.linearVelocity.z);
+        Vector3 currentVelocity = rigidBody.linearVelocity;
+        currentVelocity.y = 0f;
+        rigidBody.linearVelocity = currentVelocity;
 
-        rigidBody.AddForce(transform.up * jumpForce, ForceMode.Impulse);
-        //Debug.Log("Jump force applied.");
+        Vector3 jumpDirection = (Vector3.up).normalized;
+
+        // Dodajemy impuls skoku
+        rigidBody.AddForce(jumpDirection * jumpForce, ForceMode.Impulse);
     }
 
     private void ResetJump()
     {
         readyToJump = true;
-        //Debug.Log("Player is ready to jump again.");
-    }
-
-    public void MountPlayer(Transform mountPosition)
-    {
-        transform.position = mountPosition.position;
-        mounted = true;
-        //Debug.Log("Player mounted at new position.");
-    }
-
-    public void DeMount()
-    {
-        if (mounted)
-        {
-            Jump();
-            mounted = false;
-            //Debug.Log("Player demounted.");
-        }
     }
 }

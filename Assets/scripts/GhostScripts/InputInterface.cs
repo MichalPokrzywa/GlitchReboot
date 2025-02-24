@@ -6,4 +6,5 @@ public interface InputInterface
     public bool IsJumping();
     public float GetMouseX();
     public float GetMouseY();
+    public void ResetState();
 }

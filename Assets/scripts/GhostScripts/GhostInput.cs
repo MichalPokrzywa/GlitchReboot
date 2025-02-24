@@ -9,6 +9,7 @@ public class GhostInput : MonoBehaviour, InputInterface
     InputInterface input = new StandardInput();
     float startTime = 0;
     State state = State.NONE;
+    Vector3 startingPosition;
 
     public State GhostMovementState => state;
 
@@ -33,6 +34,11 @@ public class GhostInput : MonoBehaviour, InputInterface
     List<MovementState> recordedMovement = new List<MovementState>();
     MovementState currentMovementState = new MovementState();
 
+    void Awake()
+    {
+        startingPosition = transform.position;
+    }
+
     void FixedUpdate()
     {
         if (state == State.RECORDING)
@@ -40,12 +46,6 @@ public class GhostInput : MonoBehaviour, InputInterface
 
         if (state == State.REPLAY)
             UpdateReplaying();
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.blue;
-        Gizmos.DrawRay(transform.position, transform.forward * 2);
     }
 
     void UpdateReplaying()
@@ -152,5 +152,13 @@ public class GhostInput : MonoBehaviour, InputInterface
             return currentMovementState.mouseY;
         }
         return 0;
+    }
+
+    public void ResetState()
+    {
+        recordedMovement.Clear();
+        currentMovementState = new MovementState();
+        state = State.NONE;
+        transform.position = startingPosition;
     }
 }
