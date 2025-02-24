@@ -12,13 +12,13 @@ public class TerminalCanvas : MonoBehaviour
 
     public void SetCodeText(string code)
     {
-        prepareText();
+        //prepareText();
         codeText.text = code;
     }
 
     public void SetVariableText(Table variableTable,List<VariablePlatform> list)
     {
-        prepareText();
+        //prepareText();
         variableText.text = "";
         foreach (var pair in list)
         {

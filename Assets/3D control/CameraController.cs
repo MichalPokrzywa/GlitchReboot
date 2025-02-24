@@ -30,7 +30,7 @@ public class CameraControl : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // if (!UIControl.isPaused)
         // {
