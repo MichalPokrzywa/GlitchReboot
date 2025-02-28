@@ -32,8 +32,8 @@ public class AudioManager : MonoBehaviour
 
     private void LoadVolumes()
     {
-        musicVolume = DataManager.LoadData<float>(MusicVolumeKey, 0f);
-        soundsVolume = DataManager.LoadData<float>(SoundVolumeKey, 0f);
+        musicVolume = DataManager.LoadData<float>(MusicVolumeKey, 0.5f);
+        soundsVolume = DataManager.LoadData<float>(SoundVolumeKey, 0.5f);
 
         // Apply to AudioMixer
         audioMixer.SetFloat("Music", musicVolume);

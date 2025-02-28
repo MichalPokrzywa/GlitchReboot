@@ -63,6 +63,7 @@ public class VariableDice : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
+        DependencyManager.audioManager.PlaySound(Sound.None);
         // Check if the other object is on the correct layer
         if (other.gameObject.layer == LayerMask.NameToLayer("VariablePlatform"))
         {

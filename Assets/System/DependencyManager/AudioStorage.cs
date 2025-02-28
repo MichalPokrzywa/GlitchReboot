@@ -31,6 +31,15 @@ public class AudioStorage : ScriptableObject
             return null;
         }
 
+        float probability = 0.90f;
+
+        if (soundClip.clips.Count == 2)
+        {
+            if (Random.Range(0.0f, 1.0f) < probability)
+                return soundClip.clips[1];
+            return soundClip.clips[0];
+        }
+
         return soundClip.clips[Random.Range(0, soundClip.clips.Count)];
     }
 
