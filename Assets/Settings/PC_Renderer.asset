@@ -1,53 +1,25 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-21566026550598011
+--- !u!114 &-6783618621494497287
 MonoBehaviour:
-  m_ObjectHideFlags: 3
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce280e1cc6cb7f245989788c986a5df6, type: 3}
-  m_Name: 
+  m_Script: {fileID: 11500000, guid: b00045f12942b46c698459096c89274e, type: 3}
+  m_Name: Retro
   m_EditorClassIdentifier: 
-  _active: 1
-  _shader: {fileID: 4800000, guid: f1dac63214cc5a04abaeb35ca448e492, type: 3}
-  _noiseScale: 0.5
-  _gradient: {fileID: 2800000, guid: 31cbf367fc7af7740ad97f1ef54ee0f0, type: 3}
-  _palette:
-    enabled: 0
-    value: {fileID: 2800000, guid: 48e11582d13cc59429b5c8c9b77f31f3, type: 3}
-  _depth: 1
-  _scale: 1
-  _scaleLerp:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0.0369
-      outSlope: 0.0369
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0
-      outWeight: 0.8459
-    - serializedVersion: 3
-      time: 1
-      value: 0.5
-      inSlope: 56.8515
-      outSlope: 56.8515
-      tangentMode: 0
-      weightedMode: 3
-      inWeight: 0.0104
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  _frameRate: 0
-  _ascii: {r: 1, g: 1, b: 1, a: 1}
-  _image: {r: 0, g: 0, b: 0, a: 1}
+  m_Active: 1
+  injectionPoint: 600
+  fetchColorBuffer: 0
+  requirements: 0
+  passMaterial: {fileID: 2100000, guid: aaf4710c86b3e9249a77dc65ecdee337, type: 2}
+  passIndex: 0
+  bindDepthStencilAttachment: 0
+  m_Version: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -74,8 +46,8 @@ MonoBehaviour:
     probeVolumeBlendStatesCS: {fileID: 7200000, guid: b9a23f869c4fd45f19c5ada54dd82176, type: 3}
   m_RendererFeatures:
   - {fileID: 7833122117494664109}
-  - {fileID: 530681338282283060}
-  m_RendererFeatureMap: ad6b866f10d7b46c34903e91dd5b5d07
+  - {fileID: -6783618621494497287}
+  m_RendererFeatureMap: ad6b866f10d7b46cf96f180ecebedba1
   m_UseNativeRenderPass: 1
   xrSystemData: {fileID: 0}
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
@@ -101,22 +73,6 @@ MonoBehaviour:
   m_DepthTextureFormat: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 0
---- !u!114 &530681338282283060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43b25b61d905aa7419c090926a80d551, type: 3}
-  m_Name: AsciiFx
-  m_EditorClassIdentifier: 
-  m_Active: 1
-  _event: 600
-  _pass: {fileID: -21566026550598011}
-  _blitShader: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
 --- !u!114 &7833122117494664109
 MonoBehaviour:
   m_ObjectHideFlags: 0
