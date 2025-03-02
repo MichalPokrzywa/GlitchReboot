@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 7327881499870494053}
   - component: {fileID: 5654680752191250363}
   - component: {fileID: 4906106897603037496}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Player and camera v3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -117,13 +117,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c9a098a110ebc4bb7e45033e0ce95d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghostPlayers: []
-  ghost: []
   gameObjects:
   - {fileID: 0}
   indicatorHandlers: []
   markerPoints: []
-  kurtyna: {fileID: 0}
 --- !u!136 &4078483730592421541
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -137,7 +134,7 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 512
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
