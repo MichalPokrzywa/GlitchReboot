@@ -10,6 +10,8 @@ public class GhostInput : MonoBehaviour, InputInterface
     float startTime = 0;
     State state = State.NONE;
     Vector3 startingPosition;
+    Rigidbody rb;
+    RotationController rotationController;
 
     public State GhostMovementState => state;
 
@@ -23,6 +25,12 @@ public class GhostInput : MonoBehaviour, InputInterface
         public float mouseY;
     }
 
+    public struct ReplayStartingTransform
+    {
+        public Vector3 position;
+        public Vector2 rotation;
+    }
+
     public enum State
     {
         NONE = 0,
@@ -32,11 +40,15 @@ public class GhostInput : MonoBehaviour, InputInterface
     }
 
     List<MovementState> recordedMovement = new List<MovementState>();
+    List<MovementState> remainingMovement = new List<MovementState>();
     MovementState currentMovementState = new MovementState();
+    ReplayStartingTransform replayStartingTransform = new ReplayStartingTransform();
 
     void Awake()
     {
         startingPosition = transform.position;
+        rotationController = GetComponent<RotationController>();
+        rb = GetComponent<Rigidbody>();
     }
 
     void FixedUpdate()
@@ -48,17 +60,38 @@ public class GhostInput : MonoBehaviour, InputInterface
             UpdateReplaying();
     }
 
+    public void PrepareForReplay()
+    {
+        remainingMovement.Clear();
+        remainingMovement.AddRange(recordedMovement);
+
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.position = Vector3.zero;
+        rb.rotation = Quaternion.identity;
+
+        transform.position = replayStartingTransform.position;
+        rotationController.xRotation = replayStartingTransform.rotation.x;
+        rotationController.yRotation = replayStartingTransform.rotation.y;
+    }
+
+    public void SetReplayStartingPosition(Vector3 position, Vector2 rotation)
+    {
+        replayStartingTransform.position = position;
+        replayStartingTransform.rotation = rotation;
+    }
+
     void UpdateReplaying()
     {
-        if (recordedMovement.Count == 0)
+        if (remainingMovement.Count == 0)
         {
             return;
         }
 
-        if (Time.time - startTime >= recordedMovement.First().timeStamp)
+        if (Time.time - startTime >= remainingMovement.First().timeStamp)
         {
-            currentMovementState = recordedMovement.First();
-            recordedMovement.RemoveAt(0);
+            currentMovementState = remainingMovement.First();
+            remainingMovement.RemoveAt(0);
         }
     }
 
@@ -157,8 +190,9 @@ public class GhostInput : MonoBehaviour, InputInterface
     public void ResetState()
     {
         recordedMovement.Clear();
+        remainingMovement.Clear();
         currentMovementState = new MovementState();
-        state = State.NONE;
         transform.position = startingPosition;
+        state = State.NONE;
     }
 }

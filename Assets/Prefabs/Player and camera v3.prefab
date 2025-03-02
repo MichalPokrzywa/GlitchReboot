@@ -10,13 +10,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1169570061295094445}
   - component: {fileID: 8620224278246742451}
+  - component: {fileID: 4906106897603037496}
   - component: {fileID: 2303660254698895355}
   - component: {fileID: 1727923058423829674}
   - component: {fileID: 4530445399796016281}
   - component: {fileID: 4078483730592421541}
   - component: {fileID: 7327881499870494053}
   - component: {fileID: 5654680752191250363}
-  - component: {fileID: 4906106897603037496}
   m_Layer: 8
   m_Name: Player and camera v3
   m_TagString: Untagged
@@ -65,6 +65,22 @@ MonoBehaviour:
   groundCheckLayer:
     serializedVersion: 2
     m_Bits: 2147483648
+--- !u!114 &4906106897603037496
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620051772209329272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ee797756214bb47aa3ecb0ea7c0398, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensX: 100
+  sensY: 100
+  xRotation: 0
+  yRotation: 0
 --- !u!54 &2303660254698895355
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -117,8 +133,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c9a098a110ebc4bb7e45033e0ce95d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameObjects:
-  - {fileID: 0}
+  ghosts: []
   indicatorHandlers: []
   markerPoints: []
 --- !u!136 &4078483730592421541
@@ -197,22 +212,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620051772209329272}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &4906106897603037496
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 620051772209329272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52ee797756214bb47aa3ecb0ea7c0398, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sensX: 100
-  sensY: 100
-  xRotation: 0
-  yRotation: 0
 --- !u!1 &1690731312520728006
 GameObject:
   m_ObjectHideFlags: 0

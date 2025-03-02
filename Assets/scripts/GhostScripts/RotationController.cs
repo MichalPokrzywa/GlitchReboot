@@ -3,8 +3,9 @@ using UnityEngine;
 public class RotationController : MonoBehaviour
 {
     InputInterface input = new StandardInput();
-    public float sensX;
-    public float sensY;
+
+    [SerializeField] float sensX;
+    [SerializeField] float sensY;
 
     public float xRotation;
     public float yRotation;

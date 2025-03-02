@@ -4,31 +4,35 @@ using UnityEngine;
 
 public class GhostRecorder : MonoBehaviour
 {
-    public List<GameObject> gameObjects;
-    public List<TimeIndicatorHandler> indicatorHandlers;
-    public List<GameObject> markerPoints;
-    private bool isHeld = false;
-    private float timer;
-    private float timeValue;
-    private float[] buttonHoldTimers = new float[4];
+    [SerializeField] List<GameObject> ghosts;
+    [SerializeField] List<TimeIndicatorHandler> indicatorHandlers;
+    [SerializeField] List<GameObject> markerPoints;
 
-    Vector3 playerPosition;
-    Vector2 playerRotation;
+    bool isHeld = false;
+    float[] buttonHoldTimers = new float[4];
+
+    public enum GhostKey
+    {
+        Ghost1 = KeyCode.Alpha1,
+        Ghost2 = KeyCode.Alpha2,
+        Ghost3 = KeyCode.Alpha3,
+        Ghost4 = KeyCode.Alpha4
+    }
 
     void Update()
     {
-        timer += Time.unscaledDeltaTime;
-        timeValue += Time.unscaledDeltaTime;
+        CheckButtonPress(GhostKey.Ghost1, 0);
+        CheckButtonPress(GhostKey.Ghost2, 1);
+        CheckButtonPress(GhostKey.Ghost3, 2);
+        CheckButtonPress(GhostKey.Ghost4, 3);
+    }
 
-        if (Input.GetKeyUp(KeyCode.Alpha1)) OnButtonPressed(0);
-        if (Input.GetKeyUp(KeyCode.Alpha2)) OnButtonPressed(1);
-        if (Input.GetKeyUp(KeyCode.Alpha3)) OnButtonPressed(2);
-        if (Input.GetKeyUp(KeyCode.Alpha4)) OnButtonPressed(3);
+    void CheckButtonPress(GhostKey ghostKey, int index)
+    {
+        if (Input.GetKeyUp((KeyCode)ghostKey))
+            OnButtonPressed(index);
 
-        HandleButtonHold(KeyCode.Alpha1, 0, () => OnButtonHeld(0));
-        HandleButtonHold(KeyCode.Alpha2, 1, () => OnButtonHeld(1));
-        HandleButtonHold(KeyCode.Alpha3, 2, () => OnButtonHeld(2));
-        HandleButtonHold(KeyCode.Alpha4, 3, () => OnButtonHeld(3));
+        HandleButtonHold((KeyCode)ghostKey, index, () => OnButtonHeld(index));
     }
 
     void HandleButtonHold(KeyCode key, int index, System.Action onHoldAction)
@@ -50,53 +54,6 @@ public class GhostRecorder : MonoBehaviour
         }
     }
 
-    void StartRecording(GameObject ghost)
-    {
-        var ghostController = ghost.gameObject.GetComponent<MovementController>();
-        if (ghostController == null)
-            return;
-
-        var ghostInput = ghostController.Input as GhostInput;
-        if (ghostInput == null)
-            return;
-
-        var playerRotationController = gameObject.GetComponent<RotationController>();
-        var ghostRotationController = ghost.gameObject.GetComponent<RotationController>();
-
-        switch (ghostInput.GhostMovementState)
-        {
-            case GhostInput.State.NONE:
-                ghostController.gameObject.SetActive(true);
-                playerPosition = transform.position;
-                if (playerRotationController != null)
-                {
-                    playerRotation.x = playerRotationController.xRotation;
-                    playerRotation.y = playerRotationController.yRotation;
-                }
-                ghostInput.SetState(GhostInput.State.RECORDING);
-                Debug.Log("Recording");
-                break;
-            case GhostInput.State.RECORDING:
-                ghostInput.SetState(GhostInput.State.RECORDED);
-                Debug.Log("Recorded");
-                break;
-            case GhostInput.State.RECORDED:
-                ghostController.gameObject.transform.position = playerPosition + new Vector3(0, 0.5f, 0);
-                if (ghostRotationController != null && playerRotationController != null)
-                {
-                    ghostRotationController.xRotation = playerRotation.x;
-                    ghostRotationController.yRotation = playerRotation.y;
-                }
-                ghostInput.SetState(GhostInput.State.REPLAY);
-                Debug.Log("Replay");
-                break;
-            case GhostInput.State.REPLAY:
-                ghostInput.SetState(GhostInput.State.NONE);
-                Debug.Log("None");
-                break;
-        }
-    }
-
     void OnButtonPressed(int buttonNumber)
     {
         if (isHeld)
@@ -105,15 +62,54 @@ public class GhostRecorder : MonoBehaviour
             return;
         }
 
-        StartRecording(gameObjects[buttonNumber]);
+        HandleGhostRecording(ghosts[buttonNumber]);
     }
 
     void OnButtonHeld(int buttonNumber)
     {
-        var ghostController = gameObjects[buttonNumber].GetComponent<MovementController>();
+        var ghostController = ghosts[buttonNumber].GetComponent<MovementController>();
         if (ghostController == null)
             return;
 
         ghostController.Input.ResetState();
     }
+
+    void HandleGhostRecording(GameObject ghost)
+    {
+        var ghostController = ghost.GetComponent<MovementController>();
+        if (ghostController == null)
+            return;
+
+        var ghostInput = ghostController.Input as GhostInput;
+        if (ghostInput == null)
+            return;
+
+        var playerRotationController = gameObject.GetComponent<RotationController>();
+        if (playerRotationController == null)
+            return;
+
+        switch (ghostInput.GhostMovementState)
+        {
+            // --- START RECORDING ---
+            case GhostInput.State.NONE:
+                // save starting position and rotation
+                ghostInput.SetReplayStartingPosition(transform.position, new Vector2(playerRotationController.xRotation, playerRotationController.yRotation));
+                ghostInput.SetState(GhostInput.State.RECORDING);
+                Debug.Log("Recording");
+                break;
+            // --- END RECORDING ---
+            case GhostInput.State.RECORDING:
+                ghostInput.SetState(GhostInput.State.RECORDED);
+                Debug.Log("Recorded");
+                break;
+            // --- REPLAY ---
+            case GhostInput.State.RECORDED or GhostInput.State.REPLAY:
+                ghostInput.PrepareForReplay();
+                ghostInput.SetState(GhostInput.State.REPLAY);
+                Debug.Log("Replay");
+                break;
+        }
+    }
+
+
 }

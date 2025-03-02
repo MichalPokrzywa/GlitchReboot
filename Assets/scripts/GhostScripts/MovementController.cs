@@ -22,18 +22,13 @@ public class MovementController : MonoBehaviour
     public float playerHeight;
     public LayerMask groundCheckLayer;
 
-    bool isGrounded;
-
     float horizontalInput;
     float verticalInput;
-    private bool mounted;
+    bool isJumping = false;
+    bool isGrounded;
 
     Vector3 moveDirection;
-
     Rigidbody rigidBody;
-
-    static bool isJumping = false;
-    public static bool IsJumping => isJumping;
 
     void Awake()
     {
@@ -82,13 +77,13 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    private void OnDrawGizmos()
+    void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, transform.forward * 2);
     }
 
-    private void MyInput()
+    void MyInput()
     {
         horizontalInput = input.GetHorizontalInput();
         verticalInput = input.GetVerticalInput();
@@ -97,14 +92,12 @@ public class MovementController : MonoBehaviour
         if (isJumping)
         {
             readyToJump = false;
-
             Jump();
-
             Invoke(nameof(ResetJump), jumpCooldown);
         }
     }
 
-    private void MovePlayer()
+    void MovePlayer()
     {
         moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
 
@@ -118,12 +111,12 @@ public class MovementController : MonoBehaviour
         }
     }
 
-    private void SpeedControl()
+    void SpeedControl()
     {
         // Only control horizontal velocity
         Vector3 flatVel = new Vector3(rigidBody.linearVelocity.x, 0f, rigidBody.linearVelocity.z);
 
-        // Ograniczenie prêdkoœci, jeœli potrzeba
+        // Limit speed
         if (flatVel.magnitude > moveSpeedLimit)
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeedLimit;
@@ -132,7 +125,7 @@ public class MovementController : MonoBehaviour
         rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, rigidBody.linearVelocity.y, rigidBody.linearVelocity.z);
     }
 
-    private void Jump()
+    void Jump()
     {
         Vector3 currentVelocity = rigidBody.linearVelocity;
         currentVelocity.y = 0f;
@@ -140,11 +133,11 @@ public class MovementController : MonoBehaviour
 
         Vector3 jumpDirection = (Vector3.up).normalized;
 
-        // Dodajemy impuls skoku
+        // Add jump force
         rigidBody.AddForce(jumpDirection * jumpForce, ForceMode.Impulse);
     }
 
-    private void ResetJump()
+    void ResetJump()
     {
         readyToJump = true;
     }
