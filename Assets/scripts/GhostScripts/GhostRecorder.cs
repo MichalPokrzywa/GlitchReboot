@@ -6,7 +6,9 @@ public class GhostRecorder : MonoBehaviour
 {
     [SerializeField] List<GameObject> ghosts;
     [SerializeField] List<TimeIndicatorHandler> indicatorHandlers;
-    [SerializeField] List<GameObject> markerPoints;
+    [SerializeField] GameObject markerPrefab;
+
+    List<MarkerScript> markerPoints = new List<MarkerScript>();
 
     bool isHeld = false;
     float[] buttonHoldTimers = new float[4];
@@ -17,6 +19,16 @@ public class GhostRecorder : MonoBehaviour
         Ghost2 = KeyCode.Alpha2,
         Ghost3 = KeyCode.Alpha3,
         Ghost4 = KeyCode.Alpha4
+    }
+
+    void Awake()
+    {
+        for (int i = 0; i < ghosts.Count; i++)
+        {
+            var marker = Instantiate(markerPrefab).GetComponent<MarkerScript>();
+            marker.Deactivate();
+            markerPoints.Add(marker);
+        }
     }
 
     void Update()
@@ -62,7 +74,7 @@ public class GhostRecorder : MonoBehaviour
             return;
         }
 
-        HandleGhostRecording(ghosts[buttonNumber]);
+        HandleGhostRecording(ghosts[buttonNumber], buttonNumber);
     }
 
     void OnButtonHeld(int buttonNumber)
@@ -72,9 +84,10 @@ public class GhostRecorder : MonoBehaviour
             return;
 
         ghostController.Input.ResetState();
+        markerPoints[buttonNumber].Deactivate();
     }
 
-    void HandleGhostRecording(GameObject ghost)
+    void HandleGhostRecording(GameObject ghost, int index)
     {
         var ghostController = ghost.GetComponent<MovementController>();
         if (ghostController == null)
@@ -95,6 +108,7 @@ public class GhostRecorder : MonoBehaviour
                 // save starting position and rotation
                 ghostInput.SetReplayStartingPosition(transform.position, new Vector2(playerRotationController.xRotation, playerRotationController.yRotation));
                 ghostInput.SetState(GhostInput.State.RECORDING);
+                markerPoints[index].Activate(transform.position);
                 Debug.Log("Recording");
                 break;
             // --- END RECORDING ---
