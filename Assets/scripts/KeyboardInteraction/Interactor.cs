@@ -9,34 +9,32 @@ public class Interactor : MonoBehaviour
     void Update()
     {
         Ray r = new Ray(InteractionSource.position, InteractionSource.forward);
-        if (Physics.Raycast(r, out RaycastHit hit, InteractionRange))
+        if (Physics.Raycast(r, out RaycastHit hit, InteractionRange) &&
+            hit.collider.gameObject.TryGetComponent(out IInteractable interactObj))
         {
-            if (hit.collider.gameObject.TryGetComponent(out IInteractable interactObj))
+            if (Input.GetKeyDown(KeyCode.E))
             {
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    interactObj.Interact();
-                }
+                interactObj.Interact();
+            }
 
-                if (!interactObj.HasShownUI)
-                {
-                    interactObj.ShowUI();
-                    lastInteractor = interactObj;
-                }
-            }
-            else if (lastInteractor != null)
+            if (!interactObj.HasShownUI)
             {
-                lastInteractor.HideUI();
-                lastInteractor = null; // Resetujemy
+                interactObj.ShowUI();
+                lastInteractor = interactObj;
             }
+        }
+        else if (lastInteractor != null)
+        {
+            lastInteractor.HideUI();
+            lastInteractor = null; // Resetujemy
         }
     }
 }
 
 interface IInteractable
 {
+    bool HasShownUI { get; set; }
     public void Interact();
     public void ShowUI();
     public void HideUI();
-    bool HasShownUI { get; set; }
 }

@@ -13,7 +13,7 @@ public class InteractionTest : MonoBehaviour, IInteractable
     public float floatDistanceY = 30f;
     private Vector3 originalPosition;
     public Camera mainCamera;
-    public GameObject objectWithInteractiveMaterial;
+    public BasicGlitchShaderController objectWithInteractiveMaterial;
 
     public void Start()
     {
@@ -31,7 +31,7 @@ public class InteractionTest : MonoBehaviour, IInteractable
     
     public void Interact()
     {
-        Debug.Log("Interaction");
+        Debug.Log("InteractionNotImplemented");
     }
 
     public void AnimateUI()
@@ -54,9 +54,7 @@ public class InteractionTest : MonoBehaviour, IInteractable
         UIHoverObject.SetActive(true);
         UIHoverText.text = TooltipText;
         HasShownUI = true;
-        // TODO To chcemy używać rzadko nie za każdym razem i z dopracowanym efektem
-        // if(objectWithInteractiveMaterial != null) objectWithInteractiveMaterial.GetComponent<Renderer>().material.SetFloat("_activate", 1f);
-        // StartCoroutine(EndAnimationAfterDelay(0.125f));
+        if(objectWithInteractiveMaterial != null) objectWithInteractiveMaterial.setGlitchActivationBool(true);
     }
 
     public void HideUI()
@@ -64,11 +62,7 @@ public class InteractionTest : MonoBehaviour, IInteractable
         Debug.Log("Hide UI");
         UIHoverObject.SetActive(false);
         HasShownUI = false;
+        if(objectWithInteractiveMaterial != null) objectWithInteractiveMaterial.setGlitchActivationBool(false);
     }
     
-    private System.Collections.IEnumerator EndAnimationAfterDelay(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        if(objectWithInteractiveMaterial != null) objectWithInteractiveMaterial.GetComponent<Renderer>().material.SetFloat("_activate", 0f);
-    }
 }
