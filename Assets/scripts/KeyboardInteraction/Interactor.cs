@@ -3,7 +3,7 @@ using UnityEngine;
 public class Interactor : MonoBehaviour
 {
     public Transform InteractionSource;
-    public float InteractionRange;
+    public float InteractionRange = 10;
     private IInteractable lastInteractor;
 
     void Update()
