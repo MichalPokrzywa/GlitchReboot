@@ -93,6 +93,7 @@ public class MovingPlatform : MonoBehaviour
                 GameObject triggerObject = new GameObject(triggerName);
                 triggerObject.transform.SetParent(transform);
                 triggerObject.transform.localPosition = Vector3.zero;
+                triggerObject.layer = LayerMask.NameToLayer("Ignore Raycast");
 
                 Collider collider = triggerObject.AddComponent<BoxCollider>(); // Domyślnie BoxCollider
                 collider.isTrigger = true;

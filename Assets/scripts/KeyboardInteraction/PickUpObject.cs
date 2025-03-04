@@ -3,10 +3,17 @@ using UnityEngine;
 public class PickUpObjectInteraction : InteractionBase
 {   
    // TODO testy, zrobić aby hold point automatycznie łapał hold point czy coś, 
-   private Transform holdPoint;
-   bool iAmPickedUp = false;
-   
-   public new void Interact()
+   public Transform holdPoint;
+   bool iAmPickedUp;
+   private Rigidbody rb;
+
+   private void Start()
+   {
+      rb = GetComponent<Rigidbody>();
+      iAmPickedUp = false;
+   }
+
+   public override void Interact()
    {
       if (iAmPickedUp)
       {
@@ -21,8 +28,7 @@ public class PickUpObjectInteraction : InteractionBase
    private void PickMeUp()
    {
       transform.SetParent(holdPoint); // Parent to the hold point
-      GetComponent<Rigidbody>().detectCollisions = false;
-      GetComponent<Rigidbody>().isKinematic = true; // Disable physics
+      rb.isKinematic = true; // Disable physics
       transform.position = holdPoint.position; // Move to hold point
       transform.rotation = holdPoint.rotation; // Align rotation with hold point
       iAmPickedUp = true;
@@ -31,8 +37,7 @@ public class PickUpObjectInteraction : InteractionBase
    private void DropMe()
    {
       transform.SetParent(null); // Unparent the object
-      GetComponent<Rigidbody>().isKinematic = false; // Enable physics
-      GetComponent<Rigidbody>().detectCollisions = true;
+      rb.isKinematic = false; // Enable physics
       iAmPickedUp = false; // Clear reference
    }
 }

@@ -12,10 +12,15 @@ public class InteractionBase : MonoBehaviour, IInteractable
     public Camera mainCamera;
     public bool HasShownUI { get; set; }
 
-    void Start()
+    void Reset()
     {
-        UIHoverObject = GameObject.Find("UI Hover Text");
-        UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
+        if (UIHoverObject == null)
+        {
+            UIHoverObject = GameObject.Find("UI Hover Text");
+            UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
+        }
+        if(mainCamera == null)
+            mainCamera = Camera.main;
     }
 
     void FixedUpdate()
@@ -26,7 +31,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact()
+    public virtual void Interact()
     {
         Debug.Log("InteractionNotImplemented");
     }
