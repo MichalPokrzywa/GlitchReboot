@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class MovementController : MonoBehaviour
 {
     InputInterface input = new StandardInput();
+
+    public InputInterface Input => input;
 
     [Header("Movement")]
     public float moveSpeed;
@@ -22,24 +22,28 @@ public class PlayerMovement : MonoBehaviour
     public float playerHeight;
     public LayerMask groundCheckLayer;
 
-    bool isGrounded;
-
-    public Transform orientation;
     float horizontalInput;
     float verticalInput;
-    private bool mounted;
+    bool isJumping = false;
+    bool isGrounded;
 
     Vector3 moveDirection;
-
     Rigidbody rigidBody;
 
-    static bool isJumping = false;
-    public static bool IsJumping => isJumping;
+    void Awake()
+    {
+        var ghostInput = gameObject.GetComponent<GhostInput>();
+        if (ghostInput)
+        {
+            input = ghostInput;
+        }
+    }
 
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
         rigidBody.freezeRotation = true;
+
         readyToJump = true;
     }
 
@@ -57,7 +61,6 @@ public class PlayerMovement : MonoBehaviour
         {
             rigidBody.linearDamping = 0f;
         }
-
         MyInput();
     }
 
@@ -72,10 +75,15 @@ public class PlayerMovement : MonoBehaviour
             rigidBody.linearVelocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
             print(rigidBody.linearVelocity.y);
         }
-        
     }
 
-    private void MyInput()
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawRay(transform.position, transform.forward * 2);
+    }
+
+    void MyInput()
     {
         horizontalInput = input.GetHorizontalInput();
         verticalInput = input.GetVerticalInput();
@@ -89,9 +97,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void MovePlayer()
+    void MovePlayer()
     {
-        moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
+        moveDirection = transform.forward * verticalInput + transform.right * horizontalInput;
 
         if (isGrounded)
         {
@@ -103,52 +111,34 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void SpeedControl()
+    void SpeedControl()
     {
         // Only control horizontal velocity
         Vector3 flatVel = new Vector3(rigidBody.linearVelocity.x, 0f, rigidBody.linearVelocity.z);
 
+        // Limit speed
         if (flatVel.magnitude > moveSpeedLimit)
         {
             Vector3 limitedVel = flatVel.normalized * moveSpeedLimit;
             rigidBody.linearVelocity = new Vector3(limitedVel.x, rigidBody.linearVelocity.y, limitedVel.z);
         }
-
         rigidBody.linearVelocity = new Vector3(rigidBody.linearVelocity.x, rigidBody.linearVelocity.y, rigidBody.linearVelocity.z);
     }
 
-    private void Jump()
+    void Jump()
     {
-        // Zachowujemy poziom� pr�dko��, resetujemy tylko pionow� (aby skok by� bardziej kontrolowany)
         Vector3 currentVelocity = rigidBody.linearVelocity;
         currentVelocity.y = 0f;
         rigidBody.linearVelocity = currentVelocity;
 
-        // Tworzymy kierunek skoku jako kombinacj� wierzcho�kowej (up) oraz poziomej (forward)
-        // Mo�esz dostosowa� wag�, np. 0.2f oznacza, �e 20% si�y skoku idzie w kierunku przodu
         Vector3 jumpDirection = (Vector3.up).normalized;
 
-        // Dodajemy impuls skoku
+        // Add jump force
         rigidBody.AddForce(jumpDirection * jumpForce, ForceMode.Impulse);
     }
 
-    private void ResetJump()
+    void ResetJump()
     {
         readyToJump = true;
-    }
-
-    public void MountPlayer(Transform mountPosition)
-    {
-        transform.position = mountPosition.position;
-        mounted = true;
-    }
-
-    public void DeMount()
-    {
-        if (mounted)
-        {
-            Jump();
-            mounted = false;
-        }
     }
 }

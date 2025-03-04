@@ -12,19 +12,17 @@ public class CameraControl : MonoBehaviour
     float xRotation;
     float yRotation;
 
-    // Start is called before the first frame update
     void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         // if (!UIControl.isPaused)
         // {
-            //mouse input
+        //mouse input
         float mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
         float mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
 

@@ -12,8 +12,11 @@ GameObject:
   - component: {fileID: 7301117912561027509}
   - component: {fileID: 8778279149834979904}
   - component: {fileID: 5962894352526992286}
-  - component: {fileID: 5692602951992643667}
-  m_Layer: 0
+  - component: {fileID: 3135256546863949462}
+  - component: {fileID: 529632171894704360}
+  - component: {fileID: 3693019858664654772}
+  - component: {fileID: 3057765196393341540}
+  m_Layer: 9
   m_Name: Ghost
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -101,9 +104,9 @@ CapsuleCollider:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 768
   m_LayerOverridePriority: 0
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -111,7 +114,34 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5692602951992643667
+--- !u!54 &3135256546863949462
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215792763406150243}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 1
+--- !u!114 &529632171894704360
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -120,11 +150,45 @@ MonoBehaviour:
   m_GameObject: {fileID: 215792763406150243}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e1edd6fceecdac547ab374ec11bbfcd4, type: 3}
+  m_Script: {fileID: 11500000, guid: 66b80bb613c2e82498ff4b0a6d730aa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghost: {fileID: 11400000, guid: 081628d1e035ca64c8c1bad334624c33, type: 2}
-  timeValue: 0
-  index1: 0
-  index2: 0
-  start: 0
+  moveSpeed: 70
+  moveSpeedLimit: 10
+  groundDrag: 5.5
+  jumpForce: 20
+  jumpCooldown: 0.5
+  airMultiplier: 1
+  jumpKey: 32
+  playerHeight: 2
+  groundCheckLayer:
+    serializedVersion: 2
+    m_Bits: 2147483648
+--- !u!114 &3693019858664654772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215792763406150243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 275a63bfa34a70241bd09e88f853deb6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &3057765196393341540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 215792763406150243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52ee797756214bb47aa3ecb0ea7c0398, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sensX: 100
+  sensY: 100
+  xRotation: 0
+  yRotation: 0
