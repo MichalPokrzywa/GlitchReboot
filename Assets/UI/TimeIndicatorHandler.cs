@@ -27,10 +27,10 @@ public class TimeIndicatorHandler : MonoBehaviour
     private void Update()
     {
         // Test: Naciśnij Spację, aby rozpocząć odliczanie
-        // if (Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     StartCountdown(3.0f);
-        // }
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            StartCountdown(3.0f);
+        }
 
         if (isCounting)
         {
