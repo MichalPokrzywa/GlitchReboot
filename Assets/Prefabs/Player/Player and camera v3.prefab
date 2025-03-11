@@ -10,10 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1169570061295094445}
   - component: {fileID: 8620224278246742451}
+  - component: {fileID: 361571353594977984}
   - component: {fileID: 4906106897603037496}
   - component: {fileID: 2303660254698895355}
-  - component: {fileID: 1727923058423829674}
-  - component: {fileID: 4530445399796016281}
   - component: {fileID: 4078483730592421541}
   - component: {fileID: 7327881499870494053}
   - component: {fileID: 5654680752191250363}
@@ -65,6 +64,21 @@ MonoBehaviour:
   groundCheckLayer:
     serializedVersion: 2
     m_Bits: 2147483648
+--- !u!114 &361571353594977984
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 620051772209329272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c9a098a110ebc4bb7e45033e0ce95d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghosts: []
+  indicatorHandlers: []
+  markerPrefab: {fileID: 6048650964956699326, guid: 9831c987c399de84ab8129c41f94c7b9, type: 3}
 --- !u!114 &4906106897603037496
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,34 +122,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &1727923058423829674
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 620051772209329272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 18e1814990b84404e8f6837103e7a5aa, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  holdPoint: {fileID: 1803546936100012463}
---- !u!114 &4530445399796016281
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 620051772209329272}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 71c9a098a110ebc4bb7e45033e0ce95d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghosts: []
-  indicatorHandlers: []
-  markerPoints: []
 --- !u!136 &4078483730592421541
 CapsuleCollider:
   m_ObjectHideFlags: 0

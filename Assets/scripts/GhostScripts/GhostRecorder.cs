@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -89,16 +88,16 @@ public class GhostRecorder : MonoBehaviour
 
     void HandleGhostRecording(GameObject ghost, int index)
     {
-        var ghostController = ghost.GetComponent<MovementController>();
+        var ghostController = ghost.GetComponent<FirstPersonController>();
         if (ghostController == null)
             return;
 
-        var ghostInput = ghostController.Input as GhostInput;
+        var ghostInput = ghostController.ImplementedInput as GhostInput;
         if (ghostInput == null)
             return;
 
-        var playerRotationController = gameObject.GetComponent<RotationController>();
-        if (playerRotationController == null)
+        var playerController = gameObject.GetComponent<FirstPersonController>();
+        if (playerController == null)
             return;
 
         switch (ghostInput.GhostMovementState)
@@ -106,7 +105,7 @@ public class GhostRecorder : MonoBehaviour
             // --- START RECORDING ---
             case GhostInput.State.NONE:
                 // save starting position and rotation
-                ghostInput.SetReplayStartingPosition(transform.position, new Vector2(playerRotationController.xRotation, playerRotationController.yRotation));
+                ghostInput.SetReplayStartingPosition(transform.position, new Vector2(playerController.pitch, playerController.yaw));
                 ghostInput.SetState(GhostInput.State.RECORDING);
                 markerPoints[index].Activate(transform.position);
                 Debug.Log("Recording");
