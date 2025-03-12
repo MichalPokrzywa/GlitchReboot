@@ -21,8 +21,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         public float horizontal;
         public float vertical;
         public bool isJumping;
-        public bool crouchingStart;
-        public bool crouchingEnd;
+        public bool isCrouching;
         public bool isSprinting;
         public float mouseX;
         public float mouseY;
@@ -107,8 +106,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         float horizontalInput = input.GetHorizontalInput();
         float verticalInput = input.GetVerticalInput();
         bool isJumping = input.IsJumping();
-        bool crouchingStart = input.CrouchingStart();
-        bool crouchingEnd = input.CrouchingEnd();
+        bool isCrouching = input.IsCrouching();
         bool isSprinting = input.IsSprinting();
         float mouseX = input.GetMouseX();
         float mouseY = input.GetMouseY();
@@ -117,8 +115,7 @@ public class GhostInput : MonoBehaviour, InputInterface
             && recordedMovement.Last().horizontal == horizontalInput
             && recordedMovement.Last().vertical == verticalInput
             && recordedMovement.Last().isJumping == isJumping
-            && recordedMovement.Last().crouchingStart == crouchingStart
-            && recordedMovement.Last().crouchingEnd == crouchingEnd
+            && recordedMovement.Last().isCrouching == isCrouching
             && recordedMovement.Last().isSprinting == isSprinting
             && recordedMovement.Last().mouseX == mouseX
             && recordedMovement.Last().mouseY == mouseY;
@@ -134,8 +131,7 @@ public class GhostInput : MonoBehaviour, InputInterface
             horizontal = horizontalInput,
             vertical = verticalInput,
             isJumping = isJumping,
-            crouchingStart = crouchingStart,
-            crouchingEnd = crouchingEnd,
+            isCrouching = isCrouching,
             isSprinting = isSprinting,
             mouseX = mouseX,
             mouseY = mouseY
@@ -185,21 +181,11 @@ public class GhostInput : MonoBehaviour, InputInterface
         return false;
     }
 
-    public bool CrouchingStart()
+    public bool IsCrouching()
     {
         if (state == State.REPLAY)
         {
-            return currentMovementState.crouchingStart;
-        }
-
-        return false;
-    }
-
-    public bool CrouchingEnd()
-    {
-        if (state == State.REPLAY)
-        {
-            return !currentMovementState.crouchingEnd;
+            return currentMovementState.isCrouching;
         }
 
         return false;

@@ -115,8 +115,8 @@ public class FirstPersonController : MonoBehaviour
     public float speedReduction = .5f;
 
     // Internal Variables
-    private bool holdToCrouch = false;
     private bool isCrouched = false;
+    private bool holdToCrouch = true;
     private Vector3 originalScale;
 
     #endregion
@@ -209,6 +209,11 @@ public class FirstPersonController : MonoBehaviour
 
     float camRotation;
 
+    private void Update()
+    {
+        HandleZoom();
+    }
+
     private void FixedUpdate()
     {
         #region Camera
@@ -233,51 +238,6 @@ public class FirstPersonController : MonoBehaviour
 
             transform.localEulerAngles = new Vector3(0, yaw, 0);
             playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
-        }
-
-        #endregion
-
-        #region Camera Zoom
-
-        if (enableZoom)
-        {
-            // Changes isZoomed when key is pressed
-            // Behavior for toogle zoom
-            if(Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
-            {
-                if (!isZoomed)
-                {
-                    isZoomed = true;
-                }
-                else
-                {
-                    isZoomed = false;
-                }
-            }
-
-            // Changes isZoomed when key is pressed
-            // Behavior for hold to zoom
-            if(holdToZoom && !isSprinting)
-            {
-                if(Input.GetKeyDown(zoomKey))
-                {
-                    isZoomed = true;
-                }
-                else if(Input.GetKeyUp(zoomKey))
-                {
-                    isZoomed = false;
-                }
-            }
-
-            // Lerps camera.fieldOfView to allow for a smooth transistion
-            if(isZoomed)
-            {
-                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, zoomFOV, zoomStepTime * Time.deltaTime);
-            }
-            else if(!isZoomed && !isSprinting)
-            {
-                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, fov, zoomStepTime * Time.deltaTime);
-            }
         }
 
         #endregion
@@ -347,21 +307,7 @@ public class FirstPersonController : MonoBehaviour
 
         if (enableCrouch)
         {
-            if(ImplementedInput.CrouchingStart() && !holdToCrouch)
-            {
-                Crouch();
-            }
-
-            if(ImplementedInput.CrouchingStart() && holdToCrouch)
-            {
-                isCrouched = false;
-                Crouch();
-            }
-            else if(ImplementedInput.CrouchingEnd() && holdToCrouch)
-            {
-                isCrouched = true;
-                Crouch();
-            }
+            HandleCrouch();
         }
 
         #endregion
@@ -409,8 +355,10 @@ public class FirstPersonController : MonoBehaviour
                 {
                     isSprinting = true;
 
+                    // If player is sprinting, stop crouching
                     if (isCrouched)
                     {
+                        isCrouched = false;
                         Crouch();
                     }
 
@@ -460,6 +408,56 @@ public class FirstPersonController : MonoBehaviour
         playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
     }
 
+    void HandleZoom()
+    {
+        if (enableZoom)
+        {
+            // Changes isZoomed when key is pressed
+            // Behavior for toogle zoom
+            if (Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
+            {
+                isZoomed = !isZoomed;
+            }
+
+            // Changes isZoomed when key is pressed
+            // Behavior for hold to zoom
+            if (holdToZoom && !isSprinting)
+            {
+                isZoomed = Input.GetKey(zoomKey);
+            }
+
+            // Lerps camera.fieldOfView to allow for a smooth transistion
+            float targetFOV = isZoomed ? zoomFOV : fov;
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, zoomStepTime * Time.deltaTime);
+        }
+    }
+
+    void HandleCrouch()
+    {
+        // If player is not grounded, stop crouching
+        if (!isGrounded)
+        {
+            if (isCrouched)
+            {
+                isCrouched = false;
+                Crouch();
+            }
+            return;
+        }
+
+        bool shouldCrouch = ImplementedInput.IsCrouching();
+
+        // Behavior for hold to crouch
+        if (holdToCrouch)
+        {
+            if (shouldCrouch != isCrouched)
+            {
+                isCrouched = !isCrouched;
+                Crouch();
+            }
+        }
+    }
+
     // Sets isGrounded based on a raycast sent straigth down from the player object
     private void CheckGround()
     {
@@ -488,31 +486,28 @@ public class FirstPersonController : MonoBehaviour
         }
 
         // When crouched and using toggle system, will uncrouch for a jump
-        if(isCrouched && !holdToCrouch)
+        if(isCrouched)
         {
+            isCrouched = false;
             Crouch();
         }
     }
 
     private void Crouch()
     {
-        // Stands player up to full height
-        // Brings walkSpeed back up to original speed
-        if(isCrouched)
-        {
-            transform.localScale = new Vector3(originalScale.x, originalScale.y, originalScale.z);
-            walkSpeed = defaultWalkSpeed;
-
-            isCrouched = false;
-        }
-        // Crouches player down to set height
+        // Crouches player down to crouchHeight
         // Reduces walkSpeed
-        else
+        if (isCrouched)
         {
             transform.localScale = new Vector3(originalScale.x, crouchHeight, originalScale.z);
             walkSpeed = defaultWalkSpeed * speedReduction;
-
-            isCrouched = true;
+        }
+        // Stands player up to full height
+        // Brings walkSpeed back up to original speed
+        else
+        {
+            transform.localScale = new Vector3(originalScale.x, originalScale.y, originalScale.z);
+            walkSpeed = defaultWalkSpeed;
         }
     }
 
