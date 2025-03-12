@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cfe013702ae47743a8980a139afb4b7, type: 3}
+  m_Name: MovementSettings
+  m_EditorClassIdentifier: 
+  fov: 0
+  mouseSensitivity: 0
+  maxLookAngle: 0
+  enableZoom: 0
+  holdToZoom: 0
+  zoomFOV: 0
+  stepTimeZoom: 0
+  zoomKey: 324
+  enableWalk: 0
+  walkSpeed: 0
+  enableSprint: 0
+  unlimitedSprint: 1
+  sprintSpeed: 0
+  sprintDuration: 0
+  sprintCooldown: 0
+  sprintFov: 0
+  stepTimeSprint: 0
+  sprintKey: 304
+  enableJump: 0
+  jumpPower: 0
+  jumpKey: 32
+  enableCrouch: 0
+  crouchHeight: 0
+  crouchSpeedReduction: 0
+  crouchKey: 306
+  enableHeadBob: 0
+  speed: 0
+  bobAmount: {x: 0, y: 0, z: 0}
