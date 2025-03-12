@@ -143,12 +143,30 @@ public class GhostInput : MonoBehaviour, InputInterface
     public void SetState(State state)
     {
         this.state = state;
-        startTime = Time.time;
-
         if (state == State.RECORDING)
         {
             recordedMovement.Clear();
         }
+
+        // Add a final movement command to ensure the ghost stops properly
+        if (state == State.RECORDED)
+        {
+            MovementState movement = new MovementState
+            {
+                timeStamp = Time.time - startTime,
+                horizontal = 0,
+                vertical = 0,
+                isJumping = false,
+                isCrouching = false,
+                isSprinting = false,
+                mouseX = 0,
+                mouseY = 0
+            };
+
+            recordedMovement.Add(movement);
+        }
+
+        startTime = Time.time;
     }
 
     public float GetHorizontalInput()
