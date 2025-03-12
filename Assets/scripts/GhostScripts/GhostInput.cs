@@ -21,7 +21,8 @@ public class GhostInput : MonoBehaviour, InputInterface
         public float horizontal;
         public float vertical;
         public bool isJumping;
-        public bool isCrouching;
+        public bool crouchingStart;
+        public bool crouchingEnd;
         public bool isSprinting;
         public float mouseX;
         public float mouseY;
@@ -106,8 +107,9 @@ public class GhostInput : MonoBehaviour, InputInterface
         float horizontalInput = input.GetHorizontalInput();
         float verticalInput = input.GetVerticalInput();
         bool isJumping = input.IsJumping();
-        bool isCrouching = input.IsCrouching();
-        bool isSpriting = input.IsSprinting();
+        bool crouchingStart = input.CrouchingStart();
+        bool crouchingEnd = input.CrouchingEnd();
+        bool isSprinting = input.IsSprinting();
         float mouseX = input.GetMouseX();
         float mouseY = input.GetMouseY();
 
@@ -115,8 +117,9 @@ public class GhostInput : MonoBehaviour, InputInterface
             && recordedMovement.Last().horizontal == horizontalInput
             && recordedMovement.Last().vertical == verticalInput
             && recordedMovement.Last().isJumping == isJumping
-            && recordedMovement.Last().isCrouching == isCrouching
-            && recordedMovement.Last().isSprinting == isSpriting
+            && recordedMovement.Last().crouchingStart == crouchingStart
+            && recordedMovement.Last().crouchingEnd == crouchingEnd
+            && recordedMovement.Last().isSprinting == isSprinting
             && recordedMovement.Last().mouseX == mouseX
             && recordedMovement.Last().mouseY == mouseY;
 
@@ -131,8 +134,9 @@ public class GhostInput : MonoBehaviour, InputInterface
             horizontal = horizontalInput,
             vertical = verticalInput,
             isJumping = isJumping,
-            isCrouching = isCrouching,
-            isSprinting = isSpriting,
+            crouchingStart = crouchingStart,
+            crouchingEnd = crouchingEnd,
+            isSprinting = isSprinting,
             mouseX = mouseX,
             mouseY = mouseY
         };
@@ -181,11 +185,21 @@ public class GhostInput : MonoBehaviour, InputInterface
         return false;
     }
 
-    public bool IsCrouching()
+    public bool CrouchingStart()
     {
         if (state == State.REPLAY)
         {
-            return currentMovementState.isCrouching;
+            return currentMovementState.crouchingStart;
+        }
+
+        return false;
+    }
+
+    public bool CrouchingEnd()
+    {
+        if (state == State.REPLAY)
+        {
+            return !currentMovementState.crouchingEnd;
         }
 
         return false;

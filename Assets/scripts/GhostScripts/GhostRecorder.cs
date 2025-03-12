@@ -78,11 +78,11 @@ public class GhostRecorder : MonoBehaviour
 
     void OnButtonHeld(int buttonNumber)
     {
-        var ghostController = ghosts[buttonNumber].GetComponent<MovementController>();
+        var ghostController = ghosts[buttonNumber].GetComponent<FirstPersonController>();
         if (ghostController == null)
             return;
 
-        ghostController.Input.ResetState();
+        ghostController.ImplementedInput.ResetState();
         markerPoints[buttonNumber].Deactivate();
     }
 

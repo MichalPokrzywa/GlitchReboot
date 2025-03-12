@@ -17,9 +17,14 @@ public class StandardInput : InputInterface
         return Input.GetKey(KeyCode.Space);
     }
 
-    public bool IsCrouching()
+    public bool CrouchingStart()
     {
-        return Input.GetKey(KeyCode.LeftControl);
+        return Input.GetKeyDown(KeyCode.LeftControl);
+    }
+
+    public bool CrouchingEnd()
+    {
+        return Input.GetKeyUp(KeyCode.LeftControl);
     }
 
     public bool IsSprinting()

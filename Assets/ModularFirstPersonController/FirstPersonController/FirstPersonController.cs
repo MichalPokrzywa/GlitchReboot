@@ -64,6 +64,7 @@ public class FirstPersonController : MonoBehaviour
 
     // Internal Variables
     private bool isWalking = false;
+    private float defaultWalkSpeed;
 
     #region Sprint
 
@@ -109,12 +110,12 @@ public class FirstPersonController : MonoBehaviour
     #region Crouch
 
     public bool enableCrouch = true;
-    public bool holdToCrouch = true;
     public KeyCode crouchKey = KeyCode.LeftControl;
     public float crouchHeight = .75f;
     public float speedReduction = .5f;
 
     // Internal Variables
+    private bool holdToCrouch = false;
     private bool isCrouched = false;
     private Vector3 originalScale;
 
@@ -148,6 +149,7 @@ public class FirstPersonController : MonoBehaviour
         playerCamera.fieldOfView = fov;
         originalScale = transform.localScale;
         jointOriginalPos = joint.localPosition;
+        defaultWalkSpeed = walkSpeed;
 
         if (!unlimitedSprint)
         {
@@ -345,17 +347,17 @@ public class FirstPersonController : MonoBehaviour
 
         if (enableCrouch)
         {
-            if(ImplementedInput.IsCrouching() && !holdToCrouch)
+            if(ImplementedInput.CrouchingStart() && !holdToCrouch)
             {
                 Crouch();
             }
 
-            if(ImplementedInput.IsCrouching() && holdToCrouch)
+            if(ImplementedInput.CrouchingStart() && holdToCrouch)
             {
                 isCrouched = false;
                 Crouch();
             }
-            else if(ImplementedInput.IsCrouching() && holdToCrouch)
+            else if(ImplementedInput.CrouchingEnd() && holdToCrouch)
             {
                 isCrouched = true;
                 Crouch();
@@ -499,7 +501,7 @@ public class FirstPersonController : MonoBehaviour
         if(isCrouched)
         {
             transform.localScale = new Vector3(originalScale.x, originalScale.y, originalScale.z);
-            walkSpeed /= speedReduction;
+            walkSpeed = defaultWalkSpeed;
 
             isCrouched = false;
         }
@@ -508,7 +510,7 @@ public class FirstPersonController : MonoBehaviour
         else
         {
             transform.localScale = new Vector3(originalScale.x, crouchHeight, originalScale.z);
-            walkSpeed *= speedReduction;
+            walkSpeed = defaultWalkSpeed * speedReduction;
 
             isCrouched = true;
         }
@@ -718,7 +720,7 @@ public class FirstPersonController : MonoBehaviour
         fpc.enableCrouch = EditorGUILayout.ToggleLeft(new GUIContent("Enable Crouch", "Determines if the player is allowed to crouch."), fpc.enableCrouch);
 
         GUI.enabled = fpc.enableCrouch;
-        fpc.holdToCrouch = EditorGUILayout.ToggleLeft(new GUIContent("Hold To Crouch", "Requires the player to hold the crouch key instead if pressing to crouch and uncrouch."), fpc.holdToCrouch);
+        //fpc.holdToCrouch = EditorGUILayout.ToggleLeft(new GUIContent("Hold To Crouch", "Requires the player to hold the crouch key instead if pressing to crouch and uncrouch."), fpc.holdToCrouch);
         fpc.crouchKey = (KeyCode)EditorGUILayout.EnumPopup(new GUIContent("Crouch Key", "Determines what key is used to crouch."), fpc.crouchKey);
         fpc.crouchHeight = EditorGUILayout.Slider(new GUIContent("Crouch Height", "Determines the y scale of the player object when crouched."), fpc.crouchHeight, .1f, 1);
         fpc.speedReduction = EditorGUILayout.Slider(new GUIContent("Speed Reduction", "Determines the percent 'Walk Speed' is reduced by. 1 being no reduction, and .5 being half."), fpc.speedReduction, .1f, 1);
