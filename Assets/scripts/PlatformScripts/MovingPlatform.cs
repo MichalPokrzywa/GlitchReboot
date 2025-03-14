@@ -14,11 +14,6 @@ public class MovingPlatform : ParentOnTrigger
     private float timer;
     private bool objectInMotion = false;
 
-    private void Reset()
-    {
-        gameObject.layer = LayerMask.NameToLayer("Ground");
-    }
-    
     void Start()
     {
         // Pobranie wszystkich waypointów z obiektu rodzica
@@ -56,8 +51,5 @@ public class MovingPlatform : ParentOnTrigger
             }
         }
     }
-    
-    
-    
     
 }
