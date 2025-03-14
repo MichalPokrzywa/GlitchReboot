@@ -13,7 +13,11 @@ public class MovingPlatform : ParentOnTrigger
     private int index = 0; // Indeks aktualnego waypointa
     private float timer;
     private bool objectInMotion = false;
-    
+
+    private void Reset()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Ground");
+    }
     
     void Start()
     {
