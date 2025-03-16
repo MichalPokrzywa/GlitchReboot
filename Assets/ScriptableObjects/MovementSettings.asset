@@ -12,31 +12,40 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8cfe013702ae47743a8980a139afb4b7, type: 3}
   m_Name: MovementSettings
   m_EditorClassIdentifier: 
-  fov: 0
-  mouseSensitivity: 0
-  maxLookAngle: 0
-  enableZoom: 0
-  holdToZoom: 0
-  zoomFOV: 0
-  stepTimeZoom: 0
-  zoomKey: 324
-  enableWalk: 0
-  walkSpeed: 0
-  enableSprint: 0
-  unlimitedSprint: 1
-  sprintSpeed: 0
-  sprintDuration: 0
-  sprintCooldown: 0
-  sprintFov: 0
-  stepTimeSprint: 0
-  sprintKey: 304
-  enableJump: 0
-  jumpPower: 0
-  jumpKey: 32
-  enableCrouch: 0
-  crouchHeight: 0
-  crouchSpeedReduction: 0
-  crouchKey: 306
-  enableHeadBob: 0
-  speed: 0
-  bobAmount: {x: 0, y: 0, z: 0}
+  _cameraVariables:
+    FOV: 80
+    enableCameraRotation: 1
+    invertCameraRotation: 0
+    mouseSensitivity: 2
+    maxLookAngle: 50
+    enableZoom: 1
+    holdToZoom: 1
+    zoomFOV: 30
+    stepTimeZoom: 10
+    zoomKey: 324
+  _movementVariables:
+    enableWalk: 1
+    walkSpeed: 5
+    enableFriction: 1
+    frictionResistance: 5
+    enableSprint: 1
+    unlimitedSprint: 1
+    sprintSpeed: 7
+    sprintDuration: 5
+    sprintCooldown: 0.5
+    sprintFOV: 90
+    stepTimeSprint: 8
+    sprintKey: 304
+  _jumpVariables:
+    enableJump: 1
+    jumpPower: 5
+    jumpKey: 32
+  _crouchVariables:
+    enableCrouch: 1
+    crouchHeight: 0.75
+    crouchSpeedReduction: 0.5
+    crouchKey: 306
+  _headBobVariables:
+    enableHeadBob: 1
+    speed: 10
+    bobAmount: {x: 0, y: 0.1, z: 0}
