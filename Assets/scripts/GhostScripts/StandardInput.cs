@@ -17,6 +17,16 @@ public class StandardInput : InputInterface
         return Input.GetKey(KeyCode.Space);
     }
 
+    public bool IsCrouching()
+    {
+        return Input.GetKey(KeyCode.LeftControl);
+    }
+
+    public bool IsSprinting()
+    {
+        return Input.GetKey(KeyCode.LeftShift);
+    }
+
     public float GetMouseX()
     {
         return Input.GetAxisRaw("Mouse X");

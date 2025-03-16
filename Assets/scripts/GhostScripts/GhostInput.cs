@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.InputSystem.XR;
 
 public class GhostInput : MonoBehaviour, InputInterface
 {
@@ -10,7 +11,7 @@ public class GhostInput : MonoBehaviour, InputInterface
     State state = State.NONE;
     Vector3 startingPosition;
     Rigidbody rb;
-    RotationController rotationController;
+    FirstPersonController controller;
 
     public State GhostMovementState => state;
 
@@ -20,6 +21,8 @@ public class GhostInput : MonoBehaviour, InputInterface
         public float horizontal;
         public float vertical;
         public bool isJumping;
+        public bool isCrouching;
+        public bool isSprinting;
         public float mouseX;
         public float mouseY;
     }
@@ -46,8 +49,8 @@ public class GhostInput : MonoBehaviour, InputInterface
     void Awake()
     {
         startingPosition = transform.position;
-        rotationController = GetComponent<RotationController>();
         rb = GetComponent<Rigidbody>();
+        controller = GetComponent<FirstPersonController>();
     }
 
     void FixedUpdate()
@@ -70,8 +73,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         rb.rotation = Quaternion.identity;
 
         transform.position = replayStartingTransform.position;
-        rotationController.xRotation = replayStartingTransform.rotation.x;
-        rotationController.yRotation = replayStartingTransform.rotation.y;
+        controller.Rotate(replayStartingTransform.rotation.x, replayStartingTransform.rotation.y);
     }
 
     public void SetReplayStartingPosition(Vector3 position, Vector2 rotation)
@@ -104,12 +106,21 @@ public class GhostInput : MonoBehaviour, InputInterface
         float horizontalInput = input.GetHorizontalInput();
         float verticalInput = input.GetVerticalInput();
         bool isJumping = input.IsJumping();
+        bool isCrouching = input.IsCrouching();
+        bool isSprinting = input.IsSprinting();
         float mouseX = input.GetMouseX();
         float mouseY = input.GetMouseY();
 
-        if (recordedMovement.Count > 0 && recordedMovement.Last().horizontal == horizontalInput
-            && recordedMovement.Last().vertical == verticalInput && recordedMovement.Last().isJumping == isJumping
-            && recordedMovement.Last().mouseX == mouseX && recordedMovement.Last().mouseY == mouseY)
+        bool isCurrentInputRepeated = recordedMovement.Count > 0
+            && recordedMovement.Last().horizontal == horizontalInput
+            && recordedMovement.Last().vertical == verticalInput
+            && recordedMovement.Last().isJumping == isJumping
+            && recordedMovement.Last().isCrouching == isCrouching
+            && recordedMovement.Last().isSprinting == isSprinting
+            && recordedMovement.Last().mouseX == mouseX
+            && recordedMovement.Last().mouseY == mouseY;
+
+        if (isCurrentInputRepeated)
         {
             return;
         }
@@ -120,6 +131,8 @@ public class GhostInput : MonoBehaviour, InputInterface
             horizontal = horizontalInput,
             vertical = verticalInput,
             isJumping = isJumping,
+            isCrouching = isCrouching,
+            isSprinting = isSprinting,
             mouseX = mouseX,
             mouseY = mouseY
         };
@@ -130,12 +143,30 @@ public class GhostInput : MonoBehaviour, InputInterface
     public void SetState(State state)
     {
         this.state = state;
-        startTime = Time.time;
-
         if (state == State.RECORDING)
         {
             recordedMovement.Clear();
         }
+
+        // Add a final movement command to ensure the ghost stops properly
+        if (state == State.RECORDED)
+        {
+            MovementState movement = new MovementState
+            {
+                timeStamp = Time.time - startTime,
+                horizontal = 0,
+                vertical = 0,
+                isJumping = false,
+                isCrouching = false,
+                isSprinting = false,
+                mouseX = 0,
+                mouseY = 0
+            };
+
+            recordedMovement.Add(movement);
+        }
+
+        startTime = Time.time;
     }
 
     public float GetHorizontalInput()
@@ -163,6 +194,26 @@ public class GhostInput : MonoBehaviour, InputInterface
         if (state == State.REPLAY)
         {
             return currentMovementState.isJumping;
+        }
+
+        return false;
+    }
+
+    public bool IsCrouching()
+    {
+        if (state == State.REPLAY)
+        {
+            return currentMovementState.isCrouching;
+        }
+
+        return false;
+    }
+
+    public bool IsSprinting()
+    {
+        if (state == State.REPLAY)
+        {
+            return currentMovementState.isSprinting;
         }
 
         return false;
