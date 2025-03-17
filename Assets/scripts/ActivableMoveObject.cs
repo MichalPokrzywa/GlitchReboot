@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class ActivableMoveObject : MonoBehaviour, IActivatable
@@ -7,15 +8,26 @@ public class ActivableMoveObject : MonoBehaviour, IActivatable
     public float moveSpeed = 2f;
 
     private Vector3 targetPosition;
+    private Vector3 targetPosition2;
     private bool shouldMove = false;
+    private Vector3 basicPosition;
+
+    private void Start()
+    {
+        basicPosition = transform.position;
+    }
 
     public void Activate()
     {
-        if (!shouldMove)
-        {
-            targetPosition = transform.position + moveDirection.normalized * moveDistance;
-            shouldMove = true;
-        }
+        targetPosition2 = transform.position + moveDirection.normalized * moveDistance;
+        targetPosition = targetPosition2;
+        shouldMove = true;
+    }
+
+    public void Deactivate()
+    {
+        targetPosition = basicPosition;
+        shouldMove = true;
     }
 
     void Update()

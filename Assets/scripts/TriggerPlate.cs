@@ -2,30 +2,30 @@ using UnityEngine;
 public interface IActivatable
 {
     void Activate();
+    void Deactivate(){}
 }
 public class TriggerPlate : MonoBehaviour
 {
     public GameObject objectToActivate; // Obiekt do aktywacji
     private GameObject triggerBox; // Dziecko jako trigger
+    private IActivatable activatable;
 
-    void Reset()
+    void Start()
     {
-        // Tworzenie dziecka jako triggera
-        triggerBox = new GameObject("TriggerBox");
-        triggerBox.transform.SetParent(transform);
-        triggerBox.transform.localPosition = Vector3.zero;
-        triggerBox.transform.localScale = Vector3.one;
-        
-        Collider collider = triggerBox.AddComponent<BoxCollider>();
-        collider.isTrigger = true;
+        activatable = objectToActivate?.GetComponent<IActivatable>();
+        if (activatable == null)
+        {
+            Debug.LogError("Activable component not found!");
+        }
     }
 
     void OnTriggerEnter(Collider other)
     {
-        IActivatable activatable = objectToActivate?.GetComponent<IActivatable>();
-        if (activatable != null)
-        {
-            activatable.Activate();
-        }
+        activatable.Activate();
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        activatable.Deactivate();
     }
 }
