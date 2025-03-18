@@ -24,20 +24,39 @@ public class PickUpObjectInteraction : InteractionBase
          PickMeUp();
       }
    }
-   
+
+   private void FixedUpdate()
+   {
+       if (iAmPickedUp)
+       {
+           if (Vector3.Distance(holdPoint.position, transform.position) > 4f)
+           {
+               transform.position = holdPoint.position;
+           }
+           //TODO: Do koloru do wyboru
+           rb.linearVelocity = (holdPoint.position - transform.position) * (1 / Time.fixedDeltaTime);
+           //rb.AddForce((holdPoint.position - transform.position) * (10/ Time.fixedDeltaTime));
+           rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, holdPoint.rotation, 4));
+       }
+   }
+
    private void PickMeUp()
    {
-      transform.SetParent(holdPoint); // Parent to the hold point
-      rb.isKinematic = true; // Disable physics
-      transform.position = holdPoint.position; // Move to hold point
-      transform.rotation = holdPoint.rotation; // Align rotation with hold point
-      iAmPickedUp = true;
+
+       rb.useGravity = false;
+       rb.linearDamping = 10;
+       rb.constraints = RigidbodyConstraints.FreezeRotation;
+     
+       /*transform.parent = holdPoint;*/
+       iAmPickedUp = true;
    }
    
    private void DropMe()
    {
-      transform.SetParent(null); // Unparent the object
-      rb.isKinematic = false; // Enable physics
-      iAmPickedUp = false; // Clear reference
+        rb.useGravity = true;
+        rb.linearDamping = 1;
+        rb.constraints = RigidbodyConstraints.None;
+        /*transform.parent = null;*/
+        iAmPickedUp = false; 
    }
 }
