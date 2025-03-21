@@ -119,6 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &6552995 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8881066311131129228, guid: 2acfbc85fc9ad344e94d31a7c70ab336, type: 3}
+  m_PrefabInstance: {fileID: 2124902537}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &16139619
 GameObject:
   m_ObjectHideFlags: 0
@@ -889,6 +894,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 386226973884872072, guid: 2acfbc85fc9ad344e94d31a7c70ab336, type: 3}
   m_PrefabInstance: {fileID: 2124902537}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &634501470 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5148849211768727239, guid: 2acfbc85fc9ad344e94d31a7c70ab336, type: 3}
+  m_PrefabInstance: {fileID: 2124902537}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6552995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &704667617
 GameObject:
   m_ObjectHideFlags: 0
@@ -1394,11 +1410,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b5dacad8fad16b4a891dc87ed6f6d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIHoverObject: {fileID: 0}
-  UIHoverText: {fileID: 0}
+  UIHoverObject: {fileID: 6552995}
+  UIHoverText: {fileID: 634501470}
   floatDistanceX: 100
   floatDistanceY: 100
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 2124970409}
   holdPoint: {fileID: 1451286692}
 --- !u!1001 &1017815386
 PrefabInstance:
@@ -2881,11 +2897,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b5dacad8fad16b4a891dc87ed6f6d24, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  UIHoverObject: {fileID: 0}
-  UIHoverText: {fileID: 0}
+  UIHoverObject: {fileID: 6552995}
+  UIHoverText: {fileID: 634501470}
   floatDistanceX: 100
   floatDistanceY: 100
-  mainCamera: {fileID: 0}
+  mainCamera: {fileID: 2124970409}
   holdPoint: {fileID: 1451286692}
 --- !u!1001 &2124902537
 PrefabInstance:
@@ -2984,6 +3000,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2acfbc85fc9ad344e94d31a7c70ab336, type: 3}
+--- !u!20 &2124970409 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7528634406910017431, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
+  m_PrefabInstance: {fileID: 2030633734978919574}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2030633734978919574
 PrefabInstance:
   m_ObjectHideFlags: 0
