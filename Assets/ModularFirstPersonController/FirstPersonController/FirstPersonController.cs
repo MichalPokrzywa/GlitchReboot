@@ -432,8 +432,14 @@ public class FirstPersonController : MonoBehaviour
         Vector3 velocityChange = (targetVelocity - velocity);
         if (targetVelocity.magnitude < 0.1f)
         {
-            velocityChange.x = -velocity.x * Time.fixedDeltaTime * frictionResistance;
-            velocityChange.z = -velocity.z * Time.fixedDeltaTime * frictionResistance;
+            Vector3 friction = -velocity * frictionResistance * Time.fixedDeltaTime;
+
+            friction.x = Mathf.Clamp(friction.x, -Mathf.Abs(velocity.x), Mathf.Abs(velocity.x));
+            friction.z = Mathf.Clamp(friction.z, -Mathf.Abs(velocity.z), Mathf.Abs(velocity.z));
+
+            velocityChange.x = friction.x;
+            velocityChange.z = friction.z;
+
         }
         return velocityChange;
     }

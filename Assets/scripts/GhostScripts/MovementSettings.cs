@@ -25,6 +25,7 @@ public class MovementSettings : ScriptableObject
         public bool enableWalk = true;
         public float walkSpeed = 5f;
         public bool enableFriction = true;
+        [Range(0f, 20f)]
         public float frictionResistance = 5f;
         public bool enableSprint = true;
         public bool unlimitedSprint = true;
