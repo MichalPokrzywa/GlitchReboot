@@ -5,7 +5,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
 {
     public GameObject UIHoverObject;
     public TextMeshProUGUI UIHoverText;
-    private string TooltipText = "[E] Użyj";
+    protected string TooltipText = "[E] Użyj";
     public float floatDistanceX = 100f; // Maksymalna wysokość pływania
     public float floatDistanceY = 100f;
     private Vector3 originalPosition;
