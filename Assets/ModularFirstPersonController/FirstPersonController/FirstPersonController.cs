@@ -16,6 +16,7 @@ using UnityEngine.UI;
 
 public class FirstPersonController : MonoBehaviour
 {
+    #region Variables
     InputInterface _input = new StandardInput();
     public InputInterface ImplementedInput => _input;
 
@@ -64,6 +65,8 @@ public class FirstPersonController : MonoBehaviour
     #region Movement Variables
 
     bool playerCanMove = true;
+    bool enableFriction = true;
+    float frictionResistance = 5f;
     float walkSpeed = 5f;
     float maxVelocityChange = 10f;
 
@@ -139,6 +142,7 @@ public class FirstPersonController : MonoBehaviour
     float timer = 0;
 
     #endregion
+    #endregion
 
     private void Awake()
     {
@@ -188,186 +192,26 @@ public class FirstPersonController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        #region Camera
-
-        // Control camera movement
         if(cameraCanMove)
-        {
-            _yaw = transform.localEulerAngles.y + ImplementedInput.GetMouseX() * mouseSensitivity;
-
-            if (!invertCamera)
-            {
-                _pitch -= mouseSensitivity * ImplementedInput.GetMouseY();
-            }
-            else
-            {
-                // Inverted Y
-                _pitch += mouseSensitivity * ImplementedInput.GetMouseY();
-            }
-
-            // Clamp pitch between lookAngle
-            _pitch = Mathf.Clamp(_pitch, -maxLookAngle, maxLookAngle);
-
-            transform.localEulerAngles = new Vector3(0, _yaw, 0);
-            if (playerCamera != null)
-                playerCamera.transform.localEulerAngles = new Vector3(_pitch, 0, 0);
-        }
-
-        #endregion
-
-        #region Sprint
+            HandleCameraMovement();
 
         if(enableSprint)
-        {
-            if(isSprinting)
-            {
-                isZoomed = false;
-                if (playerCamera != null)
-                    playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.deltaTime);
-
-                // Drain sprint remaining while sprinting
-                if(!unlimitedSprint)
-                {
-                    sprintRemaining -= 1 * Time.deltaTime;
-                    if (sprintRemaining <= 0)
-                    {
-                        isSprinting = false;
-                        isSprintCooldown = true;
-                    }
-                }
-            }
-            else
-            {
-                // Regain sprint while not sprinting
-                sprintRemaining = Mathf.Clamp(sprintRemaining += 1 * Time.deltaTime, 0, sprintDuration);
-            }
-
-            // Handles sprint cooldown
-            // When sprint remaining == 0 stops sprint ability until hitting cooldown
-            if(isSprintCooldown)
-            {
-                sprintCooldown -= 1 * Time.deltaTime;
-                if (sprintCooldown <= 0)
-                {
-                    isSprintCooldown = false;
-                }
-            }
-            else
-            {
-                sprintCooldown = sprintCooldownReset;
-            }
-
-            // Handles sprintBar
-            if(useSprintBar && !unlimitedSprint)
-            {
-                float sprintRemainingPercent = sprintRemaining / sprintDuration;
-                sprintBar.transform.localScale = new Vector3(sprintRemainingPercent, 1f, 1f);
-            }
-        }
-
-        #endregion
-
-        #region Jump
+            HandleSprinting();
 
         // Gets input and calls jump method
         if(enableJump && ImplementedInput.IsJumping() && isGrounded)
-        {
             Jump();
-        }
-
-        #endregion
-
-        #region Crouch
 
         if (enableCrouch)
-        {
             HandleCrouch();
-        }
-
-        #endregion
 
         CheckGround();
 
         if(enableHeadBob)
-        {
             HeadBob();
-        }
-
-        #region Movement
 
         if (playerCanMove)
-        {
-            // Calculate how fast we should be moving
-            Vector3 targetVelocity = new Vector3(ImplementedInput.GetHorizontalInput(), 0, ImplementedInput.GetVerticalInput());
-
-            // Checks if player is walking and isGrounded
-            // Will allow head bob
-            if (targetVelocity.x != 0 || targetVelocity.z != 0 && isGrounded)
-            {
-                isWalking = true;
-            }
-            else
-            {
-                isWalking = false;
-            }
-
-            // All movement calculations shile sprint is active
-            if (enableSprint && ImplementedInput.IsSprinting() && sprintRemaining > 0f && !isSprintCooldown)
-            {
-                targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
-
-                // Apply a force that attempts to reach our target velocity
-                Vector3 velocity = rb.linearVelocity;
-                Vector3 velocityChange = (targetVelocity - velocity);
-                velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-                velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-                velocityChange.y = 0;
-
-                // Player is only moving when valocity change != 0
-                // Makes sure fov change only happens during movement
-                if (velocityChange.x != 0 || velocityChange.z != 0)
-                {
-                    isSprinting = true;
-
-                    // If player is sprinting, stop crouching
-                    if (isCrouched)
-                    {
-                        isCrouched = false;
-                        Crouch();
-                    }
-
-                    if (sprintBarCG != null && hideBarWhenFull && !unlimitedSprint)
-                    {
-                        sprintBarCG.alpha += 5 * Time.deltaTime;
-                    }
-                }
-
-                rb.AddForce(velocityChange, ForceMode.VelocityChange);
-            }
-            // All movement calculations while walking
-            else
-            {
-                isSprinting = false;
-
-                if (sprintBarCG != null && hideBarWhenFull && sprintRemaining == sprintDuration)
-                {
-                    sprintBarCG.alpha -= 3 * Time.deltaTime;
-                }
-
-                targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
-
-                // Apply a force that attempts to reach our target velocity
-                Vector3 velocity = rb.linearVelocity;
-                Vector3 velocityChange = (targetVelocity - velocity);
-                velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-                velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-                velocityChange.y = 0;
-
-                rb.AddForce(velocityChange, ForceMode.VelocityChange);
-            }
-        }
-
-        #endregion
+            HandleMovement();
     }
 
     void OnDrawGizmos()
@@ -381,6 +225,28 @@ public class FirstPersonController : MonoBehaviour
         transform.localEulerAngles = new Vector3(0, yaw, 0);
         if (playerCamera != null)
             playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+    }
+
+    void HandleCameraMovement()
+    {
+        _yaw = transform.localEulerAngles.y + ImplementedInput.GetMouseX() * mouseSensitivity;
+
+        if (!invertCamera)
+        {
+            _pitch -= mouseSensitivity * ImplementedInput.GetMouseY();
+        }
+        else
+        {
+            // Inverted Y
+            _pitch += mouseSensitivity * ImplementedInput.GetMouseY();
+        }
+
+        // Clamp pitch between lookAngle
+        _pitch = Mathf.Clamp(_pitch, -maxLookAngle, maxLookAngle);
+
+        transform.localEulerAngles = new Vector3(0, _yaw, 0);
+        if (playerCamera != null)
+            playerCamera.transform.localEulerAngles = new Vector3(_pitch, 0, 0);
     }
 
     void HandleCrosshair()
@@ -429,6 +295,153 @@ public class FirstPersonController : MonoBehaviour
             sprintBarBG.gameObject.SetActive(false);
             sprintBar.gameObject.SetActive(false);
         }
+    }
+
+    void HandleSprinting()
+    {
+        if (isSprinting)
+        {
+            isZoomed = false;
+            if (playerCamera != null)
+                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.deltaTime);
+
+            // Drain sprint remaining while sprinting
+            if (!unlimitedSprint)
+            {
+                sprintRemaining -= 1 * Time.deltaTime;
+                if (sprintRemaining <= 0)
+                {
+                    isSprinting = false;
+                    isSprintCooldown = true;
+                }
+            }
+        }
+        else
+        {
+            // Regain sprint while not sprinting
+            sprintRemaining = Mathf.Clamp(sprintRemaining += 1 * Time.deltaTime, 0, sprintDuration);
+        }
+
+        // Handles sprint cooldown
+        // When sprint remaining == 0 stops sprint ability until hitting cooldown
+        if (isSprintCooldown)
+        {
+            sprintCooldown -= 1 * Time.deltaTime;
+            if (sprintCooldown <= 0)
+            {
+                isSprintCooldown = false;
+            }
+        }
+        else
+        {
+            sprintCooldown = sprintCooldownReset;
+        }
+
+        // Handles sprintBar
+        if (useSprintBar && !unlimitedSprint)
+        {
+            float sprintRemainingPercent = sprintRemaining / sprintDuration;
+            sprintBar.transform.localScale = new Vector3(sprintRemainingPercent, 1f, 1f);
+        }
+    }
+
+    void HandleMovement()
+    {
+        // Calculate how fast we should be moving
+        Vector3 targetVelocity = new Vector3(ImplementedInput.GetHorizontalInput(), 0, ImplementedInput.GetVerticalInput());
+
+        // Checks if player is walking and isGrounded
+        // Will allow head bob
+        if (targetVelocity.x != 0 || targetVelocity.z != 0 && isGrounded)
+        {
+            isWalking = true;
+        }
+        else
+        {
+            isWalking = false;
+        }
+
+        // All movement calculations while sprint is active
+        if (enableSprint && ImplementedInput.IsSprinting() && sprintRemaining > 0f && !isSprintCooldown)
+        {
+            targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
+
+            // Apply a force that attempts to reach our target velocity
+            Vector3 velocity = rb.linearVelocity;
+            Vector3 velocityChange = (targetVelocity - velocity);
+
+            // Continuous slow down when not moving
+            if (enableFriction)
+                velocityChange = HandleFriction(targetVelocity, velocity);
+
+            velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+            velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+            velocityChange.y = 0;
+
+            // Player is only moving when valocity change != 0
+            // Makes sure fov change only happens during movement
+            if (velocityChange.x != 0 || velocityChange.z != 0)
+            {
+                isSprinting = true;
+
+                // If player is sprinting, stop crouching
+                if (isCrouched)
+                {
+                    isCrouched = false;
+                    Crouch();
+                }
+
+                if (sprintBarCG != null && hideBarWhenFull && !unlimitedSprint)
+                {
+                    sprintBarCG.alpha += 5 * Time.deltaTime;
+                }
+            }
+
+            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        }
+        // All movement calculations while walking
+        else
+        {
+            isSprinting = false;
+
+            if (sprintBarCG != null && hideBarWhenFull && sprintRemaining == sprintDuration)
+            {
+                sprintBarCG.alpha -= 3 * Time.deltaTime;
+            }
+
+            targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
+
+            // Apply a force that attempts to reach our target velocity
+            Vector3 velocity = rb.linearVelocity;
+            Vector3 velocityChange = (targetVelocity - velocity);
+
+            // Continuous slow down when not moving
+            if (enableFriction)
+                velocityChange = HandleFriction(targetVelocity, velocity);
+
+            velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+            velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+            velocityChange.y = 0;
+
+            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+        }
+    }
+
+    Vector3 HandleFriction(Vector3 targetVelocity, Vector3 velocity)
+    {
+        Vector3 velocityChange = (targetVelocity - velocity);
+        if (targetVelocity.magnitude < 0.1f)
+        {
+            Vector3 friction = -velocity * frictionResistance * Time.fixedDeltaTime;
+
+            friction.x = Mathf.Clamp(friction.x, -Mathf.Abs(velocity.x), Mathf.Abs(velocity.x));
+            friction.z = Mathf.Clamp(friction.z, -Mathf.Abs(velocity.z), Mathf.Abs(velocity.z));
+
+            velocityChange.x = friction.x;
+            velocityChange.z = friction.z;
+
+        }
+        return velocityChange;
     }
 
     void HandleZoom()
@@ -501,19 +514,17 @@ public class FirstPersonController : MonoBehaviour
 
     private void Jump()
     {
-        // Adds force to the player rigidbody to jump
-        if (isGrounded)
-        {
-            rb.AddForce(0f, jumpPower, 0f, ForceMode.Impulse);
-            isGrounded = false;
-        }
-
         // When crouched, uncrouch for a jump
-        if(isCrouched)
+        if (isCrouched)
         {
             isCrouched = false;
             Crouch();
         }
+
+        if (rb.linearVelocity.y <= 0)
+            rb.AddForce(0f, jumpPower, 0f, ForceMode.Impulse);
+
+        isGrounded = false;
     }
 
     private void Crouch()
@@ -587,6 +598,8 @@ public class FirstPersonController : MonoBehaviour
 
         #region Movement Settings
         playerCanMove = movementSettings.movementVariables.enableWalk;
+        enableFriction = movementSettings.movementVariables.enableFriction;
+        frictionResistance = movementSettings.movementVariables.frictionResistance;
         walkSpeed = movementSettings.movementVariables.walkSpeed;
         enableSprint = movementSettings.movementVariables.enableSprint;
         unlimitedSprint = movementSettings.movementVariables.unlimitedSprint;
