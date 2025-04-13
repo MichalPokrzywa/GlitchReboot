@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2522820247213193502}
-  - component: {fileID: 3108809761114410483}
   - component: {fileID: 8731066546344474636}
   m_Layer: 0
   m_Name: Terminal
@@ -38,23 +37,6 @@ Transform:
   - {fileID: 3554205777367975090}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3108809761114410483
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685512951273789960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6948c7c735aa9174c853018f3d897dab, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  luaScriptFileName: level_0
-  result: 0
-  canvas: {fileID: 8228694075074644896}
-  allLevelPlatforms:
-  - {fileID: 0}
 --- !u!135 &8731066546344474636
 SphereCollider:
   m_ObjectHideFlags: 0
