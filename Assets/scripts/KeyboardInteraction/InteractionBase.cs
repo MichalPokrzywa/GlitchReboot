@@ -12,15 +12,14 @@ public class InteractionBase : MonoBehaviour, IInteractable
     public Camera mainCamera;
     public bool HasShownUI { get; set; }
 
+    void Awake()
+    {
+        Init();
+    }
+
     void Reset()
     {
-        if (UIHoverObject == null)
-        {
-            UIHoverObject = GameObject.Find("UI Hover Text");
-            UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
-        }
-        if(mainCamera == null)
-            mainCamera = Camera.main;
+        Init();
     }
 
     void FixedUpdate()
@@ -29,6 +28,21 @@ public class InteractionBase : MonoBehaviour, IInteractable
         {
             AnimateUI();
         }
+    }
+
+    void Init()
+    {
+        if (UIHoverObject == null)
+        {
+            UIHoverObject = GameObject.Find("UI Hover Text");
+        }
+        if (UIHoverText == null)
+        {
+            UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
+        }
+
+        if (mainCamera == null)
+            mainCamera = Camera.main;
     }
 
     public virtual void Interact()
@@ -50,7 +64,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
         UIHoverObject.SetActive(false);
         HasShownUI = false;
     }
-    
+
     public void AnimateUI()
     {
         // Przekształcenie pozycji obiektu na ekran
@@ -59,9 +73,9 @@ public class InteractionBase : MonoBehaviour, IInteractable
         // Zyskujemy szerokość tekstu (można także użyć preferredWidth z TextMeshProUGUI)
         float textWidth = UIHoverText.preferredWidth;
         Vector3 targetPosition = Vector3.zero;
-        
+
         targetPosition = screenPos + new Vector3((floatDistanceX  * -1), floatDistanceY, 0);
-       
+
         UIHoverText.rectTransform.position = Vector3.Lerp(UIHoverText.rectTransform.position, targetPosition, Time.deltaTime * 5f);
     }
 }
