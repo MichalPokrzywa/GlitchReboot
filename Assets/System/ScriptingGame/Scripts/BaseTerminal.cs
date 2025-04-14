@@ -7,6 +7,8 @@ using UnityEngine;
 public abstract class BaseTerminal : MonoBehaviour
 {
     [SerializeField] private TextAsset luaScriptFile;
+    [SerializeField] private TerminalAssignedObjects assignedObjects;
+    [SerializeField] private List<LuaApi> apiClasses;
 
     protected string luaScript;
     protected Script script;
@@ -21,6 +23,8 @@ public abstract class BaseTerminal : MonoBehaviour
         {
             SetupBaseVariables();
             PrepareTerminal();
+            LoadLuaApi();
+            AssignObjects();
             OnScriptReady();
         }
     }
@@ -31,6 +35,29 @@ public abstract class BaseTerminal : MonoBehaviour
     {
         canvas.SetCodeText(luaScript);
         canvas.SetVariableText(script.Globals, allLevelPlatforms);
+    }
+
+    protected void AssignObjects()
+    {
+        foreach (ObjectOnLevel onLevel in assignedObjects.objectsOnLevels)
+        {
+            if (onLevel.gameObject == null)
+            {
+                Debug.LogError($"[Terminal] GameObject '{onLevel.name}' is null!");
+            }
+            else
+            {
+                script.Globals[onLevel.name] = UserData.Create(onLevel.gameObject);
+                Debug.Log($"[Terminal] Injected '{onLevel.name}' into Lua.");
+            }
+        }
+    }
+    protected void LoadLuaApi()
+    {
+        foreach (LuaApi api in apiClasses)
+        {
+            api.RegisterTo(script);
+        }
     }
 
     protected virtual bool LoadScriptContents()
@@ -83,5 +110,8 @@ public abstract class BaseTerminal : MonoBehaviour
         OnVariableChanged();
     }
 
-    protected virtual void OnVariableChanged() { }
+    protected virtual void OnVariableChanged()
+    {
+        //TODO: Zrobiæ, kiedy jakaœ wartoœæ jest null, wtedy ustawiæ do stanu pierwotnego
+    }
 }

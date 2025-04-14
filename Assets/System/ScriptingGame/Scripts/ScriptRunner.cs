@@ -9,6 +9,7 @@ public class ScriptRunner : Singleton<ScriptRunner>
     {
         Script.DefaultOptions.DebugPrint = s => Debug.Log(s);
         script.Globals["print"] = (Action<DynValue>)CustomPrint;
+        UserData.RegisterType<GameObject>();
     }
 
     void Start()

@@ -7,6 +7,14 @@ public class ValueTerminal : BaseTerminal
 
     protected override void OnVariableChanged()
     {
+        foreach (VariablePlatform platform in allLevelPlatforms)
+        {
+            if (script.Globals[platform.variableName] == DynValue.Nil)
+            {
+                return;
+            }
+
+        }
         script.DoString(luaScript);
         DynValue func = script.Globals.Get(functionName);
         var result = script.Call(func);
