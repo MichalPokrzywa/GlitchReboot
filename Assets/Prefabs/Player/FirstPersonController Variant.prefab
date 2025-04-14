@@ -44,6 +44,10 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850019384737, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 13400000, guid: a208e32592cddeb4f842cebdfe69e7db, type: 2}
+    - target: {fileID: 4459864850019384737, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_ExcludeLayers.m_Bits
       value: 512
       objectReference: {fileID: 0}
@@ -141,6 +145,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       insertIndex: -1
       addedObject: {fileID: 454374496872750106}
+    - targetCorrespondingSourceObject: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8481876428476470989}
     - targetCorrespondingSourceObject: {fileID: 4459864851310106424, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5504461517302277271}
@@ -164,6 +171,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   InteractionSource: {fileID: 7528634406910017424}
   InteractionRange: 10
+--- !u!114 &8481876428476470989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7528634406053254403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 71c9a098a110ebc4bb7e45033e0ce95d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghosts: []
+  indicatorHandlers: []
+  markerPrefab: {fileID: 6048650964956699326, guid: 9831c987c399de84ab8129c41f94c7b9, type: 3}
 --- !u!4 &7528634406910017424 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4459864851310106429, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
