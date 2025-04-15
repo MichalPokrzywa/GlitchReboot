@@ -1,6 +1,8 @@
 using MoonSharp.Interpreter;
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -54,9 +56,24 @@ public abstract class BaseTerminal : MonoBehaviour
     }
     protected void LoadLuaApi()
     {
-        foreach (LuaApi api in apiClasses)
+        //foreach (LuaApi api in apiClasses)
+        //{
+        //    api.RegisterTo(script);
+        //}
+
+        var luaApiType = typeof(LuaApi);
+        var types = AppDomain.CurrentDomain
+            .GetAssemblies()
+            .SelectMany(a => a.GetTypes())
+            .Where(t => luaApiType.IsAssignableFrom(t) && t != luaApiType && !t.IsAbstract)
+            .ToList();
+
+        foreach (var type in types)
         {
-            api.RegisterTo(script);
+            Debug.Log(type.FullName);
+            UserData.RegisterType(type);
+            // script.Globals[type.Name] = UseData.Create(type);
+            script.Globals[type.Name] = type;
         }
     }
 
