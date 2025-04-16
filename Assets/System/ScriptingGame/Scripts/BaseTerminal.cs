@@ -10,14 +10,13 @@ public abstract class BaseTerminal : MonoBehaviour
 {
     [SerializeField] private TextAsset luaScriptFile;
     [SerializeField] private TerminalAssignedObjects assignedObjects;
-    [SerializeField] private List<LuaApi> apiClasses;
+    [SerializeField] private TerminalCanvas canvas;
+    [SerializeField] protected List<VariablePlatform> allLevelPlatforms = new();
 
     protected string luaScript;
     protected Script script;
     protected string functionName;
 
-    public TerminalCanvas canvas;
-    public List<VariablePlatform> allLevelPlatforms = new();
 
     protected virtual void Start()
     {
@@ -25,7 +24,6 @@ public abstract class BaseTerminal : MonoBehaviour
         {
             SetupBaseVariables();
             PrepareTerminal();
-            LoadLuaApi();
             AssignObjects();
             OnScriptReady();
         }
@@ -54,28 +52,7 @@ public abstract class BaseTerminal : MonoBehaviour
             }
         }
     }
-    protected void LoadLuaApi()
-    {
-        //foreach (LuaApi api in apiClasses)
-        //{
-        //    api.RegisterTo(script);
-        //}
 
-        var luaApiType = typeof(LuaApi);
-        var types = AppDomain.CurrentDomain
-            .GetAssemblies()
-            .SelectMany(a => a.GetTypes())
-            .Where(t => luaApiType.IsAssignableFrom(t) && t != luaApiType && !t.IsAbstract)
-            .ToList();
-
-        foreach (var type in types)
-        {
-            Debug.Log(type.FullName);
-            UserData.RegisterType(type);
-            // script.Globals[type.Name] = UseData.Create(type);
-            script.Globals[type.Name] = type;
-        }
-    }
 
     protected virtual bool LoadScriptContents()
     {
@@ -130,5 +107,13 @@ public abstract class BaseTerminal : MonoBehaviour
     protected virtual void OnVariableChanged()
     {
         //TODO: Zrobiæ, kiedy jakaœ wartoœæ jest null, wtedy ustawiæ do stanu pierwotnego
+        foreach (VariablePlatform platform in allLevelPlatforms)
+        {
+            if (script.Globals[platform.variableName] == null)
+            {
+                return;
+            }
+
+        }
     }
 }
