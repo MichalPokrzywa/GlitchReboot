@@ -67,4 +67,9 @@ public class VariableChangePlatform : MonoBehaviour
     {
         dice = null;
     }
+
+    public void MoveObjectToPosition(GameObject o)
+    {
+        throw new System.NotImplementedException();
+    }
 }
