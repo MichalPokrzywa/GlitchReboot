@@ -40,7 +40,7 @@ public class PickUpObjectInteraction : InteractionBase
        }
    }
 
-   private void PickMeUp()
+   public void PickMeUp()
    {
 
        rb.useGravity = false;
@@ -51,7 +51,7 @@ public class PickUpObjectInteraction : InteractionBase
        iAmPickedUp = true;
    }
    
-   private void DropMe()
+   public void DropMe()
    {
         rb.useGravity = true;
         rb.linearDamping = 1;

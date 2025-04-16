@@ -10,15 +10,6 @@ public class VariableDice : MonoBehaviour
 
     [SerializeField] private int baseNumberValue = 1; // Initial value for Number
     [SerializeField] private bool baseBooleanValue = false; // Initial value for Boolean
-    /*  STARE AUDIO
-     * private AudioSource audioSource;
-     * 
-     * start:
-     * audioSource = GetComponent<AudioSource>();
-     * 
-     * collisionEnter:
-     * audioSource.Play();
-    */
 
     private IVariableTypeHandler handler;
 
@@ -71,6 +62,8 @@ public class VariableDice : MonoBehaviour
             VariablePlatform platform = other.gameObject.GetComponent<VariablePlatform>();
             if (platform != null)
             {
+                GetComponent<PickUpObjectInteraction>().DropMe();
+                platform.MoveObjectToPosition(this.gameObject);
                 // Get the dice's current value and send it to the platform
                 object currentValue = handler?.GetValue();
                 platform.ReceiveValue(currentValue);
@@ -81,6 +74,8 @@ public class VariableDice : MonoBehaviour
             VariableChangePlatform platform = other.gameObject.GetComponent<VariableChangePlatform>();
             if (platform != null)
             {
+                GetComponent<PickUpObjectInteraction>().DropMe();
+                platform.MoveObjectToPosition(this.gameObject);
                 // Get the dice and send it to the platform
                 platform.ReceiveValue(this);
 
@@ -109,7 +104,6 @@ public class VariableDice : MonoBehaviour
             {
                 // Get the dice and send it to the platform
                 platform.EndModification();
-
             }
         }
     }
