@@ -1,17 +1,18 @@
 using MoonSharp.Interpreter;
 using UnityEngine;
 
-public class ValueTerminal : BaseTerminal
+public class LoopTerminal : BaseTerminal
 {
-    public DynValue Result { get; private set; }
-
+    private DynValue loopFunction;
     protected override void OnVariableChanged()
     {
+        
         foreach (VariablePlatform platform in allLevelPlatforms)
         {
             if (script.Globals[platform.variableName] == null)
             {
                 ResetAssignedElements();
+                loopFunction = null;
                 ShowCodeIsWorking(false);
                 return;
             }
@@ -20,19 +21,12 @@ public class ValueTerminal : BaseTerminal
         script.DoString(luaScript);
         try
         {
-            ShowCodeIsWorking(true);
             DynValue func = script.Globals.Get(functionName);
             if (func.Type == DataType.Function)
             {
-                var result = script.Call(func);
-                if (!Equals(result, DynValue.Void))
-                {
-                    Debug.Log("Lua returned: " + result);
-                }
-                else
-                {
-                    Debug.Log("Lua did code: ");
-                }
+                loopFunction = func;
+                ShowCodeIsWorking(true);
+                Debug.Log("Lua returned: " + func);
             }
             else
             {
@@ -45,4 +39,13 @@ public class ValueTerminal : BaseTerminal
             Debug.LogError("Lua runtime error: " + ex.DecoratedMessage);
         };
     }
+
+    void Update()
+    {
+        if (loopFunction != null)
+        {
+            script.Call(loopFunction, DynValue.NewNumber(Time.deltaTime));
+        }
+    }
+
 }

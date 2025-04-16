@@ -10,7 +10,11 @@ public class ScriptRunner : Singleton<ScriptRunner>
     {
         Script.DefaultOptions.DebugPrint = s => Debug.Log(s);
         script.Globals["print"] = (Action<DynValue>)CustomPrint;
+        script.Globals["Time"] = UserData.CreateStatic(typeof(Time));
         UserData.RegisterType<GameObject>();
+        UserData.RegisterType<Vector3>();
+        UserData.RegisterType<Quaternion>();
+        UserData.RegisterType<Time>();
         LoadLuaApi();
     }
 

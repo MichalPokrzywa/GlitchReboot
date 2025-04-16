@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2522820247213193502}
-  - component: {fileID: 8731066546344474636}
+  - component: {fileID: 306701547279719332}
+  - component: {fileID: 8249341823645166126}
   m_Layer: 0
-  m_Name: Terminal
+  m_Name: TerminalVoid
   m_TagString: Terminal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -37,27 +38,38 @@ Transform:
   - {fileID: 3554205777367975090}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &8731066546344474636
-SphereCollider:
+--- !u!114 &306701547279719332
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1685512951273789960}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 0.8
-  m_Center: {x: -0.3, y: 0, z: 0}
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 256ae17301750234791c6bb8321fa90b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  luaScriptFile: {fileID: 1449258621073462137, guid: a523c09e3a658d24f86cd035c3715f97, type: 3}
+  assignedObjects: {fileID: 8249341823645166126}
+  canvas: {fileID: 8228694075074644896}
+  allLevelPlatforms:
+  - {fileID: 0}
+--- !u!114 &8249341823645166126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685512951273789960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a8a997f992ecc6418f3be0b2632d233, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectsOnLevels:
+  - name: GreyDoors
+    gameObject: {fileID: 0}
 --- !u!1 &1761649804536375018
 GameObject:
   m_ObjectHideFlags: 0

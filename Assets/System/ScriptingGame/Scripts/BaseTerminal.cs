@@ -123,6 +123,6 @@ public abstract class BaseTerminal : MonoBehaviour
     }
     protected virtual void OnVariableChanged()
     {
-        //TODO: Zrobiæ, kiedy jakaœ wartoœæ jest null, wtedy ustawiæ do stanu pierwotnego
+
     }
 }

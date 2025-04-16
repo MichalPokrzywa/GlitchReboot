@@ -39,7 +39,8 @@ public class VoidTerminal : BaseTerminal
         }
         catch (ScriptRuntimeException ex)
         {
+            ShowCodeIsWorking(false);
             Debug.LogError("Lua runtime error: " + ex.DecoratedMessage);
-        } ;
+        }
     }
 }
