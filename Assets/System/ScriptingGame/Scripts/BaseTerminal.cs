@@ -104,16 +104,13 @@ public abstract class BaseTerminal : MonoBehaviour
         OnVariableChanged();
     }
 
+    protected void ResetAssignedElements()
+    {
+        assignedObjects.ResetObjects();
+    }
+
     protected virtual void OnVariableChanged()
     {
         //TODO: Zrobiæ, kiedy jakaœ wartoœæ jest null, wtedy ustawiæ do stanu pierwotnego
-        foreach (VariablePlatform platform in allLevelPlatforms)
-        {
-            if (script.Globals[platform.variableName] == null)
-            {
-                return;
-            }
-
-        }
     }
 }

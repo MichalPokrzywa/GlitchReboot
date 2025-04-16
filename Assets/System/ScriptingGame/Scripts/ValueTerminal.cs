@@ -11,6 +11,7 @@ public class ValueTerminal : BaseTerminal
         {
             if (script.Globals[platform.variableName] == null)
             {
+                ResetAssignedElements();
                 return;
             }
 

@@ -9,6 +9,7 @@ public class VoidTerminal : BaseTerminal
         {
             if (script.Globals[platform.variableName] == null)
             {
+                ResetAssignedElements();
                 return;
             }
 

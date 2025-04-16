@@ -1453,8 +1453,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   luaScriptFile: {fileID: 1449258621073462137, guid: a523c09e3a658d24f86cd035c3715f97, type: 3}
   assignedObjects: {fileID: 710635741}
-  apiClasses:
-  - {fileID: 11400000, guid: 8e6c3ef881ac58143929a4fa50a89393, type: 2}
   canvas: {fileID: 710635736}
   allLevelPlatforms:
   - {fileID: 24378893}
@@ -1736,7 +1734,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   luaScriptFile: {fileID: 1449258621073462137, guid: 09394e96092f24b4c88cc34431dcdf53, type: 3}
   assignedObjects: {fileID: 0}
-  apiClasses: []
   canvas: {fileID: 786362816}
   allLevelPlatforms:
   - {fileID: 24378893}
@@ -3849,6 +3846,7 @@ GameObject:
   - component: {fileID: 1904051086}
   - component: {fileID: 1904051085}
   - component: {fileID: 1904051084}
+  - component: {fileID: 1904051088}
   m_Layer: 31
   m_Name: Cube (5)
   m_TagString: Untagged
@@ -3939,12 +3937,35 @@ Transform:
   m_GameObject: {fileID: 1904051083}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16, y: 2.32, z: -5.46}
+  m_LocalPosition: {x: 10.78, y: 2.32, z: -6.463}
   m_LocalScale: {x: 2, y: 4, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1904051088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1904051083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36c581c7871612840ba00d0e083b7163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToReset:
+  - actionType: 0
+    initialPosition: {x: 15.93, y: 2.32, z: -3.679}
+    initialRotation: {x: 0, y: 0, z: 0, w: 1}
+    activeOnReset: 1
+    originalMaterial: {fileID: 0}
+    targetComponent: {fileID: 0}
+    methodName: 
+    onResetEvent:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!1001 &1994810171
 PrefabInstance:
   m_ObjectHideFlags: 0
