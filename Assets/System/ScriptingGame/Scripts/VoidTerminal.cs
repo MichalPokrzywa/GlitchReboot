@@ -10,6 +10,7 @@ public class VoidTerminal : BaseTerminal
             if (script.Globals[platform.variableName] == null)
             {
                 ResetAssignedElements();
+                ShowCodeIsWorking(false);
                 return;
             }
 
@@ -17,6 +18,7 @@ public class VoidTerminal : BaseTerminal
         script.DoString(luaScript);
         try
         {
+            ShowCodeIsWorking(true);
             DynValue func = script.Globals.Get(functionName);
             if (func.Type == DataType.Function)
             {

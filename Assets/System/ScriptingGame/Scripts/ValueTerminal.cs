@@ -12,6 +12,7 @@ public class ValueTerminal : BaseTerminal
             if (script.Globals[platform.variableName] == null)
             {
                 ResetAssignedElements();
+                ShowCodeIsWorking(false);
                 return;
             }
 
@@ -19,6 +20,7 @@ public class ValueTerminal : BaseTerminal
         script.DoString(luaScript);
         try
         {
+            ShowCodeIsWorking(true);
             DynValue func = script.Globals.Get(functionName);
             if (func.Type == DataType.Function)
             {

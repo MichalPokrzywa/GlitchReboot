@@ -29,7 +29,16 @@ public abstract class BaseTerminal : MonoBehaviour
         }
     }
 
-    protected virtual void OnScriptReady() { }
+    protected virtual void OnScriptReady()
+    {
+        if (allLevelPlatforms.Any(platform => script.Globals[platform.variableName] == null))
+        {
+            ShowCodeIsWorking(false);
+            return;
+        }
+
+        ShowCodeIsWorking(true);
+    }
 
     protected void PrepareTerminal()
     {
@@ -52,7 +61,6 @@ public abstract class BaseTerminal : MonoBehaviour
             }
         }
     }
-
 
     protected virtual bool LoadScriptContents()
     {
@@ -109,6 +117,10 @@ public abstract class BaseTerminal : MonoBehaviour
         assignedObjects.ResetObjects();
     }
 
+    protected void ShowCodeIsWorking(bool isWorking)
+    {
+        canvas.SetImageColor(isWorking);
+    }
     protected virtual void OnVariableChanged()
     {
         //TODO: Zrobiæ, kiedy jakaœ wartoœæ jest null, wtedy ustawiæ do stanu pierwotnego
