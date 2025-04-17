@@ -1,7 +1,7 @@
 using MoonSharp.Interpreter;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Lua/API/LuaApiTest")]
+
 [MoonSharpUserData]
 public class LuaApiTest : LuaApi
 {

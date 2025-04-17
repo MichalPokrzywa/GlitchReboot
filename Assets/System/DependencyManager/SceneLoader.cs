@@ -1,16 +1,17 @@
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
     public Scene currentScene;
-
+    public LoadingCanvas loadingCanvas;
     public void LoadScene(Scene scene)
     {
         currentScene = scene;
-
-        //LSS_LoadingScreen.LoadScene(scene.ToString(), "Standard");
-        SceneManager.LoadSceneAsync((int)currentScene);
+        StartCoroutine(PlayTransitionAndLoad());
+        //SceneManager.LoadSceneAsync((int)currentScene);
     }
 
     public void LoadSceneAdditive(Scene scene)
@@ -28,14 +29,32 @@ public class SceneLoader : MonoBehaviour
         SceneManager.UnloadSceneAsync(index);
     }
 
-    public bool IsSceneLoaded(Scene scene)
+    private IEnumerator PlayTransitionAndLoad()
     {
-        // Pobieramy scenê na podstawie indeksu
-        UnityEngine.SceneManagement.Scene unityScene = SceneManager.GetSceneByBuildIndex((int)scene);
+        yield return new WaitUntil(() => TVCloseRenderFeature.Instance != null);
 
-        // Sprawdzamy, czy scena istnieje i czy jest za³adowana
-        return unityScene.isLoaded;
+        TVCloseRenderFeature.Instance.PlayCloseEffect(2f, () =>
+        {
+            loadingCanvas.ShowLoadingCanvas();
+            StartCoroutine(LoadSceneAsyncWithUI());
+        });
     }
+
+    private IEnumerator LoadSceneAsyncWithUI()
+    {
+        AsyncOperation operation = SceneManager.LoadSceneAsync((int)currentScene);
+
+        while (!operation.isDone)
+        {
+            float progress = Mathf.Clamp01(operation.progress / 0.9f);
+            Debug.Log($"Loading progress: {progress}");
+            yield return null;
+        }
+
+        loadingCanvas.HideLoadingCanvas();
+        TVCloseRenderFeature.Instance.PlayOpenEffect(2f);
+    }
+
 }
 
 public enum Scene
