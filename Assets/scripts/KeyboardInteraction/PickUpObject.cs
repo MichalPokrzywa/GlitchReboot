@@ -2,32 +2,35 @@ using UnityEngine;
 
 public class PickUpObjectInteraction : InteractionBase
 {   
-   // TODO testy, zrobić aby hold point automatycznie łapał hold point czy coś, 
    public Transform holdPoint;
-   bool iAmPickedUp;
    private Rigidbody rb;
+   public bool IsPickedUp { get; private set; }
 
-   private void Start()
+    private void Start()
    {
       rb = GetComponent<Rigidbody>();
-      iAmPickedUp = false;
+      IsPickedUp = false;
    }
 
    public override void Interact()
    {
-      if (iAmPickedUp)
-      {
-         DropMe();
-      }
-      else
-      {
-         PickMeUp();
-      }
+      //if (iAmPickedUp)
+      //{ 
+      //    DropMe();
+      //}
+      //else
+      //{ 
+      //    PickMeUp();
+      //}
    }
 
    private void FixedUpdate()
    {
-       if (iAmPickedUp)
+       if (!IsPickedUp && HasShownUI)
+       {
+           AnimateUI();
+       }
+       if (IsPickedUp)
        {
            if (Vector3.Distance(holdPoint.position, transform.position) > 4f)
            {
@@ -40,23 +43,21 @@ public class PickUpObjectInteraction : InteractionBase
        }
    }
 
-   public void PickMeUp()
+   public void PickMeUp(Transform point)
    {
-
+       holdPoint = point;
        rb.useGravity = false;
        rb.linearDamping = 10;
        rb.constraints = RigidbodyConstraints.FreezeRotation;
-     
-       /*transform.parent = holdPoint;*/
-       iAmPickedUp = true;
+       IsPickedUp = true;
    }
-   
+
    public void DropMe()
    {
-        rb.useGravity = true;
-        rb.linearDamping = 1;
-        rb.constraints = RigidbodyConstraints.None;
-        /*transform.parent = null;*/
-        iAmPickedUp = false; 
+       holdPoint = null;
+       rb.useGravity = true;
+       rb.linearDamping = 1;
+       rb.constraints = RigidbodyConstraints.None;
+       IsPickedUp = false;
    }
 }

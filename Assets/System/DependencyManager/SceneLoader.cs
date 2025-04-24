@@ -11,12 +11,10 @@ public class SceneLoader : MonoBehaviour
     {
         currentScene = scene;
         StartCoroutine(PlayTransitionAndLoad());
-        //SceneManager.LoadSceneAsync((int)currentScene);
     }
 
     public void LoadSceneAdditive(Scene scene)
     {
-        //LSS_LoadingScreen.LoadSceneAdditive(scene.ToString(), "Standard");
         SceneManager.LoadSceneAsync((int)currentScene,LoadSceneMode.Additive);
     }
 
