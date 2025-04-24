@@ -24,7 +24,8 @@ public class Interactor : MonoBehaviour
 
                     if (!pickup.IsPickedUp)
                     {
-                        pickup.PickMeUp(holdPoint);
+                        // pass yourself into the pickup
+                        pickup.PickMeUp(holdPoint, this);
                         heldObject = pickup;
                         interactObj.HideUI(); // Hide UI when picked up
                     }
@@ -51,6 +52,12 @@ public class Interactor : MonoBehaviour
             lastInteractor.HideUI();
             lastInteractor = null;
         }
+    }
+    // called by the pickup when it actually drops
+    public void NotifyDropped(PickUpObjectInteraction obj)
+    {
+        if (heldObject == obj)
+            heldObject = null;
     }
 }
 

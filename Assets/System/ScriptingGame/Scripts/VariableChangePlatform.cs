@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class VariableChangePlatform : MonoBehaviour
@@ -8,7 +9,7 @@ public class VariableChangePlatform : MonoBehaviour
     public List<GameObject> platformType;
 
     private VariableDice dice = null;
-
+    [SerializeField] private Transform dicePosition;
     void Start()
     {
         foreach (GameObject o in platformType)
@@ -68,8 +69,18 @@ public class VariableChangePlatform : MonoBehaviour
         dice = null;
     }
 
-    public void MoveObjectToPosition(GameObject o)
+    public void MoveObjectToPosition(GameObject gameObject)
     {
-        throw new System.NotImplementedException();
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.
+            gameObject.transform.DOMove(dicePosition.position, 0.3f).OnComplete(() =>
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+                rb.useGravity = true;
+            });
     }
 }
