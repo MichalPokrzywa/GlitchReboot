@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Unity.VisualScripting;
+using UnityEngine;
 
 public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         {
             if (instance == null)
             {
-                instance = (T)FindObjectOfType(typeof(T),true);
+                instance = (T)FindFirstObjectByType(typeof(T), FindObjectsInactive.Include);
 
                 if (instance == null)
                 {

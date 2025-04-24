@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,7 +9,7 @@ public class VariablePlatform : MonoBehaviour
     [SerializeField] 
     public string variableName = "x_value";
     public VariableType type;
-
+    [SerializeField] private Transform dicePosition;
     [HideInInspector] public UnityEvent<string,object> variableAdded;
     [HideInInspector] public UnityEvent<string> variableRemoved;
 
@@ -55,5 +56,18 @@ public class VariablePlatform : MonoBehaviour
         {
             text.color = isOn ? Color.green : Color.grey;
         }
+    }
+
+    public void MoveObjectToPosition(GameObject gameObject)
+    {
+        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        rb.useGravity = false;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+        rb.
+        gameObject.transform.DOMove(dicePosition.position, 0.3f).OnComplete(() =>
+        {
+            rb.useGravity = true;
+        });
     }
 }

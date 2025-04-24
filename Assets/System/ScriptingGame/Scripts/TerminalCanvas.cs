@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using MoonSharp.Interpreter;
 using TMPro;
 using UnityEngine;
@@ -13,7 +14,8 @@ public class TerminalCanvas : MonoBehaviour
     public void SetCodeText(string code)
     {
         //prepareText();
-        codeText.text = code;
+        string cleanedCode = Regex.Replace(code, @"\b\w+:", "").Replace("\t", "   ");
+        codeText.text = cleanedCode;
     }
 
     public void SetVariableText(Table variableTable,List<VariablePlatform> list)
@@ -39,35 +41,5 @@ public class TerminalCanvas : MonoBehaviour
     public void SetImageColor(bool pass)
     {
         passImage.color = pass ? Color.green : Color.red;
-    }
-
-    private void prepareText()
-    {
-        TMP_Text result = new TextMeshPro();
-        result.text = "";
-        bool comment = false;
-        for (int i = 0; i < codeText.text.Length; i++)
-        {
-            if (codeText.text[i] == '-' && i + 1< codeText.text.Length 
-                && codeText.text[i + 1] == '-')
-            {
-                if (!comment)
-                {
-                    comment = true;
-                  
-                } else
-                {
-                    comment = false;
-                    i ++;
-                    continue;
-                }
-            }
-            if (!comment)
-                result.text = result.text + codeText.text[i];
-        }
-        if (result.text[result.text.Length - 2] != '(')
-            result.text = result.text + "   door_loop()";      
-        codeText.text = result.text;
-        
     }
 }
