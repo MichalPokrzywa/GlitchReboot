@@ -1,15 +1,25 @@
 using UnityEngine;
 
 public class PickUpObjectInteraction : InteractionBase
-{   
-   // TODO testy, zrobić aby hold point automatycznie łapał hold point czy coś, 
+{
+   // TODO testy, zrobić aby hold point automatycznie łapał hold point czy coś,
    public Transform holdPoint;
+
+   [SerializeField] Rigidbody rb;
+
    bool iAmPickedUp;
-   private Rigidbody rb;
+
+
+   void OnDisable()
+   {
+       int x = 5;
+   }
 
    private void Start()
    {
-      rb = GetComponent<Rigidbody>();
+       if (rb == null)
+        rb = GetComponent<Rigidbody>();
+
       iAmPickedUp = false;
    }
 
@@ -23,6 +33,12 @@ public class PickUpObjectInteraction : InteractionBase
       {
          PickMeUp();
       }
+   }
+
+   public void Interact(Transform holdPoint)
+   {
+       this.holdPoint = holdPoint;
+       Interact();
    }
 
    private void FixedUpdate()
@@ -42,21 +58,20 @@ public class PickUpObjectInteraction : InteractionBase
 
    private void PickMeUp()
    {
-
        rb.useGravity = false;
        rb.linearDamping = 10;
        rb.constraints = RigidbodyConstraints.FreezeRotation;
-     
+
        /*transform.parent = holdPoint;*/
        iAmPickedUp = true;
    }
-   
+
    private void DropMe()
    {
         rb.useGravity = true;
         rb.linearDamping = 1;
         rb.constraints = RigidbodyConstraints.None;
         /*transform.parent = null;*/
-        iAmPickedUp = false; 
+        iAmPickedUp = false;
    }
 }

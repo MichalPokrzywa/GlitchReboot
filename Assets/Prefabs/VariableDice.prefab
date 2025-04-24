@@ -1155,6 +1155,7 @@ GameObject:
   - component: {fileID: 6992753583628638050}
   - component: {fileID: 604787650891974096}
   - component: {fileID: 8803764186136295686}
+  - component: {fileID: 5596173067887955971}
   m_Layer: 7
   m_Name: VariableDice
   m_TagString: Untagged
@@ -1351,3 +1352,22 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &5596173067887955971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7662297200887842987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b5dacad8fad16b4a891dc87ed6f6d24, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UIHoverObject: {fileID: 0}
+  UIHoverText: {fileID: 0}
+  floatDistanceX: 100
+  floatDistanceY: 100
+  mainCamera: {fileID: 0}
+  holdPoint: {fileID: 0}
+  rb: {fileID: 604787650891974096}
