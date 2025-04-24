@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -28,8 +27,8 @@ public class InteractionTest : MonoBehaviour, IInteractable
             AnimateUI();
         }
     }
-    
-    public void Interact()
+
+    public void Interact(Transform? holdPoint = null)
     {
         Debug.Log("InteractionNotImplemented");
     }
@@ -42,12 +41,12 @@ public class InteractionTest : MonoBehaviour, IInteractable
         // Zyskujemy szerokość tekstu (można także użyć preferredWidth z TextMeshProUGUI)
         float textWidth = UIHoverText.preferredWidth;
         Vector3 targetPosition = Vector3.zero;
-        
+
         targetPosition = screenPos + new Vector3((floatDistanceX  * -1), floatDistanceY, 0);
-       
+
         UIHoverText.rectTransform.position = Vector3.Lerp(UIHoverText.rectTransform.position, targetPosition, Time.deltaTime * 5f);
     }
-    
+
     public void ShowUI()
     {
         Debug.Log("Show UI");
@@ -64,5 +63,5 @@ public class InteractionTest : MonoBehaviour, IInteractable
         HasShownUI = false;
         if(objectWithInteractiveMaterial != null) objectWithInteractiveMaterial.setGlitchActivationBool(false);
     }
-    
+
 }

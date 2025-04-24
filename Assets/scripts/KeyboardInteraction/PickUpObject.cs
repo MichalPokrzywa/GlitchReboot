@@ -3,17 +3,11 @@ using UnityEngine;
 public class PickUpObjectInteraction : InteractionBase
 {
    // TODO testy, zrobić aby hold point automatycznie łapał hold point czy coś,
-   public Transform holdPoint;
+   Transform holdPoint;
 
    [SerializeField] Rigidbody rb;
 
    bool iAmPickedUp;
-
-
-   void OnDisable()
-   {
-       int x = 5;
-   }
 
    private void Start()
    {
@@ -23,23 +17,21 @@ public class PickUpObjectInteraction : InteractionBase
       iAmPickedUp = false;
    }
 
-   public override void Interact()
+   public override void Interact(Transform? holdPoint = null)
    {
-      if (iAmPickedUp)
-      {
-         DropMe();
-      }
-      else
-      {
-         PickMeUp();
-      }
+       if (holdPoint != null)
+        this.holdPoint = holdPoint;
+
+       if (iAmPickedUp)
+       {
+          DropMe();
+       }
+       else
+       {
+          PickMeUp();
+       }
    }
 
-   public void Interact(Transform holdPoint)
-   {
-       this.holdPoint = holdPoint;
-       Interact();
-   }
 
    private void FixedUpdate()
    {

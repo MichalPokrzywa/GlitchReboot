@@ -45,7 +45,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
             mainCamera = Camera.main;
     }
 
-    public virtual void Interact()
+    public virtual void Interact(Transform? holdPoint = null)
     {
         Debug.Log("InteractionNotImplemented");
     }

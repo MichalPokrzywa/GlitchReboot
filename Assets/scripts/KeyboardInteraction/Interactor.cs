@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class Interactor : MonoBehaviour
 {
-    public Transform InteractionSource;
-    public float InteractionRange = 10;
+    [SerializeField] Transform InteractionSource;
+    [SerializeField] Transform holdPoint;
+    [SerializeField] float InteractionRange = 10;
     private IInteractable lastInteractor;
 
     void Update()
@@ -14,7 +15,7 @@ public class Interactor : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                interactObj.Interact();
+                interactObj.Interact(holdPoint);
             }
 
             if (!interactObj.HasShownUI)
@@ -34,7 +35,8 @@ public class Interactor : MonoBehaviour
 interface IInteractable
 {
     bool HasShownUI { get; set; }
-    public void Interact();
+    public void Interact(Transform? holdPoint = null);
+
     public void ShowUI();
     public void HideUI();
 }

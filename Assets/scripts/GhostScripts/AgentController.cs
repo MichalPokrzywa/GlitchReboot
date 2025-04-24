@@ -8,7 +8,7 @@ using UnityEngine.UIElements;
 [RequireComponent(typeof(NavMeshAgent))]
 public class AgentController : MonoBehaviour
 {
-    [SerializeField] GameObject holdPoint;
+    [SerializeField] Transform holdPoint;
 
     // -------------------------------------------------
     [SerializeField] GameObject objectTEST;
@@ -156,7 +156,7 @@ public class AgentController : MonoBehaviour
     void DoPickUp(PickUpObjectInteraction objectToPickUp)
     {
         pickedUpObject = objectToPickUp.gameObject;
-        objectToPickUp.Interact(holdPoint.transform);
+        objectToPickUp.Interact(holdPoint);
         searchingObject = null;
     }
 
