@@ -9,8 +9,6 @@ using UnityEngine.UIElements;
 public class AgentController : MonoBehaviour
 {
     [SerializeField] Transform holdPoint;
-
-    // -------------------------------------------------
     [SerializeField] GameObject objectTEST;
 
     // for cubes: 2f, platforms: 0.1f
@@ -21,8 +19,8 @@ public class AgentController : MonoBehaviour
     NavMeshAgent agent;
     GameObject searchingObject;
     Coroutine pathCoroutine;
-    GameObject lastTarget = null;
     Vector3? lastTargetUnreachablePosition = null;
+    Vector3? lastMyUnreachablePosition = null;
 
     GameObject pickedUpObject;
 
@@ -30,7 +28,9 @@ public class AgentController : MonoBehaviour
     bool hasReachedTarget = false;
     bool targetUnreachable = false;
 
-    const float pathCalculationInterval = 0.5f;
+    Vector3 lastPos = new Vector3(0, 0, 0);
+
+    const float pathCalculationInterval = 0.25f;
     const float hysteresisBuffer = 0.2f;
 
     // ----------------------------------------------------------------------------------------
@@ -65,6 +65,7 @@ public class AgentController : MonoBehaviour
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        //lastPos = agent.transform.position;
     }
 
     void Update()
@@ -75,13 +76,8 @@ public class AgentController : MonoBehaviour
         }
 
         // Check if we should consider path recalculation
-        if (targetUnreachable)
-        {
-            if (!HasUnreachableTargetMoved())
-            {
-                return;
-            }
-        }
+        if (targetUnreachable && !IsPathRecalculationNeeded())
+            return;
 
         distance = Vector3.Distance(agent.transform.position, searchingObject.transform.position);
 
@@ -90,6 +86,8 @@ public class AgentController : MonoBehaviour
         {
             agent.isStopped = true;
             hasReachedTarget = true;
+            agent.ResetPath();
+            Debug.Log("Target reached");
             ResetCoroutine();
             onTargetReached?.Invoke();
             onTargetReached = null;
@@ -117,7 +115,6 @@ public class AgentController : MonoBehaviour
         }
 
         searchingObject = newSearchingObject;
-        lastTarget = newSearchingObject;
         targetUnreachable = false;
         hasReachedTarget = false;
     }
@@ -160,13 +157,10 @@ public class AgentController : MonoBehaviour
         searchingObject = null;
     }
 
-
-    bool HasUnreachableTargetMoved()
+    bool IsPathRecalculationNeeded()
     {
-        if (lastTargetUnreachablePosition == null)
-        {
-            lastTargetUnreachablePosition = searchingObject.transform.position;
-        }
+        lastTargetUnreachablePosition ??= searchingObject.transform.position;
+        lastMyUnreachablePosition ??= agent.transform.position;
 
         // Check if the target has moved significantly
         if (Vector3.Distance(lastTargetUnreachablePosition.Value, searchingObject.transform.position) > hysteresisBuffer)
@@ -175,6 +169,17 @@ public class AgentController : MonoBehaviour
             // log only once
             if (pathCoroutine == null)
                 Debug.Log("Target moved");
+
+            return true;
+        }
+
+        // Check if the agent has moved significantly
+        if (Vector3.Distance(lastMyUnreachablePosition.Value, agent.transform.position) > hysteresisBuffer)
+        {
+            lastMyUnreachablePosition = agent.transform.position;
+            // log only once
+            if (pathCoroutine == null)
+                Debug.Log("Agent moved");
 
             return true;
         }
@@ -198,8 +203,16 @@ public class AgentController : MonoBehaviour
 
         while (true)
         {
+            // if there is no object to follow - stop coroutine
             if (searchingObject == null)
                 yield break;
+
+            // if agent is already on the path or on off-mesh link - let him finish
+            if (agent.isOnOffMeshLink)
+            {
+                yield return null;
+                continue;
+            }
 
             // thanks to this function, path should be ALWAYS calculated immediately
             // it means that agent should not try to reach an object that is unreachable (like following object moving behind a wall)
@@ -208,14 +221,21 @@ public class AgentController : MonoBehaviour
             if (path.status == NavMeshPathStatus.PathComplete)
             {
                 targetUnreachable = false;
-                agent.path = path;
+                agent.isStopped = false;
+                if (!agent.hasPath || Vector3.Distance(agent.destination, searchingObject.transform.position) > 2*hysteresisBuffer)
+                {
+                    Debug.Log("Setting new path");
+                    agent.SetPath(path);
+                }
             }
             else
             {
                 Debug.LogWarning("Path is invalid. Target unreachable");
+                agent.ResetPath();
                 agent.isStopped = true;
                 targetUnreachable = true;
                 ResetCoroutine();
+                yield break;
             }
 
             // Wait for a short time before checking again
