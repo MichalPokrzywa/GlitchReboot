@@ -67,6 +67,8 @@ public class VariablePlatform : MonoBehaviour
         rb.
         gameObject.transform.DOMove(dicePosition.position, 0.3f).OnComplete(() =>
         {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
             rb.useGravity = true;
         });
     }

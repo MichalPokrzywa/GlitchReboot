@@ -4,7 +4,10 @@ public class Interactor : MonoBehaviour
 {
     public Transform InteractionSource;
     public float InteractionRange = 10;
+    public Transform holdPoint;
+
     private IInteractable lastInteractor;
+    private PickUpObjectInteraction heldObject;
 
     void Update()
     {
@@ -14,10 +17,31 @@ public class Interactor : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                interactObj.Interact();
+                if (interactObj is PickUpObjectInteraction pickup)
+                {
+                    if (heldObject != null && heldObject != pickup)
+                        heldObject.DropMe();
+
+                    if (!pickup.IsPickedUp)
+                    {
+                        // pass yourself into the pickup
+                        pickup.PickMeUp(holdPoint, this);
+                        heldObject = pickup;
+                        interactObj.HideUI(); // Hide UI when picked up
+                    }
+                    else
+                    {
+                        pickup.DropMe();
+                        heldObject = null;
+                    }
+                }
+                else
+                {
+                    interactObj.Interact();
+                }
             }
 
-            if (!interactObj.HasShownUI)
+            if (!interactObj.HasShownUI && heldObject == null)
             {
                 interactObj.ShowUI();
                 lastInteractor = interactObj;
@@ -26,8 +50,14 @@ public class Interactor : MonoBehaviour
         else if (lastInteractor != null)
         {
             lastInteractor.HideUI();
-            lastInteractor = null; // Resetujemy
+            lastInteractor = null;
         }
+    }
+    // called by the pickup when it actually drops
+    public void NotifyDropped(PickUpObjectInteraction obj)
+    {
+        if (heldObject == obj)
+            heldObject = null;
     }
 }
 

@@ -7,7 +7,6 @@ public class DependencyManager : MonoBehaviour
     //public static SaveManager saveManager;
     public static SceneLoader sceneLoader; 
 
-
     [SerializeField] Scene initiallyLoadedScene;
 
     private void Awake()
