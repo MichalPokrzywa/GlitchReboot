@@ -1155,7 +1155,7 @@ GameObject:
   - component: {fileID: 6992753583628638050}
   - component: {fileID: 604787650891974096}
   - component: {fileID: 8803764186136295686}
-  - component: {fileID: 5596173067887955971}
+  - component: {fileID: 3746043349995198986}
   m_Layer: 7
   m_Name: VariableDice
   m_TagString: Untagged
@@ -1172,7 +1172,7 @@ Transform:
   m_GameObject: {fileID: 7662297200887842987}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4, y: 4, z: 0.745}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1352,7 +1352,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5596173067887955971
+--- !u!114 &3746043349995198986
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1369,5 +1369,4 @@ MonoBehaviour:
   floatDistanceX: 100
   floatDistanceY: 100
   mainCamera: {fileID: 0}
-  holdPoint: {fileID: 0}
-  rb: {fileID: 604787650891974096}
+  rotationSpeed: 10

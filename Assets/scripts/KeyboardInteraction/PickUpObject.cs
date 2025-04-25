@@ -1,69 +1,72 @@
 using UnityEngine;
 
 public class PickUpObjectInteraction : InteractionBase
-{
-   // TODO testy, zrobić aby hold point automatycznie łapał hold point czy coś,
-   Transform holdPoint;
-
-   [SerializeField] Rigidbody rb;
-
-   bool iAmPickedUp;
-
+{   
+   private Transform holdPoint;
+   private Rigidbody rb;
+   public bool IsPickedUp { get; private set; }
+   [Header("Rotation Snap")]
+   [Tooltip("Speed (deg/sec) at which to rotate toward the snapped orientation.")]
+   public float rotationSpeed = 20f;
+   private Interactor ownerInteractor;
    private void Start()
    {
-       if (rb == null)
-        rb = GetComponent<Rigidbody>();
-
-      iAmPickedUp = false;
+      rb = GetComponent<Rigidbody>();
+      IsPickedUp = false;
    }
 
-   public override void Interact(Transform? holdPoint = null)
+   public override void Interact()
    {
-       if (holdPoint != null)
-        this.holdPoint = holdPoint;
-
-       if (iAmPickedUp)
-       {
-          DropMe();
-       }
-       else
-       {
-          PickMeUp();
-       }
+      //if (iAmPickedUp)
+      //{ 
+      //    DropMe();
+      //}
+      //else
+      //{ 
+      //    PickMeUp();
+      //}
    }
-
 
    private void FixedUpdate()
    {
-       if (iAmPickedUp)
+       if (!IsPickedUp && HasShownUI)
+       {
+           AnimateUI();
+       }
+       if (IsPickedUp)
        {
            if (Vector3.Distance(holdPoint.position, transform.position) > 4f)
            {
                transform.position = holdPoint.position;
            }
-           //TODO: Do koloru do wyboru
-           rb.linearVelocity = (holdPoint.position - transform.position) * (1 / Time.fixedDeltaTime);
-           //rb.AddForce((holdPoint.position - transform.position) * (10/ Time.fixedDeltaTime));
-           rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, holdPoint.rotation, 4));
+            //TODO: Do koloru do wyboru
+            rb.linearVelocity = (holdPoint.position - transform.position) * (1 / Time.fixedDeltaTime);
+            rb.MoveRotation(Quaternion.RotateTowards(transform.rotation, holdPoint.rotation, rotationSpeed) );
+            //rb.AddForce((holdPoint.position - transform.position) * (10/ Time.fixedDeltaTime));
        }
    }
 
-   private void PickMeUp()
+   public void PickMeUp(Transform point, Interactor interactor)
    {
+       holdPoint = point;
+       ownerInteractor = interactor;
+
        rb.useGravity = false;
        rb.linearDamping = 10;
        rb.constraints = RigidbodyConstraints.FreezeRotation;
-
-       /*transform.parent = holdPoint;*/
-       iAmPickedUp = true;
+       IsPickedUp = true;
    }
 
-   private void DropMe()
+   public void DropMe()
    {
-        rb.useGravity = true;
-        rb.linearDamping = 1;
-        rb.constraints = RigidbodyConstraints.None;
-        /*transform.parent = null;*/
-        iAmPickedUp = false;
+       // reset physics
+       rb.useGravity = true;
+       rb.linearDamping = 1;
+       rb.constraints = RigidbodyConstraints.None;
+       IsPickedUp = false;
+
+       // let the interactor know to clear its heldObject
+       ownerInteractor?.NotifyDropped(this);
+       ownerInteractor = null;
    }
 }
