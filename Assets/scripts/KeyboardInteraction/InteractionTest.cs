@@ -28,7 +28,7 @@ public class InteractionTest : MonoBehaviour, IInteractable
         }
     }
 
-    public void Interact(Transform? holdPoint = null)
+    public void Interact()
     {
         Debug.Log("InteractionNotImplemented");
     }

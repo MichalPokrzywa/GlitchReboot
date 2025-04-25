@@ -146,14 +146,14 @@ public class AgentController : MonoBehaviour
         }
 
         var pickUpComponent = pickedUpObject.GetComponent<PickUpObjectInteraction>();
-        pickUpComponent.Interact();
+        pickUpComponent.DropMe();
         pickedUpObject = null;
     }
 
     void DoPickUp(PickUpObjectInteraction objectToPickUp)
     {
         pickedUpObject = objectToPickUp.gameObject;
-        objectToPickUp.Interact(holdPoint);
+        objectToPickUp.PickMeUp(holdPoint, null);
         searchingObject = null;
     }
 
