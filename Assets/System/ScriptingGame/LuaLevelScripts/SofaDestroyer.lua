@@ -1,3 +1,3 @@
 function SofaDestroyer()
-	DoorLua:OpenDoors(GreyDoors,value_x)
+	DoorLua:OpenDoors(GreyDoors, value_x)
 end
