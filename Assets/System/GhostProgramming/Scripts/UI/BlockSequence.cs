@@ -1,34 +1,21 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class BlockSequence : MonoBehaviour
+public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] Image selectionIndicator;
 
-    public int Index => _index;
+    public Action<BlockSequence> OnDropped;
+    public int BlockCount => blocks.Count;
 
-    int _index = 0;
-    bool selected = false;
     List<Block> blocks = new List<Block>();
 
-    public void Initialize(int index, Block block)
+    void Awake()
     {
-        ToggleSelection();
-        _index = index;
-        AddBlock(block);
-    }
-
-    public void SetIndex(int index)
-    {
-        _index = index;
-    }
-
-    public void ToggleSelection()
-    {
-        selected = !selected;
-        selectionIndicator.enabled = selected;
+        SetSelection(false);
     }
 
     public void AddBlock(Block block)
@@ -41,11 +28,46 @@ public class BlockSequence : MonoBehaviour
         if (blocks.Contains(block))
         {
             blocks.Remove(block);
-            Destroy(block.gameObject);
         }
         else
         {
             Debug.LogWarning("Block not found in this sequence.");
         }
+    }
+
+    public bool ContainsBlock(Block block)
+    {
+        return blocks.Contains(block);
+    }
+
+    #region InterfacesImplementation
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        OnDropped?.Invoke(this);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        SetSelection(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        SetSelection(false);
+    }
+
+    #endregion
+
+    void SetSelection(bool selected)
+    {
+        SetImageAlpha(selectionIndicator, selected ? 1f : 0f);
+    }
+
+    static void SetImageAlpha(Image img, float alpha)
+    {
+        Color color = img.color;
+        color.a = alpha;
+        img.color = color;
     }
 }

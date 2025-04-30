@@ -545,6 +545,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5268490267257610932, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: blockData.name
+      value: Platform
+      objectReference: {fileID: 0}
+    - target: {fileID: 5268490267257610932, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: blockData.type
       value: 2
       objectReference: {fileID: 0}
@@ -972,6 +976,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8286518452263458521, guid: 167fc69fd5c3099409e705a2219a14a5, type: 3}
+      propertyPath: m_Padding.m_Bottom
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 8286518452263458521, guid: 167fc69fd5c3099409e705a2219a14a5, type: 3}
       propertyPath: m_ChildControlWidth
       value: 0
       objectReference: {fileID: 0}
@@ -1074,6 +1082,7 @@ MonoBehaviour:
   - {fileID: 6773003364265593956}
   - {fileID: 7422849985635900003}
   - {fileID: 7226693255038037509}
+  blocksRemover: {fileID: 0}
 --- !u!224 &7226693255038037509 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8699800095227106746, guid: 167fc69fd5c3099409e705a2219a14a5, type: 3}
@@ -1151,6 +1160,10 @@ PrefabInstance:
     - target: {fileID: 5125851812869919798, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7624900532827488353, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: blockData.name
+      value: GoTo
       objectReference: {fileID: 0}
     - target: {fileID: 7624900532827488353, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: blockData.type
@@ -1323,6 +1336,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7624900532827488353, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: blockData.name
+      value: PickUp
+      objectReference: {fileID: 0}
+    - target: {fileID: 7624900532827488353, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: blockData.type
       value: 1
       objectReference: {fileID: 0}
@@ -1491,6 +1508,10 @@ PrefabInstance:
     - target: {fileID: 5125851812869919798, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7624900532827488353, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: blockData.name
+      value: Drop
       objectReference: {fileID: 0}
     - target: {fileID: 7624900532827488353, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: blockData.type
@@ -2088,6 +2109,10 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3867210752447511579, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: blockData.name
+      value: Ghost
+      objectReference: {fileID: 0}
     - target: {fileID: 8175216458072536835, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_Name
       value: GhostBlock
@@ -2129,6 +2154,10 @@ PrefabInstance:
     - target: {fileID: 2662596334273062709, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5268490267257610932, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: blockData.name
+      value: Cube
       objectReference: {fileID: 0}
     - target: {fileID: 5268490267257610932, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: blockData.type
@@ -2500,6 +2529,10 @@ PrefabInstance:
     - target: {fileID: 5125851812869919798, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7624900532827488353, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: blockData.name
+      value: Stop
       objectReference: {fileID: 0}
     - target: {fileID: 7624900532827488353, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: blockData.type

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -31,16 +32,36 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
 
     [SerializeField] BlockData blockData;
     [SerializeField] GameObject selectionIndicator;
-    [SerializeField] Button button;
 
     bool selected = false;
     Vector3 offset;
+    List<Image> images = new List<Image>();
+
+    void Awake()
+    {
+        images = new List<Image>(GetComponentsInChildren<Image>(true));
+    }
+
+    public void UpdateParentType(BlockParentType parentType)
+    {
+        blockData.parentType = parentType;
+    }
 
     public void ToggleSelection()
     {
         selected = !selected;
         selectionIndicator.SetActive(selected);
     }
+
+    public void RaycastTargetActivation(bool active)
+    {
+        foreach (var img in images)
+        {
+            img.raycastTarget = active;
+        }
+    }
+
+    #region InterfacesImplementation
 
     public void OnBeginDrag(PointerEventData eventData)
     {
@@ -62,4 +83,6 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     {
 
     }
+
+    #endregion
 }

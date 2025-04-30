@@ -12,14 +12,119 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     [SerializeField] List<RectTransform> uiToUpdate;
 
     List<BlockSequence> sequences = new List<BlockSequence>();
-    List<Block> blocksInSelectionBox = new List<Block>();
-    List<Block> blocksInSequences = new List<Block>();
+    readonly List<Block> blocksInSelectionBox = new List<Block>();
 
-   Block selectedBlock;
+    Block selectedBlock;
 
     void Awake()
     {
         InitBlocksFromSelectionBox();
+    }
+
+    #region InterfacesImplementation
+
+    public void OnDrop(PointerEventData eventData)
+    {
+        // Create new sequence
+        var go = Instantiate(sequencePrefab.gameObject, sequenceContainer.transform);
+        var newSequence = go.GetComponent<BlockSequence>();
+        newSequence.OnDropped += OnDrop;
+        sequences.Add(newSequence);
+
+        OnDrop(newSequence);
+    }
+
+    #endregion
+
+    void OnDrop(BlockSequence sequence)
+    {
+        // 1) This block comes from the selection box
+        if (selectedBlock.BlockInfo.parentType == Block.BlockParentType.SelectionBox)
+        {
+            OnDropFromSelectionBox(sequence);
+        }
+
+        // 2) This block comes from another sequence
+        else
+        {
+            OnDropFromSequence(sequence);
+        }
+
+        // Turn on raycast target for all images in the block
+        selectedBlock.RaycastTargetActivation(true);
+
+        UpdateUI();
+    }
+
+    void OnDropFromSelectionBox(BlockSequence sequence)
+    {
+        // Add block to sequence
+        sequence.AddBlock(selectedBlock);
+        // Make currently dragged block a child of the sequence container
+        selectedBlock.transform.SetParent(sequence.transform);
+        // Update events
+        selectedBlock.OnDragged -= OnBlockFromSelectionBoxDragged;
+        selectedBlock.OnDragged += OnBlockFromSequenceDragged;
+        selectedBlock.UpdateParentType(Block.BlockParentType.Sequence);
+    }
+
+    void OnDropFromSequence(BlockSequence sequence)
+    {
+        // Remove block from previous sequence and add to the new one
+        BlockSequence previousSequence = sequences.Find(seq => seq.ContainsBlock(selectedBlock));
+        if (previousSequence != null && previousSequence != sequence)
+        {
+            previousSequence.RemoveBlock(selectedBlock);
+            sequence.AddBlock(selectedBlock);
+        }
+        // Make currently dragged block a child of the sequence container
+        selectedBlock.transform.SetParent(sequence.transform);
+
+        DestroyEmptySequence(previousSequence);
+    }
+
+    void OnBlockFromSelectionBoxDragged(Block block)
+    {
+        // Make currently dragged block a child of the temporary block placement
+        // to display it on the top of all other UI elements
+        block.transform.SetParent(temporaryBlockPlacement.transform);
+
+        // Turn off raycast target for all images in the block
+        block.RaycastTargetActivation(false);
+
+        // Create copy of the block
+        int index = blocksInSelectionBox.IndexOf(block);
+        var blockCopy = Instantiate(block.gameObject, selectionBox.transform);
+        // and place it in the same position as the original block
+        blockCopy.transform.SetSiblingIndex(index);
+
+        // Swap the original block with the copy in the list
+        Block blockCopyComponent = blockCopy.GetComponent<Block>();
+        blocksInSelectionBox[index] = blockCopyComponent;
+        blockCopyComponent.OnDragged += OnBlockFromSelectionBoxDragged;
+
+        SelectBlock(block);
+    }
+
+    void OnBlockFromSequenceDragged(Block block)
+    {
+        block.transform.SetParent(temporaryBlockPlacement.transform);
+        block.RaycastTargetActivation(false);
+        SelectBlock(block);
+
+        // check if should be swapped with another block
+
+        // check if should be removed from sequence
+
+        // check if should be swapped with another sequence
+    }
+
+    void DestroyEmptySequence(BlockSequence sequence)
+    {
+        if (sequence != null && sequence.BlockCount == 0)
+        {
+            Destroy(sequence.gameObject);
+        }
     }
 
     void InitBlocksFromSelectionBox()
@@ -35,61 +140,12 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         }
     }
 
-    void OnBlockFromSelectionBoxDragged(Block block)
-    {
-        // Make currently dragged block a child of the temporary block placement
-        // to display it on the top of all other UI elements
-        block.transform.SetParent(temporaryBlockPlacement.transform);
-
-        // Create copy of the block
-        int index = blocksInSelectionBox.IndexOf(block);
-        var blockCopy = Instantiate(block.gameObject, selectionBox.transform);
-        // and place it in the same position as the original block
-        blockCopy.transform.SetSiblingIndex(index);
-
-        // Swap the original block with the copy in the list
-        Block blockCopyComponent = blockCopy.GetComponent<Block>();
-        blocksInSelectionBox[index] = blockCopyComponent;
-        blockCopyComponent.OnDragged += OnBlockFromSelectionBoxDragged;
-
-        SelectBlock(block);
-
-        Debug.Log($"Selected {selectedBlock}");
-    }
-
-    void OnBlockFromSequenceDragged(Block block)
-    {
-
-    }
-
     void SelectBlock(Block block)
     {
         selectedBlock?.ToggleSelection();
         selectedBlock = block;
         selectedBlock.ToggleSelection();
     }
-
-    public void OnDrop(PointerEventData eventData)
-    {
-        // Instantiate sequence
-        var go = Instantiate(sequencePrefab.gameObject, sequenceContainer.transform);
-        var sequence = go.GetComponent<BlockSequence>();
-        sequences.Add(sequence);
-
-        // Add block to sequence
-        sequence.AddBlock(selectedBlock);
-        blocksInSequences.Add(selectedBlock);
-
-        // Make currently dragged block a child of the sequence container
-        selectedBlock.transform.SetParent(sequence.transform);
-
-        selectedBlock.OnDragged -= OnBlockFromSelectionBoxDragged;
-        selectedBlock.OnDragged += OnBlockFromSequenceDragged;
-
-        UpdateUI();
-        Debug.Log($"Dropped {selectedBlock.name}!");
-    }
-
     void UpdateUI()
     {
         foreach (var uiElement in uiToUpdate)
@@ -97,5 +153,4 @@ public class SequenceManager : MonoBehaviour, IDropHandler
             LayoutRebuilder.ForceRebuildLayoutImmediate(uiElement);
         }
     }
-
 }
