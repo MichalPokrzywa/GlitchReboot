@@ -38,31 +38,37 @@ public class SequenceManager : MonoBehaviour, IDropHandler
 
     #region InterfacesImplementation
 
-    public void OnDrop(PointerEventData eventData)
+    public void OnDrop(PointerEventData pointerData)
     {
+        if (selectedBlock == null)
+            return;
+
         // Create new sequence
         var go = Instantiate(sequencePrefab.gameObject, sequenceContainer.transform);
         var newSequence = go.GetComponent<BlockSequence>();
         newSequence.OnDropped += OnDrop;
         sequences.Add(newSequence);
 
-        OnDrop(newSequence);
+        OnDrop(newSequence, pointerData);
     }
 
     #endregion
 
-    void OnDrop(BlockSequence sequence)
+    void OnDrop(BlockSequence sequence, PointerEventData pointerData)
     {
+        if (selectedBlock == null)
+            return;
+
         // 1) This block comes from the selection box
         if (selectedBlock.BlockInfo.parentType == Block.BlockParentType.SelectionBox)
         {
-            OnDropFromSelectionBox(sequence);
+            OnDropFromSelectionBox(sequence, pointerData);
         }
 
         // 2) This block comes from another sequence
         else
         {
-            OnDropFromSequence(sequence);
+            OnDropFromSequence(sequence, pointerData);
         }
 
         // Turn on raycast target for all images in the block
@@ -72,30 +78,36 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         UpdateUI();
     }
 
-    void OnDropFromSelectionBox(BlockSequence sequence)
+    void OnDropFromSelectionBox(BlockSequence sequence, PointerEventData pointerData)
     {
         // Add block to sequence
         sequence.AddBlock(selectedBlock);
-        // Make currently dragged block a child of the sequence container
+        // Make currently dragged block a child of the sequence container in correct position
         selectedBlock.transform.SetParent(sequence.transform);
+        int insertIndex = GetIndexInSequence(sequence, pointerData);
+        selectedBlock.transform.SetSiblingIndex(insertIndex);
         // Update events
         selectedBlock.OnDragged -= OnBlockFromSelectionBoxDragged;
         selectedBlock.OnDragged += OnBlockFromSequenceDragged;
         selectedBlock.UpdateParentType(Block.BlockParentType.Sequence);
     }
 
-    void OnDropFromSequence(BlockSequence sequence)
+    void OnDropFromSequence(BlockSequence sequence, PointerEventData pointerData)
     {
         // Remove block from previous sequence and add to the new one
         BlockSequence previousSequence = sequences.Find(seq => seq.ContainsBlock(selectedBlock));
         if (previousSequence != null && previousSequence != sequence)
-        {
             previousSequence.RemoveBlock(selectedBlock);
-            sequence.AddBlock(selectedBlock);
-        }
-        // Make currently dragged block a child of the sequence container
-        selectedBlock.transform.SetParent(sequence.transform);
 
+        if (!sequence.ContainsBlock(selectedBlock))
+            sequence.AddBlock(selectedBlock);
+
+        // Make currently dragged block a child of the sequence container in correct position
+        selectedBlock.transform.SetParent(sequence.transform);
+        int insertIndex = GetIndexInSequence(sequence, pointerData);
+        selectedBlock.transform.SetSiblingIndex(insertIndex);
+
+        // Destroy the previous sequence if it is empty
         DestroyEmptySequence(previousSequence);
     }
 
@@ -142,12 +154,28 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         block.transform.SetParent(temporaryBlockPlacement.transform);
         block.RaycastTargetActivation(false);
         SelectBlock(block);
+    }
 
-        // check if should be swapped with another block
+    int GetIndexInSequence(BlockSequence sequence, PointerEventData pointerData)
+    {
+        // Calculate the position of the block in the new sequence according to the drop position
+        // Default to end
+        int insertIndex = sequence.transform.childCount;
+        for (int i = 0; i < sequence.transform.childCount; i++)
+        {
+            RectTransform child = sequence.transform.GetChild(i) as RectTransform;
+            // Skip self if already present
+            if (child == selectedBlock.transform)
+                continue;
 
-        // check if should be removed from sequence
-
-        // check if should be swapped with another sequence
+            Vector3 worldPos = child.position;
+            if (pointerData.position.x < worldPos.x)
+            {
+                insertIndex = i;
+                break;
+            }
+        }
+        return insertIndex;
     }
 
     void DestroyEmptySequence(BlockSequence sequence)

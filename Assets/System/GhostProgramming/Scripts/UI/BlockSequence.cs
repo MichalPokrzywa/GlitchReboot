@@ -8,7 +8,7 @@ public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 {
     [SerializeField] Image selectionIndicator;
 
-    public Action<BlockSequence> OnDropped;
+    public Action<BlockSequence, PointerEventData> OnDropped;
     public int BlockCount => blocks.Count;
 
     List<Block> blocks = new List<Block>();
@@ -44,7 +44,7 @@ public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
     public void OnDrop(PointerEventData eventData)
     {
-        OnDropped?.Invoke(this);
+        OnDropped?.Invoke(this, eventData);
     }
 
     public void OnPointerEnter(PointerEventData eventData)
