@@ -47,10 +47,10 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         blockData.parentType = parentType;
     }
 
-    public void ToggleSelection()
+    public void UpdateSelect(bool select)
     {
-        selected = !selected;
-        selectionIndicator.SetActive(selected);
+        selected = select;
+        selectionIndicator.SetActive(select);
     }
 
     public void RaycastTargetActivation(bool active)

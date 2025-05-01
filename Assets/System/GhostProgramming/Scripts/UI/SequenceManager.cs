@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class SequenceManager : MonoBehaviour, IDropHandler
 {
+    [SerializeField] GameObject mainParent;
     [SerializeField] BlockSequence sequencePrefab;
     [SerializeField] GameObject sequenceContainer;
     [SerializeField] GameObject selectionBox;
@@ -19,6 +20,20 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     void Awake()
     {
         InitBlocksFromSelectionBox();
+        var noDropZones = mainParent.GetComponentsInChildren<NoDropZone>(true);
+        foreach (var child in noDropZones)
+        {
+            child.OnDropped += OnNoDropZoneDropped;
+        }
+    }
+
+    void OnDestroy()
+    {
+        var noDropZones = mainParent.GetComponentsInChildren<NoDropZone>(true);
+        foreach (var child in noDropZones)
+        {
+            child.OnDropped -= OnNoDropZoneDropped;
+        }
     }
 
     #region InterfacesImplementation
@@ -52,6 +67,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
 
         // Turn on raycast target for all images in the block
         selectedBlock.RaycastTargetActivation(true);
+        DeselectBlock();
 
         UpdateUI();
     }
@@ -81,6 +97,21 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         selectedBlock.transform.SetParent(sequence.transform);
 
         DestroyEmptySequence(previousSequence);
+    }
+
+    void OnNoDropZoneDropped()
+    {
+        if (selectedBlock == null)
+            return;
+
+        BlockSequence sequence = sequences.Find(seq => seq.ContainsBlock(selectedBlock));
+        if (sequence != null)
+        {
+            sequence.RemoveBlock(selectedBlock);
+        }
+
+        Destroy(selectedBlock.gameObject);
+        DeselectBlock();
     }
 
     void OnBlockFromSelectionBoxDragged(Block block)
@@ -142,10 +173,20 @@ public class SequenceManager : MonoBehaviour, IDropHandler
 
     void SelectBlock(Block block)
     {
-        selectedBlock?.ToggleSelection();
+        selectedBlock?.UpdateSelect(false);
         selectedBlock = block;
-        selectedBlock.ToggleSelection();
+        selectedBlock.UpdateSelect(true);
     }
+
+    void DeselectBlock()
+    {
+        if (selectedBlock != null)
+        {
+            selectedBlock.UpdateSelect(false);
+            selectedBlock = null;
+        }
+    }
+
     void UpdateUI()
     {
         foreach (var uiElement in uiToUpdate)
