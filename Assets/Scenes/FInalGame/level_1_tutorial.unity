@@ -4821,6 +4821,10 @@ PrefabInstance:
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6695309081750114704, guid: 8ebc2d8dc44551a498caf484407abf2e, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 74117f645ca87544896e430b75e9a316, type: 2}
     - target: {fileID: 7039529378174240496, guid: 8ebc2d8dc44551a498caf484407abf2e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 23
@@ -7339,10 +7343,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1269539225763432072, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -1.5
-      objectReference: {fileID: 0}
     - target: {fileID: 2446884201075776812, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -7350,18 +7350,6 @@ PrefabInstance:
     - target: {fileID: 2472975633471888773, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
       propertyPath: m_Name
       value: PlatformParrent
-      objectReference: {fileID: 0}
-    - target: {fileID: 5102803164530441125, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 5102803164530441125, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5102803164530441125, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6167846353306974569, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
       propertyPath: m_Mesh
@@ -7373,11 +7361,10 @@ PrefabInstance:
       objectReference: {fileID: 1003422274}
     - target: {fileID: 6861798408057343433, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
       propertyPath: m_VersionIndex
-      value: 1486
+      value: 1492
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 4239365143170567385, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 357d836f421bfeb4c9478fc813257d34, type: 3}
