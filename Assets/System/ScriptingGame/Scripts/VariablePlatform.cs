@@ -13,6 +13,9 @@ public class VariablePlatform : MonoBehaviour
     [HideInInspector] public UnityEvent<string,object> variableAdded;
     [HideInInspector] public UnityEvent<string> variableRemoved;
 
+    [HideInInspector]
+    public int variableValue=0;
+
     public List<TMP_Text> textList;
 
     void Start()
@@ -30,12 +33,14 @@ public class VariablePlatform : MonoBehaviour
             Debug.Log($"Platform received integer: {intValue}");
             variableAdded.Invoke(variableName, intValue);
             UpdateText(true);
+            variableValue = (int)intValue;
         }
         else if (value is bool boolValue && type == VariableType.Boolean)
         {
             Debug.Log($"Platform received boolean: {boolValue}");
             variableAdded.Invoke(variableName, boolValue);
             UpdateText(true);
+            variableValue = boolValue? 1 : 0;
         }
         else
         {
@@ -49,6 +54,7 @@ public class VariablePlatform : MonoBehaviour
         variableRemoved.Invoke(variableName);
         Debug.Log("Platform value cleared");
         UpdateText(false);
+        variableValue = 0;
     }
     private void UpdateText(bool isOn)
     {
