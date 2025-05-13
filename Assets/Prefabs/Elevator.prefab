@@ -314,7 +314,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 721
+  m_VersionIndex: 748
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -364,7 +364,7 @@ GameObject:
   - component: {fileID: 6539247872735316170}
   - component: {fileID: 1221155441754879912}
   m_Layer: 0
-  m_Name: Door2
+  m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -597,7 +597,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3973
+  m_VersionIndex: 4000
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1395,7 +1395,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 5072
+  m_VersionIndex: 5099
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1439,6 +1439,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8686270376731708962}
+  - component: {fileID: 7536393322343224273}
+  - component: {fileID: 6996495066352725564}
   m_Layer: 0
   m_Name: Elevator
   m_TagString: Untagged
@@ -1464,8 +1466,53 @@ Transform:
   - {fileID: 7373534153205237333}
   - {fileID: 382827884900289410}
   - {fileID: 4272855485986364395}
+  - {fileID: 6513677448665104870}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7536393322343224273
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4267726045753634904}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc91f16fecad5c8499234e109d5b00d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leftDoor: {fileID: 4272855485986364395}
+  rightDoor: {fileID: 382827884900289410}
+  spawnPoint: {fileID: 6513677448665104870}
+  moveShakeDuration: 3
+  moveShakeStrength: 0.2
+  stopShakeDuration: 0.5
+  stopShakeStrength: 0.1
+  doorOpenDuration: 1
+  doorCloseDuration: 0.5
+  doorLeftOpenOffset: {x: 0, y: 0, z: 0.95}
+  doorRightOpenOffset: {x: 0, y: 0, z: -0.95}
+--- !u!65 &6996495066352725564
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4267726045753634904}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 6.9234657, y: 4.2418904, z: 5.555443}
+  m_Center: {x: -2.371317, y: 1.620945, z: 1.9280701}
 --- !u!1 &4982787729739385881
 GameObject:
   m_ObjectHideFlags: 0
@@ -1932,7 +1979,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 565
+  m_VersionIndex: 592
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -1982,7 +2029,7 @@ GameObject:
   - component: {fileID: 2332545874678168311}
   - component: {fileID: 14010304866267438}
   m_Layer: 0
-  m_Name: Door1
+  m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2215,7 +2262,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 3973
+  m_VersionIndex: 4000
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2319,3 +2366,34 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 0}
+--- !u!1 &6292091614483470041
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6513677448665104870}
+  m_Layer: 0
+  m_Name: Spawnpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6513677448665104870
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6292091614483470041}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -3, y: 1, z: 2}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8686270376731708962}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}

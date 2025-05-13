@@ -43,7 +43,6 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator LoadSceneAsyncWithUI()
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync((int)currentScene);
-
         while (!operation.isDone)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
@@ -51,9 +50,11 @@ public class SceneLoader : MonoBehaviour
             yield return null;
         }
 
+        yield return new WaitForSeconds(2f);
+        sceneLoaded.Invoke();
+
         loadingCanvas.HideLoadingCanvas();
         TVCloseRenderFeature.Instance.PlayOpenEffect(2f);
-        sceneLoaded.Invoke();
     }
 
 }
