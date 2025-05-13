@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
     public Scene currentScene;
     public LoadingCanvas loadingCanvas;
+    public UnityEvent sceneLoaded;
     public void LoadScene(Scene scene)
     {
         currentScene = scene;
@@ -51,6 +53,7 @@ public class SceneLoader : MonoBehaviour
 
         loadingCanvas.HideLoadingCanvas();
         TVCloseRenderFeature.Instance.PlayOpenEffect(2f);
+        sceneLoaded.Invoke();
     }
 
 }
