@@ -47,7 +47,7 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         blockData.parentType = parentType;
     }
 
-    public void UpdateSelect(bool select)
+    public void UpdateSelection(bool select)
     {
         selected = select;
         selectionIndicator.SetActive(select);

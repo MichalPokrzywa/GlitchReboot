@@ -15,7 +15,7 @@ public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
     void Awake()
     {
-        SetSelection(false);
+        UpdateSelection(false);
     }
 
     public void AddBlock(Block block)
@@ -49,17 +49,17 @@ public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        SetSelection(true);
+        UpdateSelection(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        SetSelection(false);
+        UpdateSelection(false);
     }
 
     #endregion
 
-    void SetSelection(bool selected)
+    void UpdateSelection(bool selected)
     {
         SetImageAlpha(selectionIndicator, selected ? 1f : 0f);
     }

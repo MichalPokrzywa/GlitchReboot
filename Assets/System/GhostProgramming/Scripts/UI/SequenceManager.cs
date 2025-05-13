@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -10,12 +11,15 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     [SerializeField] GameObject sequenceContainer;
     [SerializeField] GameObject selectionBox;
     [SerializeField] GameObject temporaryBlockPlacement;
+    [SerializeField] GameObject emptySpace;
+    [SerializeField] ScrollRect scrollRect;
     [SerializeField] List<RectTransform> uiToUpdate;
 
     List<BlockSequence> sequences = new List<BlockSequence>();
     readonly List<Block> blocksInSelectionBox = new List<Block>();
 
     Block selectedBlock;
+    Coroutine scrollCoroutine;
 
     void Awake()
     {
@@ -83,9 +87,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         // Add block to sequence
         sequence.AddBlock(selectedBlock);
         // Make currently dragged block a child of the sequence container in correct position
-        selectedBlock.transform.SetParent(sequence.transform);
-        int insertIndex = GetIndexInSequence(sequence, pointerData);
-        selectedBlock.transform.SetSiblingIndex(insertIndex);
+        PlaceSelectedBlockInSequence(sequence, pointerData);
         // Update events
         selectedBlock.OnDragged -= OnBlockFromSelectionBoxDragged;
         selectedBlock.OnDragged += OnBlockFromSequenceDragged;
@@ -103,10 +105,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
             sequence.AddBlock(selectedBlock);
 
         // Make currently dragged block a child of the sequence container in correct position
-        selectedBlock.transform.SetParent(sequence.transform);
-        int insertIndex = GetIndexInSequence(sequence, pointerData);
-        selectedBlock.transform.SetSiblingIndex(insertIndex);
-
+        PlaceSelectedBlockInSequence(sequence, pointerData);
         // Destroy the previous sequence if it is empty
         DestroyEmptySequence(previousSequence);
     }
@@ -156,6 +155,29 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         SelectBlock(block);
     }
 
+    void PlaceSelectedBlockInSequence(BlockSequence sequence, PointerEventData pointerData)
+    {
+        selectedBlock.transform.SetParent(sequence.transform);
+        int insertIndex = GetIndexInSequence(sequence, pointerData);
+        selectedBlock.transform.SetSiblingIndex(insertIndex);
+        emptySpace.transform.SetAsLastSibling();
+
+        // if sequence has the last index (including empty space), scroll to the bottom
+        int sequenceIndex = sequence.transform.GetSiblingIndex();
+        if (sequenceIndex == sequenceContainer.transform.childCount - 2)
+        {
+            scrollRect.verticalNormalizedPosition = 0.02f;
+
+            if (scrollCoroutine == null)
+            {
+                if (scrollCoroutine != null)
+                    StopCoroutine(scrollCoroutine);
+
+                scrollCoroutine = StartCoroutine(SmoothScrollTo(0.25f, 0.02f));
+            }
+        }
+    }
+
     int GetIndexInSequence(BlockSequence sequence, PointerEventData pointerData)
     {
         // Calculate the position of the block in the new sequence according to the drop position
@@ -201,16 +223,16 @@ public class SequenceManager : MonoBehaviour, IDropHandler
 
     void SelectBlock(Block block)
     {
-        selectedBlock?.UpdateSelect(false);
+        selectedBlock?.UpdateSelection(false);
         selectedBlock = block;
-        selectedBlock.UpdateSelect(true);
+        selectedBlock.UpdateSelection(true);
     }
 
     void DeselectBlock()
     {
         if (selectedBlock != null)
         {
-            selectedBlock.UpdateSelect(false);
+            selectedBlock.UpdateSelection(false);
             selectedBlock = null;
         }
     }
@@ -221,5 +243,24 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         {
             LayoutRebuilder.ForceRebuildLayoutImmediate(uiElement);
         }
+    }
+
+    IEnumerator SmoothScrollTo(float duration = 0.25f, float targetPos = 0.02f)
+    {
+        yield return new WaitForEndOfFrame();
+
+        float elapsedTime = 0f;
+        float startPos = scrollRect.verticalNormalizedPosition;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsedTime / duration);
+            scrollRect.verticalNormalizedPosition = Mathf.Lerp(startPos, targetPos, t);
+            yield return null;
+        }
+
+        scrollRect.verticalNormalizedPosition = targetPos;
+        scrollCoroutine = null;
     }
 }
