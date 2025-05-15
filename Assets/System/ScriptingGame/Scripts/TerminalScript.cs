@@ -28,7 +28,7 @@ public class TerminalScript : MonoBehaviour
     private void PrepareTerminal()
     {
        canvas.SetCodeText(luaScript);
-       canvas.SetVariableText(script.Globals, allLevelPlatforms);
+      // canvas.SetVariableText(script.Globals, allLevelPlatforms);
        canvas.SetImageColor(result);
     }
 
@@ -75,7 +75,7 @@ public class TerminalScript : MonoBehaviour
                 script.Globals[variableName] = DynValue.NewNumber(newInt);
                 break;
         }
-        canvas.SetVariableText(script.Globals, allLevelPlatforms);
+        //canvas.SetVariableText(script.Globals, allLevelPlatforms);
         Debug.Log($"{variableName} updated to: {value}, Type: {script.Globals[variableName]}");
         RunScript();
     }
@@ -84,7 +84,7 @@ public class TerminalScript : MonoBehaviour
     {
         // Remove the variable entirely or set it to nil
         script.Globals[variableName] = DynValue.Nil;
-        canvas.SetVariableText(script.Globals, allLevelPlatforms);
+        //canvas.SetVariableText(script.Globals, allLevelPlatforms);
         Debug.Log($"{variableName} removed.");
         RunScript();
     }

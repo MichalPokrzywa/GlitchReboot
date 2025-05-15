@@ -43,7 +43,7 @@ public abstract class BaseTerminal : MonoBehaviour
     protected void PrepareTerminal()
     {
         canvas.SetCodeText(luaScript);
-        canvas.SetVariableText(script.Globals, allLevelPlatforms);
+        //canvas.SetVariableText(script.Globals, allLevelPlatforms);
     }
 
     protected void AssignObjects()
@@ -101,14 +101,14 @@ public abstract class BaseTerminal : MonoBehaviour
             default: script.Globals[variableName] = DynValue.Nil; break;
         }
 
-        canvas.SetVariableText(script.Globals, allLevelPlatforms);
+        //canvas.SetVariableText(script.Globals, allLevelPlatforms);
         OnVariableChanged();
     }
 
     protected void RemoveVariable(string variableName)
     {
         script.Globals[variableName] = DynValue.Nil;
-        canvas.SetVariableText(script.Globals, allLevelPlatforms);
+        //canvas.SetVariableText(script.Globals, allLevelPlatforms);
         OnVariableChanged();
     }
 

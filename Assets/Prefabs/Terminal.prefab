@@ -9,10 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2522820247213193502}
-  - component: {fileID: 306701547279719332}
   - component: {fileID: 8249341823645166126}
+  - component: {fileID: 4148668123788954654}
   m_Layer: 0
-  m_Name: TerminalVoid
+  m_Name: Terminal
   m_TagString: Terminal
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -38,23 +38,6 @@ Transform:
   - {fileID: 3554205777367975090}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &306701547279719332
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1685512951273789960}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 256ae17301750234791c6bb8321fa90b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  luaScriptFile: {fileID: 1449258621073462137, guid: a523c09e3a658d24f86cd035c3715f97, type: 3}
-  assignedObjects: {fileID: 8249341823645166126}
-  canvas: {fileID: 8228694075074644896}
-  allLevelPlatforms:
-  - {fileID: 0}
 --- !u!114 &8249341823645166126
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -70,6 +53,29 @@ MonoBehaviour:
   objectsOnLevels:
   - name: GreyDoors
     gameObject: {fileID: 0}
+--- !u!114 &4148668123788954654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685512951273789960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 930f31cee07feb7489eea62b2880521b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignedObjects: {fileID: 8249341823645166126}
+  canvas: {fileID: 8228694075074644896}
+  allLevelPlatforms:
+  - {fileID: 0}
+  naturalText: "Ma\u0142pa k\u0142adzie {value_x} na {value_x.name}, przesuwa si\u0119
+    w odleg\u0142o\u015Bci {value_x} na osi {value_x.name}."
+  codeText: 'Vector3 newPosition = transform.position + new Vector3({value_x}({value_x.name}),0,0);
+
+    waypoint.transform.position
+    = newPosition;'
+  waypoint: {fileID: 0}
 --- !u!1 &1761649804536375018
 GameObject:
   m_ObjectHideFlags: 0
@@ -446,7 +452,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeText: {fileID: 5610513122488965382}
-  variableText: {fileID: 7508876210601109377}
+  neutralText: {fileID: 7508876210601109377}
   passImage: {fileID: 2707201647193509060}
 --- !u!1 &4911687550226415982
 GameObject:

@@ -714,7 +714,7 @@ GameObject:
   - component: {fileID: 1175783332180117050}
   - component: {fileID: 2381116898432367164}
   m_Layer: 6
-  m_Name: PlatformLua
+  m_Name: PlatformVariable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -773,7 +773,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 68d9464d0cd4fbf48a81abf378167c7f, type: 2}
+  - {fileID: 2100000, guid: 2ab8149ec4775284bada96c1b85b4a09, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -808,7 +808,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   variableName: value_x
-  type: 1
+  type: 0
+  baseNumberValue: 2
+  baseBooleanValue: 0
+  baseGameObjectValue: {fileID: 0}
+  textList:
+  - {fileID: 2528952515066228867}
+  - {fileID: 7105036762882610404}
+  - {fileID: 1504881768774404597}
+  - {fileID: 3685241132833482926}
   dicePosition: {fileID: 6902998511601655113}
   variableAdded:
     m_PersistentCalls:
@@ -816,11 +824,6 @@ MonoBehaviour:
   variableRemoved:
     m_PersistentCalls:
       m_Calls: []
-  textList:
-  - {fileID: 2528952515066228867}
-  - {fileID: 7105036762882610404}
-  - {fileID: 1504881768774404597}
-  - {fileID: 3685241132833482926}
 --- !u!65 &2381116898432367164
 BoxCollider:
   m_ObjectHideFlags: 0
