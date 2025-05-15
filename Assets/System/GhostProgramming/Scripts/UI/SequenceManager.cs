@@ -40,6 +40,19 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         }
     }
 
+    public List<BlockSequence> GetSelectedSequences()
+    {
+        List<BlockSequence> selectedSequences = new List<BlockSequence>();
+        foreach (var sequence in sequences)
+        {
+            if (sequence.IsSelected)
+            {
+                selectedSequences.Add(sequence);
+            }
+        }
+        return selectedSequences;
+    }
+
     #region InterfacesImplementation
 
     public void OnDrop(PointerEventData pointerData)
@@ -63,6 +76,8 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         if (selectedBlock == null)
             return;
 
+        SelectionBoxRaycastActivate();
+
         // 1) This block comes from the selection box
         if (selectedBlock.BlockInfo.parentType == Block.BlockParentType.SelectionBox)
         {
@@ -75,8 +90,6 @@ public class SequenceManager : MonoBehaviour, IDropHandler
             OnDropFromSequence(sequence, pointerData);
         }
 
-        // Turn on raycast target for all images in the block
-        selectedBlock.RaycastTargetActivation(true);
         DeselectBlock();
 
         UpdateUI();
@@ -85,12 +98,13 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     void OnDropFromSelectionBox(BlockSequence sequence, PointerEventData pointerData)
     {
         // Add block to sequence
-        sequence.AddBlock(selectedBlock);
+        int insertIndex = GetIndexInSequence(sequence, pointerData);
+        sequence.AddBlock(insertIndex, selectedBlock);
         // Make currently dragged block a child of the sequence container in correct position
-        PlaceSelectedBlockInSequence(sequence, pointerData);
+        PlaceSelectedBlockInSequence(sequence, insertIndex);
         // Update events
-        selectedBlock.OnDragged -= OnBlockFromSelectionBoxDragged;
-        selectedBlock.OnDragged += OnBlockFromSequenceDragged;
+        UnregisterFromSelectionBoxEvents(selectedBlock);
+        RegisterToSequenceEvents(selectedBlock);
         selectedBlock.UpdateParentType(Block.BlockParentType.Sequence);
     }
 
@@ -101,11 +115,15 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         if (previousSequence != null && previousSequence != sequence)
             previousSequence.RemoveBlock(selectedBlock);
 
-        if (!sequence.ContainsBlock(selectedBlock))
-            sequence.AddBlock(selectedBlock);
+        int insertIndex = GetIndexInSequence(sequence, pointerData);
+
+        if (sequence.ContainsBlock(selectedBlock))
+            sequence.RemoveBlock(selectedBlock);
+
+        sequence.AddBlock(insertIndex,selectedBlock);
 
         // Make currently dragged block a child of the sequence container in correct position
-        PlaceSelectedBlockInSequence(sequence, pointerData);
+        PlaceSelectedBlockInSequence(sequence, insertIndex);
         // Destroy the previous sequence if it is empty
         DestroyEmptySequence(previousSequence);
     }
@@ -115,6 +133,8 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         if (selectedBlock == null)
             return;
 
+        SelectionBoxRaycastActivate();
+
         BlockSequence sequence = sequences.Find(seq => seq.ContainsBlock(selectedBlock));
         if (sequence != null)
         {
@@ -123,6 +143,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
 
         Destroy(selectedBlock.gameObject);
         DeselectBlock();
+        DestroyEmptySequence(sequence);
     }
 
     void OnBlockFromSelectionBoxDragged(Block block)
@@ -131,19 +152,18 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         // to display it on the top of all other UI elements
         block.transform.SetParent(temporaryBlockPlacement.transform);
 
-        // Turn off raycast target for all images in the block
-        block.RaycastTargetActivation(false);
-
         // Create copy of the block
         int index = blocksInSelectionBox.IndexOf(block);
         var blockCopy = Instantiate(block.gameObject, selectionBox.transform);
         // and place it in the same position as the original block
         blockCopy.transform.SetSiblingIndex(index);
+        blockCopy.name = block.name;
 
         // Swap the original block with the copy in the list
         Block blockCopyComponent = blockCopy.GetComponent<Block>();
         blocksInSelectionBox[index] = blockCopyComponent;
-        blockCopyComponent.OnDragged += OnBlockFromSelectionBoxDragged;
+        blockCopyComponent.RaycastTargetActivation(false);
+        RegisterToSelectionBoxEvents(blockCopyComponent);
 
         SelectBlock(block);
     }
@@ -151,15 +171,13 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     void OnBlockFromSequenceDragged(Block block)
     {
         block.transform.SetParent(temporaryBlockPlacement.transform);
-        block.RaycastTargetActivation(false);
         SelectBlock(block);
     }
 
-    void PlaceSelectedBlockInSequence(BlockSequence sequence, PointerEventData pointerData)
+    void PlaceSelectedBlockInSequence(BlockSequence sequence, int index)
     {
         selectedBlock.transform.SetParent(sequence.transform);
-        int insertIndex = GetIndexInSequence(sequence, pointerData);
-        selectedBlock.transform.SetSiblingIndex(insertIndex);
+        selectedBlock.transform.SetSiblingIndex(index);
         emptySpace.transform.SetAsLastSibling();
 
         // if sequence has the last index (including empty space), scroll to the bottom
@@ -216,9 +234,43 @@ public class SequenceManager : MonoBehaviour, IDropHandler
             if (block != null)
             {
                 blocksInSelectionBox.Add(block);
-                block.OnDragged += OnBlockFromSelectionBoxDragged;
+                RegisterToSelectionBoxEvents(block);
             }
         }
+    }
+
+    void SelectionBoxRaycastActivate(Block block = null)
+    {
+        foreach (var b in blocksInSelectionBox)
+        {
+            b.RaycastTargetActivation(true);
+        }
+    }
+
+    void SelectionBoxRaycastDeactivate(Block block = null)
+    {
+        foreach (var b in blocksInSelectionBox)
+        {
+            b.RaycastTargetActivation(false);
+        }
+    }
+
+    void RegisterToSelectionBoxEvents(Block block)
+    {
+        block.OnDragged += OnBlockFromSelectionBoxDragged;
+        block.OnDragged += SelectionBoxRaycastDeactivate;
+    }
+
+    void UnregisterFromSelectionBoxEvents(Block block)
+    {
+        block.OnDragged -= OnBlockFromSelectionBoxDragged;
+        block.OnDragged -= SelectionBoxRaycastDeactivate;
+    }
+
+    void RegisterToSequenceEvents(Block block)
+    {
+        block.OnDragged += OnBlockFromSequenceDragged;
+        block.OnDragged += SelectionBoxRaycastDeactivate;
     }
 
     void SelectBlock(Block block)

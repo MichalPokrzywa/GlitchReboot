@@ -6,66 +6,36 @@ using UnityEngine.AI;
 using UnityEngine.UIElements;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class AgentController : MonoBehaviour
+public class GhostController : MonoBehaviour
 {
     [SerializeField] Transform holdPoint;
-    [SerializeField] GameObject objectTEST;
 
     // for cubes: 2f, platforms: 0.1f
-    public float interactionDistance = 2f;
+    float interactionDistance = 2f;
 
     Action onTargetReached;
 
     NavMeshAgent agent;
     GameObject searchingObject;
+    GameObject pickedUpObject;
+
     Coroutine pathCoroutine;
     Vector3? lastTargetUnreachablePosition = null;
     Vector3? lastMyUnreachablePosition = null;
 
-    GameObject pickedUpObject;
-
     float distance;
     bool hasReachedTarget = false;
     bool targetUnreachable = false;
-
-    Vector3 lastPos = new Vector3(0, 0, 0);
+    bool stopFollowingWhenReached = true;
 
     const float pathCalculationInterval = 0.25f;
     const float hysteresisBuffer = 0.2f;
 
-    // ----------------------------------------------------------------------------------------
-
-    public void MoveToTEST()
-    {
-        Debug.Log("Moving to: " + objectTEST.name);
-        MoveTo(objectTEST);
-    }
-
-    public void StopFollowingTEST()
-    {
-        Debug.Log("Stopped Following");
-        StopFollowing();
-    }
-
-    public void PickUpTEST()
-    {
-        Debug.Log("I'm going to pick up an object...");
-        var pickUpComponent = objectTEST.GetComponent<PickUpObjectInteraction>();
-        PickUp(pickUpComponent);
-    }
-
-    public void DropTEST()
-    {
-        Debug.Log("Dropping...");
-        Drop();
-    }
-
-    // ----------------------------------------------------------------------------------------
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        //lastPos = agent.transform.position;
+        EntityManager.instance.Register(gameObject);
     }
 
     void Update()
@@ -91,6 +61,10 @@ public class AgentController : MonoBehaviour
             ResetCoroutine();
             onTargetReached?.Invoke();
             onTargetReached = null;
+            if (stopFollowingWhenReached)
+            {
+                searchingObject = null;
+            }
         }
         // if target was reached already, but it moved away - start path finding again
         else if (distance > interactionDistance + hysteresisBuffer)
@@ -106,20 +80,20 @@ public class AgentController : MonoBehaviour
         }
     }
 
-    public void MoveTo(GameObject newSearchingObject)
+    public void MoveTo(GameObject newSearchingObject, float interactionDistance = 2f)
     {
         if (newSearchingObject == null)
         {
             Debug.LogWarning("New searching object is null.");
             return;
         }
-
+        this.interactionDistance = interactionDistance;
         searchingObject = newSearchingObject;
         targetUnreachable = false;
         hasReachedTarget = false;
     }
 
-    public void StopFollowing()
+    public void Stop()
     {
         if (searchingObject == null)
         {
@@ -131,7 +105,7 @@ public class AgentController : MonoBehaviour
         agent.isStopped = true;
     }
 
-    public void PickUp(PickUpObjectInteraction objectToPickUp)
+    public void PickUp(PickUpObjectInteraction objectToPickUp, float interactionDistance = 2f)
     {
         MoveTo(objectToPickUp.gameObject);
         onTargetReached = () => DoPickUp(objectToPickUp);

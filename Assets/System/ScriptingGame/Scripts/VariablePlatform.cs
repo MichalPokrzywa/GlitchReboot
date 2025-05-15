@@ -6,7 +6,7 @@ using UnityEngine.Events;
 
 public class VariablePlatform : MonoBehaviour
 {
-    [SerializeField] 
+    [SerializeField]
     public string variableName = "x_value";
     public VariableType type;
     [SerializeField] private Transform dicePosition;
@@ -14,6 +14,11 @@ public class VariablePlatform : MonoBehaviour
     [HideInInspector] public UnityEvent<string> variableRemoved;
 
     public List<TMP_Text> textList;
+
+    void Awake()
+    {
+        EntityManager.instance.Register(gameObject);
+    }
 
     void Start()
     {

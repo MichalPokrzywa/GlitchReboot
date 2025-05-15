@@ -1,3 +1,4 @@
+using GhostProgramming;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,21 +7,40 @@ using UnityEngine.UI;
 
 public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] Image selectionIndicator;
+    [SerializeField] Image image;
+    [SerializeField] Toggle toggle;
+    [SerializeField] Color normalColor;
+    [SerializeField] Color selectedColor;
 
     public Action<BlockSequence, PointerEventData> OnDropped;
     public int BlockCount => blocks.Count;
+    public bool IsSelected => selected;
+    public List<Block> Blocks => blocks;
 
     List<Block> blocks = new List<Block>();
+    bool selected = false;
 
     void Awake()
     {
-        UpdateSelection(false);
+        UpdateHighlight(false);
+        toggle.onValueChanged.AddListener(OnToggle);
     }
 
-    public void AddBlock(Block block)
+    void OnDestroy()
     {
-        blocks.Add(block);
+        toggle.onValueChanged.RemoveListener(OnToggle);
+    }
+
+    void OnToggle(bool isOn)
+    {
+        selected = isOn;
+        image.color = selected ? selectedColor : normalColor;
+    }
+
+    public void AddBlock(int index, Block block)
+    {
+        blocks.Insert(index, block);
+        UpdateNodeLinks();
     }
 
     public void RemoveBlock(Block block)
@@ -28,6 +48,7 @@ public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
         if (blocks.Contains(block))
         {
             blocks.Remove(block);
+            UpdateNodeLinks();
         }
         else
         {
@@ -49,19 +70,38 @@ public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        UpdateSelection(true);
+        if (selected)
+            return;
+
+        UpdateHighlight(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        UpdateSelection(false);
+        if (selected)
+            return;
+
+        UpdateHighlight(false);
     }
 
     #endregion
 
-    void UpdateSelection(bool selected)
+    void UpdateNodeLinks()
     {
-        SetImageAlpha(selectionIndicator, selected ? 1f : 0f);
+        for (int i = 0; i < blocks.Count; i++)
+        {
+            Node current = blocks[i].BlockNode;
+            Node prev = i > 0 ? blocks[i - 1].BlockNode : null;
+            Node next = i < blocks.Count - 1 ? blocks[i + 1].BlockNode : null;
+
+            current.prevNode = prev;
+            current.nextNode = next;
+        }
+    }
+
+    void UpdateHighlight(bool highlighted)
+    {
+        SetImageAlpha(image, highlighted ? 1f : 0f);
     }
 
     static void SetImageAlpha(Image img, float alpha)
