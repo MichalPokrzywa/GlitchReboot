@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using UnityEngine;
 
 namespace GhostProgramming
 {
-    public class GoToActionNode : ActionNode
+    public class DropActionNode : ActionNode
     {
         public override async Task<bool> Execute()
         {
@@ -11,13 +10,8 @@ namespace GhostProgramming
                 return false;
             if (ghostNode.GetValue() is not GhostController ghost)
                 return false;
-            if (nextNode is not ArgumentNode targetNode)
-                return false;
 
-            var target = targetNode.GetValue() as MonoBehaviour;
-
-            return await ghost.MoveTo(target?.gameObject);
+            return ghost.Drop();
         }
-
     }
 }

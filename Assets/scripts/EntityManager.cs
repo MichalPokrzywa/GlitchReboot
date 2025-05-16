@@ -3,19 +3,29 @@ using UnityEngine;
 
 public class EntityManager : MonoBehaviour
 {
-    public static EntityManager instance { get; private set; }
+    static EntityManager _instance;
+
+    public static EntityManager instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = FindFirstObjectByType<EntityManager>();
+                if (_instance == null)
+                {
+                    GameObject singletonGO = new GameObject("EntityManager (Singleton)");
+                    _instance = singletonGO.AddComponent<EntityManager>();
+                }
+            }
+
+            return _instance;
+        }
+    }
 
     public List<GhostController> ghosts { get; } = new List<GhostController>();
     public List<VariableDice> cubes { get; } = new List<VariableDice>();
     public List<VariablePlatform> platforms { get; } = new List<VariablePlatform>();
-
-    void Awake()
-    {
-        if (instance == null)
-            instance = this;
-        else
-            Destroy(gameObject);
-    }
 
     public void Register(GameObject obj)
     {

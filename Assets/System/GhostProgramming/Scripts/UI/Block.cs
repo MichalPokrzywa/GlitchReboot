@@ -59,7 +59,7 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         header.color = blockUIData.GetHeaderColor(blockData.type);
         if (inLabel != null) inLabel.color = blockUIData.GetInLabelColor(blockData.type);
         if (outLabel != null) outLabel.color = blockUIData.GetOutLabelColor(blockData.type);
-        blockName.text = blockData.name;
+        if (blockName != null) blockName.text = blockData.name;
     }
 
     public void UpdateParentType(BlockParentType parentType)

@@ -1,19 +1,16 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
-using UnityEngine.UIElements;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class GhostController : MonoBehaviour
 {
     [SerializeField] Transform holdPoint;
 
-    // for cubes: 2f, platforms: 0.1f
-    float interactionDistance = 2f;
-
     Action onTargetReached;
+    TaskCompletionSource<bool> taskCS;
 
     NavMeshAgent agent;
     GameObject searchingObject;
@@ -24,6 +21,7 @@ public class GhostController : MonoBehaviour
     Vector3? lastMyUnreachablePosition = null;
 
     float distance;
+    float interactionDistance = 2f;
     bool hasReachedTarget = false;
     bool targetUnreachable = false;
     bool stopFollowingWhenReached = true;
@@ -31,6 +29,11 @@ public class GhostController : MonoBehaviour
     const float pathCalculationInterval = 0.25f;
     const float hysteresisBuffer = 0.2f;
 
+    public enum InteractionDistance
+    {
+        Close,
+        Far
+    }
 
     void Awake()
     {
@@ -51,7 +54,7 @@ public class GhostController : MonoBehaviour
 
         distance = Vector3.Distance(agent.transform.position, searchingObject.transform.position);
 
-        // If target was not reached yet, but we are close enough - stop path finding
+        // If target is reached - stop path finding
         if (!hasReachedTarget && distance < interactionDistance)
         {
             agent.isStopped = true;
@@ -59,15 +62,16 @@ public class GhostController : MonoBehaviour
             agent.ResetPath();
             Debug.Log("Target reached");
             ResetCoroutine();
-            onTargetReached?.Invoke();
-            onTargetReached = null;
             if (stopFollowingWhenReached)
             {
                 searchingObject = null;
             }
+            onTargetReached?.Invoke();
+            onTargetReached = null;
+            return;
         }
         // if target was reached already, but it moved away - start path finding again
-        else if (distance > interactionDistance + hysteresisBuffer)
+        if (distance > interactionDistance + hysteresisBuffer)
         {
             agent.isStopped = false;
             hasReachedTarget = false;
@@ -80,17 +84,29 @@ public class GhostController : MonoBehaviour
         }
     }
 
-    public void MoveTo(GameObject newSearchingObject, float interactionDistance = 2f)
+    public async Task<bool> MoveTo(GameObject newSearchingObject)
     {
+        taskCS = new TaskCompletionSource<bool>();
+
         if (newSearchingObject == null)
         {
             Debug.LogWarning("New searching object is null.");
-            return;
+            return false;
         }
-        this.interactionDistance = interactionDistance;
+
+        interactionDistance = agent.stoppingDistance = GetInteractionDistance( InteractionDistance.Far);
+
         searchingObject = newSearchingObject;
         targetUnreachable = false;
         hasReachedTarget = false;
+
+        onTargetReached = () =>
+        {
+            taskCS.TrySetResult(true);
+            onTargetReached = null;
+        };
+
+        return await taskCS.Task;
     }
 
     public void Stop()
@@ -105,23 +121,36 @@ public class GhostController : MonoBehaviour
         agent.isStopped = true;
     }
 
-    public void PickUp(PickUpObjectInteraction objectToPickUp, float interactionDistance = 2f)
+    public async Task<bool> PickUp(PickUpObjectInteraction objectToPickUp)
     {
-        MoveTo(objectToPickUp.gameObject);
-        onTargetReached = () => DoPickUp(objectToPickUp);
+        if (objectToPickUp == null)
+        {
+            Debug.LogWarning("Object to pick up is null.");
+            return false;
+        }
+
+        bool reachedDest = await MoveTo(objectToPickUp.gameObject);
+        if (!reachedDest)
+        {
+            Debug.LogWarning("Failed to reach the object.");
+            return false;
+        }
+        DoPickUp(objectToPickUp);
+        return true;
     }
 
-    public void Drop()
+    public bool Drop()
     {
         if (pickedUpObject == null)
         {
             Debug.Log("Nothing to drop...");
-            return;
+            return false;
         }
 
         var pickUpComponent = pickedUpObject.GetComponent<PickUpObjectInteraction>();
         pickUpComponent.DropMe();
         pickedUpObject = null;
+        return true;
     }
 
     void DoPickUp(PickUpObjectInteraction objectToPickUp)
@@ -215,5 +244,15 @@ public class GhostController : MonoBehaviour
             // Wait for a short time before checking again
             yield return new WaitForSeconds(pathCalculationInterval);
         }
+    }
+
+    public static float GetInteractionDistance(InteractionDistance type)
+    {
+        return type switch
+        {
+            InteractionDistance.Far => 2f,
+            InteractionDistance.Close => 0.3f,
+            _ => 0.5f
+        };
     }
 }
