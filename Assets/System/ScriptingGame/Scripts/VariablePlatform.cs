@@ -20,6 +20,8 @@ public class VariablePlatform : MonoBehaviour
     [Tooltip("Choose the variable type here")]
     public VariableType type;
 
+    private INamedVariableHandler namedHandler;
+
     [Header("Initial Value")]
     [Tooltip("Starting value if Number")]
     [SerializeField] private int baseNumberValue = 0;
@@ -36,7 +38,7 @@ public class VariablePlatform : MonoBehaviour
 
     [HideInInspector] public VariableAddedEvent variableAdded = new();
     [HideInInspector] public VariableRemovedEvent variableRemoved = new();
-
+    
 
     private void Awake()
     {
