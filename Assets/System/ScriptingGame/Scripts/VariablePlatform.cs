@@ -1,81 +1,112 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
+[Serializable]
+public class VariableAddedEvent : UnityEvent<string, object> { }
+
+[Serializable]
+public class VariableRemovedEvent : UnityEvent<string> { }
+
 public class VariablePlatform : MonoBehaviour
 {
-    [SerializeField] 
+    [Header("Identity")]
+    [Tooltip("Variable used for terminal")]
     public string variableName = "x_value";
+
+    [Tooltip("Choose the variable type here")]
     public VariableType type;
+
+    [Header("Initial Value")]
+    [Tooltip("Starting value if Number")]
+    [SerializeField] private int baseNumberValue = 0;
+    [Tooltip("Starting value if Boolean")]
+    [SerializeField] private bool baseBooleanValue = false;
+    [Tooltip("Starting value if GameObject")]
+    [SerializeField] private GameObject baseGameObjectValue = null;
+
+    [Header("UI")]
+    [SerializeField] private List<TMP_Text> textList = new();
+
+    [Header("Tween Target")]
     [SerializeField] private Transform dicePosition;
-    [HideInInspector] public UnityEvent<string,object> variableAdded;
-    [HideInInspector] public UnityEvent<string> variableRemoved;
 
-    [HideInInspector]
-    public int variableValue=0;
+    [HideInInspector] public VariableAddedEvent variableAdded = new();
+    [HideInInspector] public VariableRemovedEvent variableRemoved = new();
 
-    public List<TMP_Text> textList;
+    // Internal handler to keep track of currentValue + text update logic
+    private INamedVariableHandler namedHandler;
 
-    void Start()
+    private void Awake()
     {
-        foreach (TMP_Text text in textList)
+        // 1) create the core value-handler
+        IVariableValueHandler core = type switch
         {
-            text.text = variableName;
-        }
+            VariableType.Number => new NumberHandler(baseNumberValue),
+            VariableType.Boolean => new BooleanHandler(baseBooleanValue),
+            VariableType.GameObject => new GameObjectHandler(baseGameObjectValue),
+            _ => throw new Exception($"Unknown type {type}")
+        };
+        // 2) wrap it in a NamedVariableHandler
+        namedHandler = new NamedVariableHandler(
+            variableName,
+            type,
+            core
+        );
     }
-    public void ReceiveValue(object value)
+
+    private void Start()
     {
-        // Handle the received value
-        if (value is int intValue && type == VariableType.Number)
+        // update UI to show displayName
+        foreach (var t in textList)
         {
-            Debug.Log($"Platform received integer: {intValue}");
-            variableAdded.Invoke(variableName, intValue);
-            UpdateText(true);
-            variableValue = (int)intValue;
+            t.text = namedHandler.VariableName;
         }
-        else if (value is bool boolValue && type == VariableType.Boolean)
-        {
-            Debug.Log($"Platform received boolean: {boolValue}");
-            variableAdded.Invoke(variableName, boolValue);
-            UpdateText(true);
-            variableValue = boolValue? 1 : 0;
-        }
-        else
-        {
-            Debug.LogError("Platform received unknown value type");
-        }
+        var rend = GetComponentInChildren<Renderer>();
+        if (rend != null)
+            rend.material.color = VariableTypeColor.GetColor(type);
     }
+
+    public void ReceiveValue(object v)
+    {
+        if (!namedHandler.Accepts(v))
+            return;
+        namedHandler.UpdateValue(v);
+        variableAdded.Invoke(
+            namedHandler.VariableName,
+            namedHandler.GetValue()
+        );
+        namedHandler.UpdateHighlight(textList, true);
+    }
+
     public void ClearValue()
     {
-        // Clear the value stored on the platform
-        //currentValue = null;
-        variableRemoved.Invoke(variableName);
-        Debug.Log("Platform value cleared");
-        UpdateText(false);
-        variableValue = 0;
-    }
-    private void UpdateText(bool isOn)
-    {
-        foreach (TMP_Text text in textList)
-        {
-            text.color = isOn ? Color.green : Color.grey;
-        }
+        namedHandler.ResetToBase();
+        variableRemoved.Invoke(namedHandler.VariableName);
+        namedHandler.UpdateHighlight(textList, false);
     }
 
-    public void MoveObjectToPosition(GameObject gameObject)
+    public INamedVariableHandler GetHandler()
     {
-        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        return namedHandler;
+    }
+
+    public void MoveObjectToPosition(GameObject go)
+    {
+        var rb = go.GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.
-        gameObject.transform.DOMove(dicePosition.position, 0.3f).OnComplete(() =>
-        {
-            rb.linearVelocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            rb.useGravity = true;
-        });
+
+        go.transform.DOMove(dicePosition.position, 0.3f)
+          .OnComplete(() =>
+          {
+              rb.linearVelocity = Vector3.zero;
+              rb.angularVelocity = Vector3.zero;
+              rb.useGravity = true;
+          });
     }
 }

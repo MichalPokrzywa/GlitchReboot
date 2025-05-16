@@ -1,12 +1,14 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
     public Scene currentScene;
     public LoadingCanvas loadingCanvas;
+    public UnityEvent sceneLoaded;
     public void LoadScene(Scene scene)
     {
         currentScene = scene;
@@ -41,13 +43,15 @@ public class SceneLoader : MonoBehaviour
     private IEnumerator LoadSceneAsyncWithUI()
     {
         AsyncOperation operation = SceneManager.LoadSceneAsync((int)currentScene);
-
         while (!operation.isDone)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
             Debug.Log($"Loading progress: {progress}");
             yield return null;
         }
+
+        yield return new WaitForSeconds(2f);
+        sceneLoaded.Invoke();
 
         loadingCanvas.HideLoadingCanvas();
         TVCloseRenderFeature.Instance.PlayOpenEffect(2f);
