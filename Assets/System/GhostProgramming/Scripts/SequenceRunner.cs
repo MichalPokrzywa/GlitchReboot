@@ -1,5 +1,7 @@
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using GhostProgramming;
-using NUnit.Framework;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,33 +24,40 @@ public class SequenceRunner : MonoBehaviour
         executeButton.onClick.RemoveListener(OnExecuteClicked);
     }
 
-    void OnExecuteClicked()
+    async void OnExecuteClicked()
     {
         infoLabel.text = string.Empty;
 
         var sequences = sequenceManager.GetSelectedSequences();
-
         if (sequences.Count == 0)
         {
             infoLabel.text = noSelectedSequencesInfo;
             return;
         }
 
+        List<Task> sequenceTasks = new List<Task>();
+
         foreach (var sequence in sequences)
         {
-            foreach (var block in sequence.Blocks)
-            {
-                var node = block.BlockNode;
-                if (node == null)
-                {
-                    Debug.LogWarning($"Node is null for block: {block.BlockInfo.name}");
-                    return;
-                }
+            sequenceTasks.Add(RunSequenceAsync(sequence));
+        }
 
-                var actionNode = node as ActionNode;
-                if (actionNode != null)
-                    actionNode.Execute();
+        await Task.WhenAll(sequenceTasks);
+    }
+
+    private async Task RunSequenceAsync(BlockSequence sequence)
+    {
+        foreach (var block in sequence.Blocks)
+        {
+            var node = block.BlockNode;
+            if (node == null)
+            {
+                Debug.LogWarning($"Node is null for block: {block.BlockInfo.name}");
+                return;
             }
+
+            if (node is ActionNode actionNode)
+                await actionNode.Execute();
         }
     }
 }

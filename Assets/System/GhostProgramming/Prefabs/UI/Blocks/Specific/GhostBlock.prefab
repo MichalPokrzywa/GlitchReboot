@@ -30,7 +30,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1426598918959785085, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_Options.m_Options.Array.size
-      value: 3
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1426598918959785085, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: Ghost 1
       objectReference: {fileID: 0}
     - target: {fileID: 1970516163348506700, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_SizeDelta.x
@@ -140,9 +144,29 @@ PrefabInstance:
       propertyPath: blockData.name
       value: Ghost
       objectReference: {fileID: 0}
+    - target: {fileID: 3867210752447511579, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: blockData.type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4257871414751153864, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_fontColor.b
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4257871414751153864, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_fontColor.g
+      value: 0.827451
+      objectReference: {fileID: 0}
+    - target: {fileID: 4257871414751153864, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_fontColor.r
+      value: 0.24313726
+      objectReference: {fileID: 0}
+    - target: {fileID: 4257871414751153864, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_fontColor32.rgba
+      value: 4281586494
+      objectReference: {fileID: 0}
     - target: {fileID: 8175216458072536835, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_Name
-      value: GhostBlock Variant
+      value: GhostBlock
       objectReference: {fileID: 0}
     - target: {fileID: 8994505174423023481, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_text
@@ -184,4 +208,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f04016f35663e34eacd0253c718f046, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prevNode: {fileID: 0}
+  nextNode: {fileID: 0}
   dropdown: {fileID: 2013134307582398394}

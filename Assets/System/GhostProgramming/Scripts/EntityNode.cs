@@ -18,6 +18,7 @@ namespace GhostProgramming
                 dropdown.options.Add(new TMP_Dropdown.OptionData(objName));
             }
         }
+
         protected abstract List<T> GetEntityList();
         protected abstract string GetEnityName();
 

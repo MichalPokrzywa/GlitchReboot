@@ -37,16 +37,12 @@ PrefabInstance:
       value: GoTo()
       objectReference: {fileID: 0}
     - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
-      propertyPath: m_fontSize
-      value: 20
-      objectReference: {fileID: 0}
-    - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_fontSizeBase
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3246590790935104377, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_Name
-      value: GoToActionBlock Variant
+      value: GoToActionBlock
       objectReference: {fileID: 0}
     - target: {fileID: 3986759086075442806, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_SizeDelta.x
@@ -237,3 +233,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e0ade9406d49dcc458e41d39cfc75d49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prevNode: {fileID: 0}
+  nextNode: {fileID: 0}

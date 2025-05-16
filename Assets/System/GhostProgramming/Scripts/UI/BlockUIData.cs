@@ -35,6 +35,7 @@ public class BlockUIData : ScriptableObject
         {
             BlockType.Performer => actionColor,
             BlockType.Action => objectColor,
+            BlockType.Object => actionColor,
             _ => Color.white
         };
     }
