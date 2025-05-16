@@ -10,6 +10,8 @@ public class VariableDice : MonoBehaviour
 
     [SerializeField] private int baseNumberValue = 1; // Initial value for Number
     [SerializeField] private bool baseBooleanValue = false; // Initial value for Boolean
+    [SerializeField] private string baseStringValue = ""; // Initial value for Boolean
+    [SerializeField] private GameObject baseGameObjectValue; // Initial value for Boolean
 
     private IVariableValueHandler handler;
 
@@ -29,6 +31,14 @@ public class VariableDice : MonoBehaviour
             case VariableType.Boolean:
                 handler = new BooleanHandler(baseBooleanValue);
                 UpdateValue(baseBooleanValue);
+                break;
+            case VariableType.String:
+                handler = new StringHandler(baseStringValue);
+                UpdateValue(baseStringValue);
+                break;
+            case VariableType.GameObject:
+                handler = new GameObjectHandler(baseGameObjectValue);
+                UpdateValue(baseGameObjectValue);
                 break;
         }
         var rend = GetComponentInChildren<Renderer>();

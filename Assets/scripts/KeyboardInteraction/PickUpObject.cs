@@ -1,7 +1,7 @@
 using UnityEngine;
 
 public class PickUpObjectInteraction : InteractionBase
-{   
+{
    private Transform holdPoint;
    private Rigidbody rb;
    public bool IsPickedUp { get; private set; }
@@ -9,20 +9,26 @@ public class PickUpObjectInteraction : InteractionBase
    [Tooltip("Speed (deg/sec) at which to rotate toward the snapped orientation.")]
    public float rotationSpeed = 20f;
    private Interactor ownerInteractor;
+
+   void Awake()
+   {
+       EntityManager.instance.Register(gameObject);
+    }
+
    private void Start()
    {
       rb = GetComponent<Rigidbody>();
       IsPickedUp = false;
-   }
+    }
 
    public override void Interact()
    {
       //if (iAmPickedUp)
-      //{ 
+      //{
       //    DropMe();
       //}
       //else
-      //{ 
+      //{
       //    PickMeUp();
       //}
    }

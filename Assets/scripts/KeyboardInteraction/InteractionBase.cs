@@ -52,7 +52,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
 
     public void ShowUI()
     {
-        Debug.Log("Show UI");
+        //Debug.Log("Show UI");
         UIHoverObject.SetActive(true);
         UIHoverText.text = TooltipText;
         HasShownUI = true;
@@ -60,7 +60,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
 
     public void HideUI()
     {
-        Debug.Log("Hide UI");
+       // Debug.Log("Hide UI");
         UIHoverObject.SetActive(false);
         HasShownUI = false;
     }

@@ -117,7 +117,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7039529378174240496}
-  - component: {fileID: 1506970712116079763}
+  - component: {fileID: 4626061278759759730}
   m_Layer: 0
   m_Name: TrigerPoint
   m_TagString: Untagged
@@ -143,7 +143,7 @@ Transform:
   - {fileID: 506019898642814746}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1506970712116079763
+--- !u!114 &4626061278759759730
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -152,14 +152,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 483081599117596532}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c24635c241fa86418270d188fe7cb24, type: 3}
+  m_Script: {fileID: 11500000, guid: 80c872b7aba3d3640a04ef425c88791c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRadius: 1
-  targetTag: Player
-  onObjectEnter:
-    m_PersistentCalls:
-      m_Calls: []
+  objectToActivate: {fileID: 0}
 --- !u!1 &4408004961170862117
 GameObject:
   m_ObjectHideFlags: 0

@@ -20,11 +20,15 @@ public class VariablePlatform : MonoBehaviour
     [Tooltip("Choose the variable type here")]
     public VariableType type;
 
+    private INamedVariableHandler namedHandler;
+
     [Header("Initial Value")]
     [Tooltip("Starting value if Number")]
     [SerializeField] private int baseNumberValue = 0;
     [Tooltip("Starting value if Boolean")]
     [SerializeField] private bool baseBooleanValue = false;
+    [Tooltip("Starting value if String")]
+    [SerializeField] private string baseStringValue = "";
     [Tooltip("Starting value if GameObject")]
     [SerializeField] private GameObject baseGameObjectValue = null;
 
@@ -36,9 +40,7 @@ public class VariablePlatform : MonoBehaviour
 
     [HideInInspector] public VariableAddedEvent variableAdded = new();
     [HideInInspector] public VariableRemovedEvent variableRemoved = new();
-
-    // Internal handler to keep track of currentValue + text update logic
-    private INamedVariableHandler namedHandler;
+    
 
     private void Awake()
     {
@@ -47,6 +49,7 @@ public class VariablePlatform : MonoBehaviour
         {
             VariableType.Number => new NumberHandler(baseNumberValue),
             VariableType.Boolean => new BooleanHandler(baseBooleanValue),
+            VariableType.String => new StringHandler(baseStringValue),
             VariableType.GameObject => new GameObjectHandler(baseGameObjectValue),
             _ => throw new Exception($"Unknown type {type}")
         };
@@ -56,6 +59,7 @@ public class VariablePlatform : MonoBehaviour
             type,
             core
         );
+	EntityManager.instance.Register(gameObject);
     }
 
     private void Start()
