@@ -37,8 +37,6 @@ public class VariablePlatform : MonoBehaviour
     [HideInInspector] public VariableAddedEvent variableAdded = new();
     [HideInInspector] public VariableRemovedEvent variableRemoved = new();
 
-    // Internal handler to keep track of currentValue + text update logic
-    private INamedVariableHandler namedHandler;
 
     private void Awake()
     {
@@ -56,6 +54,7 @@ public class VariablePlatform : MonoBehaviour
             type,
             core
         );
+	EntityManager.instance.Register(gameObject);
     }
 
     private void Start()
