@@ -45,7 +45,7 @@ public class SequenceRunner : MonoBehaviour
         await Task.WhenAll(sequenceTasks);
     }
 
-    private async Task RunSequenceAsync(BlockSequence sequence)
+    async Task RunSequenceAsync(BlockSequence sequence)
     {
         foreach (var block in sequence.Blocks)
         {

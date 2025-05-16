@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AI;
@@ -107,6 +108,19 @@ public class GhostController : MonoBehaviour
         };
 
         return await taskCS.Task;
+    }
+
+    public async Task WaitForSeconds(float time, CancellationToken token)
+    {
+        int milliseconds = Mathf.RoundToInt(time * 1000f);
+        try
+        {
+            await Task.Delay(milliseconds, token);
+        }
+        catch (TaskCanceledException)
+        {
+            Debug.Log("WaitForSeconds canceled");
+        }
     }
 
     public void Stop()
