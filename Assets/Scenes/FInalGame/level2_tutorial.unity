@@ -5773,17 +5773,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!114 &631185967 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
-  m_PrefabInstance: {fileID: 1509094510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df62234e674f445838a0c4729493e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &634501469 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 386226973884872072, guid: 2acfbc85fc9ad344e94d31a7c70ab336, type: 3}
@@ -9836,37 +9825,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45699614f9df4ce4da39a42f124077cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointParent: {fileID: 577835281}
-  platformx: {fileID: 1289559270}
-  platformy: {fileID: 2103985293}
-  platformz: {fileID: 631185967}
-  platformBaseHight: {fileID: 1455683311}
-  penis: {fileID: 7122535686620654060}
-  logika: "Dla ka\u017Cdego punktu, kt\xF3ry ma wyznacza\u0107 stopie\u0144 schod\xF3w,
-    obliczane jest jego dok\u0142adne po\u0142o\u017Cenie w \u015Bwiecie gry. To
-    po\u0142o\u017Cenie jest wyznaczane na podstawie dw\xF3ch rzeczy:\n\nAktualnej
-    pozycji ca\u0142ych schod\xF3w: Wyobra\u017A sobie, \u017Ce ca\u0142e schody
-    s\u0105 jak ruchoma baza. Pozycja ka\u017Cdego stopnia jest liczona wzgl\u0119dem
-    tej bazy.\n\nWarto\u015Bci 'krok\xF3w' w trzech kierunkach (X, Y, Z) i numeru
-    stopnia: Mamy trzy warto\u015Bci (platformx, platformy, platformz), kt\xF3re
-    m\xF3wi\u0105, o ile ka\u017Cdy kolejny stopie\u0144 ma by\u0107 przesuni\u0119ty
-    wzd\u0142u\u017C odpowiedniej osi. Dodatkowo, u\u017Cywamy numeru stopnia (pierwszy
-    ma numer 0, drugi 1, trzeci 2 i tak dalej).\n\nDla pierwszego stopnia (numer
-    0), te warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez 0, co oznacza,
-    \u017Ce pierwszy stopie\u0144 jest umieszczany bezpo\u015Brednio na pozycji bazowej
-    schod\xF3w (z ewentualnym przesuni\u0119ciem od transform.position).\nDla drugiego
-    stopnia (numer 1), warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez
-    1, wi\u0119c stopie\u0144 jest przesuni\u0119ty o dok\u0142adnie te warto\u015Bci
-    od pozycji bazowej schod\xF3w.\nDla trzeciego stopnia (numer 2), warto\u015Bci
-    przesuni\u0119cia s\u0105 mno\u017Cone przez 2, wi\u0119c stopie\u0144 jest przesuni\u0119ty
-    dwa razy dalej od pozycji bazowej schod\xF3w i tak dalej.\nW efekcie, mno\u017C\u0105c
-    te 'kroki' przez numer stopnia, tworzymy efekt schod\xF3w. Ka\u017Cdy kolejny
-    stopie\u0144 jest umieszczany dalej wzd\u0142u\u017C osi X, Y i Z, tworz\u0105c
-    wizualn\u0105 struktur\u0119 schod\xF3w. Po obliczeniu tej nowej pozycji, dany
-    punkt (waypoint) jest fizycznie umieszczany w tym miejscu w \u015Bwiecie gry."
-  waypoints: []
-  basicPosition: {x: 0, y: 0, z: 0}
-  czasZmianyLogiki: 3
 --- !u!1 &932317488
 GameObject:
   m_ObjectHideFlags: 0
@@ -10620,37 +10578,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45699614f9df4ce4da39a42f124077cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointParent: {fileID: 1605450687}
-  platformx: {fileID: 1289559270}
-  platformy: {fileID: 2103985293}
-  platformz: {fileID: 631185967}
-  platformBaseHight: {fileID: 1455683311}
-  penis: {fileID: 7122535686620654060}
-  logika: "Dla ka\u017Cdego punktu, kt\xF3ry ma wyznacza\u0107 stopie\u0144 schod\xF3w,
-    obliczane jest jego dok\u0142adne po\u0142o\u017Cenie w \u015Bwiecie gry. To
-    po\u0142o\u017Cenie jest wyznaczane na podstawie dw\xF3ch rzeczy:\n\nAktualnej
-    pozycji ca\u0142ych schod\xF3w: Wyobra\u017A sobie, \u017Ce ca\u0142e schody
-    s\u0105 jak ruchoma baza. Pozycja ka\u017Cdego stopnia jest liczona wzgl\u0119dem
-    tej bazy.\n\nWarto\u015Bci 'krok\xF3w' w trzech kierunkach (X, Y, Z) i numeru
-    stopnia: Mamy trzy warto\u015Bci (platformx, platformy, platformz), kt\xF3re
-    m\xF3wi\u0105, o ile ka\u017Cdy kolejny stopie\u0144 ma by\u0107 przesuni\u0119ty
-    wzd\u0142u\u017C odpowiedniej osi. Dodatkowo, u\u017Cywamy numeru stopnia (pierwszy
-    ma numer 0, drugi 1, trzeci 2 i tak dalej).\n\nDla pierwszego stopnia (numer
-    0), te warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez 0, co oznacza,
-    \u017Ce pierwszy stopie\u0144 jest umieszczany bezpo\u015Brednio na pozycji bazowej
-    schod\xF3w (z ewentualnym przesuni\u0119ciem od transform.position).\nDla drugiego
-    stopnia (numer 1), warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez
-    1, wi\u0119c stopie\u0144 jest przesuni\u0119ty o dok\u0142adnie te warto\u015Bci
-    od pozycji bazowej schod\xF3w.\nDla trzeciego stopnia (numer 2), warto\u015Bci
-    przesuni\u0119cia s\u0105 mno\u017Cone przez 2, wi\u0119c stopie\u0144 jest przesuni\u0119ty
-    dwa razy dalej od pozycji bazowej schod\xF3w i tak dalej.\nW efekcie, mno\u017C\u0105c
-    te 'kroki' przez numer stopnia, tworzymy efekt schod\xF3w. Ka\u017Cdy kolejny
-    stopie\u0144 jest umieszczany dalej wzd\u0142u\u017C osi X, Y i Z, tworz\u0105c
-    wizualn\u0105 struktur\u0119 schod\xF3w. Po obliczeniu tej nowej pozycji, dany
-    punkt (waypoint) jest fizycznie umieszczany w tym miejscu w \u015Bwiecie gry."
-  waypoints: []
-  basicPosition: {x: 0, y: 0, z: 0}
-  czasZmianyLogiki: 3
 --- !u!43 &1021631314
 Mesh:
   m_ObjectHideFlags: 0
@@ -14348,37 +14275,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45699614f9df4ce4da39a42f124077cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointParent: {fileID: 5661152375219723365}
-  platformx: {fileID: 1289559270}
-  platformy: {fileID: 2103985293}
-  platformz: {fileID: 631185967}
-  platformBaseHight: {fileID: 1455683311}
-  penis: {fileID: 7122535686620654060}
-  logika: "Dla ka\u017Cdego punktu, kt\xF3ry ma wyznacza\u0107 stopie\u0144 schod\xF3w,
-    obliczane jest jego dok\u0142adne po\u0142o\u017Cenie w \u015Bwiecie gry. To
-    po\u0142o\u017Cenie jest wyznaczane na podstawie dw\xF3ch rzeczy:\n\nAktualnej
-    pozycji ca\u0142ych schod\xF3w: Wyobra\u017A sobie, \u017Ce ca\u0142e schody
-    s\u0105 jak ruchoma baza. Pozycja ka\u017Cdego stopnia jest liczona wzgl\u0119dem
-    tej bazy.\n\nWarto\u015Bci 'krok\xF3w' w trzech kierunkach (X, Y, Z) i numeru
-    stopnia: Mamy trzy warto\u015Bci (platformx, platformy, platformz), kt\xF3re
-    m\xF3wi\u0105, o ile ka\u017Cdy kolejny stopie\u0144 ma by\u0107 przesuni\u0119ty
-    wzd\u0142u\u017C odpowiedniej osi. Dodatkowo, u\u017Cywamy numeru stopnia (pierwszy
-    ma numer 0, drugi 1, trzeci 2 i tak dalej).\n\nDla pierwszego stopnia (numer
-    0), te warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez 0, co oznacza,
-    \u017Ce pierwszy stopie\u0144 jest umieszczany bezpo\u015Brednio na pozycji bazowej
-    schod\xF3w (z ewentualnym przesuni\u0119ciem od transform.position).\nDla drugiego
-    stopnia (numer 1), warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez
-    1, wi\u0119c stopie\u0144 jest przesuni\u0119ty o dok\u0142adnie te warto\u015Bci
-    od pozycji bazowej schod\xF3w.\nDla trzeciego stopnia (numer 2), warto\u015Bci
-    przesuni\u0119cia s\u0105 mno\u017Cone przez 2, wi\u0119c stopie\u0144 jest przesuni\u0119ty
-    dwa razy dalej od pozycji bazowej schod\xF3w i tak dalej.\nW efekcie, mno\u017C\u0105c
-    te 'kroki' przez numer stopnia, tworzymy efekt schod\xF3w. Ka\u017Cdy kolejny
-    stopie\u0144 jest umieszczany dalej wzd\u0142u\u017C osi X, Y i Z, tworz\u0105c
-    wizualn\u0105 struktur\u0119 schod\xF3w. Po obliczeniu tej nowej pozycji, dany
-    punkt (waypoint) jest fizycznie umieszczany w tym miejscu w \u015Bwiecie gry."
-  waypoints: []
-  basicPosition: {x: 0, y: 0, z: 0}
-  czasZmianyLogiki: 3
 --- !u!1 &1203514158
 GameObject:
   m_ObjectHideFlags: 0
@@ -16938,17 +16834,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!114 &1289559270 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
-  m_PrefabInstance: {fileID: 1034252018}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df62234e674f445838a0c4729493e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1298592940
 GameObject:
   m_ObjectHideFlags: 0
@@ -19986,17 +19871,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7960105786080236497, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
   m_PrefabInstance: {fileID: 2030633734978919574}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1455683311 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
-  m_PrefabInstance: {fileID: 1023792866}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df62234e674f445838a0c4729493e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1486727821
 GameObject:
   m_ObjectHideFlags: 0
@@ -20026,37 +19900,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45699614f9df4ce4da39a42f124077cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointParent: {fileID: 680585999}
-  platformx: {fileID: 1289559270}
-  platformy: {fileID: 2103985293}
-  platformz: {fileID: 631185967}
-  platformBaseHight: {fileID: 1455683311}
-  penis: {fileID: 7122535686620654060}
-  logika: "Dla ka\u017Cdego punktu, kt\xF3ry ma wyznacza\u0107 stopie\u0144 schod\xF3w,
-    obliczane jest jego dok\u0142adne po\u0142o\u017Cenie w \u015Bwiecie gry. To
-    po\u0142o\u017Cenie jest wyznaczane na podstawie dw\xF3ch rzeczy:\n\nAktualnej
-    pozycji ca\u0142ych schod\xF3w: Wyobra\u017A sobie, \u017Ce ca\u0142e schody
-    s\u0105 jak ruchoma baza. Pozycja ka\u017Cdego stopnia jest liczona wzgl\u0119dem
-    tej bazy.\n\nWarto\u015Bci 'krok\xF3w' w trzech kierunkach (X, Y, Z) i numeru
-    stopnia: Mamy trzy warto\u015Bci (platformx, platformy, platformz), kt\xF3re
-    m\xF3wi\u0105, o ile ka\u017Cdy kolejny stopie\u0144 ma by\u0107 przesuni\u0119ty
-    wzd\u0142u\u017C odpowiedniej osi. Dodatkowo, u\u017Cywamy numeru stopnia (pierwszy
-    ma numer 0, drugi 1, trzeci 2 i tak dalej).\n\nDla pierwszego stopnia (numer
-    0), te warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez 0, co oznacza,
-    \u017Ce pierwszy stopie\u0144 jest umieszczany bezpo\u015Brednio na pozycji bazowej
-    schod\xF3w (z ewentualnym przesuni\u0119ciem od transform.position).\nDla drugiego
-    stopnia (numer 1), warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez
-    1, wi\u0119c stopie\u0144 jest przesuni\u0119ty o dok\u0142adnie te warto\u015Bci
-    od pozycji bazowej schod\xF3w.\nDla trzeciego stopnia (numer 2), warto\u015Bci
-    przesuni\u0119cia s\u0105 mno\u017Cone przez 2, wi\u0119c stopie\u0144 jest przesuni\u0119ty
-    dwa razy dalej od pozycji bazowej schod\xF3w i tak dalej.\nW efekcie, mno\u017C\u0105c
-    te 'kroki' przez numer stopnia, tworzymy efekt schod\xF3w. Ka\u017Cdy kolejny
-    stopie\u0144 jest umieszczany dalej wzd\u0142u\u017C osi X, Y i Z, tworz\u0105c
-    wizualn\u0105 struktur\u0119 schod\xF3w. Po obliczeniu tej nowej pozycji, dany
-    punkt (waypoint) jest fizycznie umieszczany w tym miejscu w \u015Bwiecie gry."
-  waypoints: []
-  basicPosition: {x: 0, y: 0, z: 0}
-  czasZmianyLogiki: 3
 --- !u!4 &1486727823
 Transform:
   m_ObjectHideFlags: 0
@@ -30097,17 +29940,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2103985293 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
-  m_PrefabInstance: {fileID: 295657702}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df62234e674f445838a0c4729493e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2119521561
 GameObject:
   m_ObjectHideFlags: 0
@@ -31674,6 +31506,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   codeText: {fileID: 4415969026477061909}
+  neutralText: {fileID: 0}
+  passImage: {fileID: 0}
 --- !u!223 &7282723033033077321
 Canvas:
   m_ObjectHideFlags: 0
