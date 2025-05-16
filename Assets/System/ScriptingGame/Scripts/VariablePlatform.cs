@@ -27,6 +27,8 @@ public class VariablePlatform : MonoBehaviour
     [SerializeField] private int baseNumberValue = 0;
     [Tooltip("Starting value if Boolean")]
     [SerializeField] private bool baseBooleanValue = false;
+    [Tooltip("Starting value if String")]
+    [SerializeField] private string baseStringValue = "";
     [Tooltip("Starting value if GameObject")]
     [SerializeField] private GameObject baseGameObjectValue = null;
 
@@ -47,6 +49,7 @@ public class VariablePlatform : MonoBehaviour
         {
             VariableType.Number => new NumberHandler(baseNumberValue),
             VariableType.Boolean => new BooleanHandler(baseBooleanValue),
+            VariableType.String => new StringHandler(baseStringValue),
             VariableType.GameObject => new GameObjectHandler(baseGameObjectValue),
             _ => throw new Exception($"Unknown type {type}")
         };

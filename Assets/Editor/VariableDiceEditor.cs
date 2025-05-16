@@ -7,6 +7,8 @@ public class VariableDiceEditor : Editor
     SerializedProperty typeProp;
     SerializedProperty baseNumberValueProp;
     SerializedProperty baseBooleanValueProp;
+    SerializedProperty baseStringValueProp;
+    SerializedProperty baseGameObjectValueProp;
     SerializedProperty textListProp;
 
     void OnEnable()
@@ -15,6 +17,8 @@ public class VariableDiceEditor : Editor
         typeProp = serializedObject.FindProperty("type");
         baseNumberValueProp = serializedObject.FindProperty("baseNumberValue");
         baseBooleanValueProp = serializedObject.FindProperty("baseBooleanValue");
+        baseStringValueProp = serializedObject.FindProperty("baseStringValue");
+        baseGameObjectValueProp = serializedObject.FindProperty("baseGameObjectValue");
         textListProp = serializedObject.FindProperty("textList");
     }
 
@@ -27,13 +31,20 @@ public class VariableDiceEditor : Editor
 
         // Show the appropriate field based on the selected type
         VariableType type = (VariableType)typeProp.enumValueIndex;
-        if (type == VariableType.Number)
+        switch (type)
         {
-            EditorGUILayout.PropertyField(baseNumberValueProp, new GUIContent("Base Number Value"));
-        }
-        else if (type == VariableType.Boolean)
-        {
-            EditorGUILayout.PropertyField(baseBooleanValueProp, new GUIContent("Base Boolean Value"));
+            case VariableType.Number:
+                EditorGUILayout.PropertyField(baseNumberValueProp, new GUIContent("Base Number Value"));
+                break;
+            case VariableType.Boolean:
+                EditorGUILayout.PropertyField(baseBooleanValueProp, new GUIContent("Base Boolean Value"));
+                break;
+            case VariableType.String:
+                EditorGUILayout.PropertyField(baseStringValueProp, new GUIContent("Base String Value"));
+                break;
+            case VariableType.GameObject:
+                EditorGUILayout.PropertyField(baseGameObjectValueProp, new GUIContent("Base GameObject Value"));
+                break;
         }
 
         // Display the textList field

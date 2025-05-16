@@ -7,7 +7,8 @@ public enum VariableType
 {
     Number = 0,
     Boolean = 1,
-    GameObject = 2      // example of adding a 3rd type
+    String = 2,
+    GameObject = 3      // example of adding a 3rd type
 }
 
 public interface IVariableValueHandler
@@ -111,6 +112,17 @@ public class BooleanHandler : VariableTypeHandlerBase<bool>
     }
 }
 
+public class StringHandler : VariableTypeHandlerBase<string>
+{
+    public StringHandler(string baseValue) : base(baseValue) { }
+
+    public override void UpdateTextValue(TMP_Text text, bool highlight)
+    {
+        text.text = currentValue ?? "Empty";
+        base.UpdateTextValue(text, highlight);
+    }
+}
+
 public class GameObjectHandler : VariableTypeHandlerBase<GameObject>
 {
     public GameObjectHandler(GameObject baseValue) : base(baseValue) { }
@@ -132,6 +144,7 @@ public static class VariableTypeColor
         {
             VariableType.Number => new Color(46f/255f, 153f / 255f, 28f / 255f),
             VariableType.Boolean => Color.cyan,
+            VariableType.String => Color.green,
             VariableType.GameObject => Color.cyan,
             _ => Color.white
         };
