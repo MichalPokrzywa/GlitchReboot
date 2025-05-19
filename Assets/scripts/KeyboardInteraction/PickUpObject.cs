@@ -10,10 +10,11 @@ public class PickUpObjectInteraction : InteractionBase
    public float rotationSpeed = 20f;
    private Interactor ownerInteractor;
 
-   void Awake()
+   protected override void Awake()
    {
+       base.Awake();
        EntityManager.instance.Register(gameObject);
-    }
+   }
 
    private void Start()
    {
