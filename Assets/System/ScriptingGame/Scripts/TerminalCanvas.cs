@@ -9,8 +9,8 @@ public class TerminalCanvas : MonoBehaviour
 {
     public TMP_Text codeText;
     public GameObject sideNumbers;
-    [HideInInspector]public Image passImage;
-    private bool showRobot = false;
+    [HideInInspector] public Image passImage;
+    public bool showRobot = false;
 
     public void Start()
     {
@@ -20,11 +20,13 @@ public class TerminalCanvas : MonoBehaviour
     {
         //string cleanedCode = Regex.Replace(code, @"\b\w+:", "").Replace("\t", "   ");
         if(showRobot) codeText.text = code;
+        sideNumbers.SetActive(showRobot);
     }
     public void SetNeutralText(string neutral)
     {
         //string cleanedCode = Regex.Replace(code, @"\b\w+:", "").Replace("\t", "   ");
         if(!showRobot) codeText.text = neutral;
+        sideNumbers.SetActive(showRobot);
     }
 
     public void SetImageColor(bool pass)
