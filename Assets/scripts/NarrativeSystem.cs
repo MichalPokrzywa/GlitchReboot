@@ -1,11 +1,15 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class NarrativeSystem : MonoBehaviour
 {
+    [SerializeField] AudioSource audioSource;
     [SerializeField] TextMeshProUGUI textDisplay;
     [SerializeField] float fadeDuration = 1f;
+    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
 
     static NarrativeSystem _instance;
 
@@ -46,6 +50,17 @@ public class NarrativeSystem : MonoBehaviour
         textDisplay.text = text;
         SetAlpha(1f);
         fadeCoroutine = StartCoroutine(FadeOutAfterDelay(displayTime));
+    }
+
+    public void Play(int key)
+    {
+        AudioClip voice = audioClips[key - 1];
+
+        if (audioSource.isPlaying)
+            audioSource.Stop();
+
+        audioSource.clip = voice;
+        audioSource.Play();
     }
 
     void SetAlpha(float alpha)

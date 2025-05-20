@@ -3,8 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpiderMoveToTarget : MonoBehaviour
+public class SpiderBehaviour : MonoBehaviour
 {
+    public enum Emotion
+    {
+        Happy,
+        Angry,
+        Sad
+    }
+
     [Serializable]
     class TargetData
     {
@@ -16,11 +23,17 @@ public class SpiderMoveToTarget : MonoBehaviour
         [Range(0, 1f)]
         public float minBodyHeight;
         public float waitTime = 0f;
+        public Emotion emotion;
         public string speech;
+        public int voiceKey;
     }
+
     [Header("References")]
     [SerializeField] SpiderProceduralAnimation spiderAnim;
     [SerializeField] GameObject player;
+    [SerializeField] List<GameObject> eyebrowsHappy;
+    [SerializeField] List<GameObject> eyebrowsAngry;
+    [SerializeField] RectTransform smile;
 
     [Header("Movement Settings")]
     [SerializeField] float rotationSpeed = 5f;
@@ -28,6 +41,7 @@ public class SpiderMoveToTarget : MonoBehaviour
     [SerializeField] List<TargetData> targetData = new List<TargetData>();
 
     int currentTargetIndex = 0;
+    bool playAtStart = false;
     bool isWaiting = false;
     bool isMovementActive = true;
     bool lookAtTarget = false;
@@ -38,7 +52,14 @@ public class SpiderMoveToTarget : MonoBehaviour
     {
         if (targetData.Count > 0)
         {
+            playAtStart = true;
+
             SetAnimationData(targetData[0]);
+            SetEmotion(targetData[0].emotion);
+            if (!string.IsNullOrEmpty(targetData[0].speech))
+                NarrativeSystem.instance.SetText(targetData[0].speech);
+            if (targetData[0].voiceKey != 0)
+                NarrativeSystem.instance.Play(targetData[0].voiceKey);
         }
         else
         {
@@ -61,12 +82,14 @@ public class SpiderMoveToTarget : MonoBehaviour
         Vector3 targetPos = current.target.position;
 
         MoveTowards(targetPos, current.speed);
-        RotateTowards(targetPos);
 
-        if (Vector3.Distance(transform.position, targetPos) < targetDistThreshold)
-        {
+        float dist = Vector3.Distance(transform.position, targetPos);
+
+        if (dist > targetDistThreshold * 50f)
+            RotateTowards(targetPos);
+
+        if (dist < targetDistThreshold)
             StartCoroutine(WaitAtWaypoint(current));
-        }
     }
 
     void MoveTowards(Vector3 targetPos, float speed)
@@ -87,6 +110,35 @@ public class SpiderMoveToTarget : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
+    void SetEmotion(Emotion emotion)
+    {
+        if (emotion == Emotion.Angry)
+        {
+            foreach (var eyebrow in eyebrowsHappy)
+                eyebrow.SetActive(false);
+            foreach (var eyebrow in eyebrowsAngry)
+                eyebrow.SetActive(true);
+
+            smile.transform.localRotation = Quaternion.Euler(0, 0, 180);
+        }
+        else
+        {
+            foreach (var eyebrow in eyebrowsHappy)
+                eyebrow.SetActive(true);
+            foreach (var eyebrow in eyebrowsAngry)
+                eyebrow.SetActive(false);
+
+            if (emotion == Emotion.Happy)
+            {
+                smile.transform.localRotation = Quaternion.Euler(0, 0, 0);
+            }
+            else if (emotion == Emotion.Sad)
+            {
+                smile.transform.localRotation = Quaternion.Euler(0, 0, 180);
+            }
+        }
+    }
+
     void SetAnimationData(TargetData data)
     {
         spiderAnim.smoothness = data.animSmoothness;
@@ -97,10 +149,15 @@ public class SpiderMoveToTarget : MonoBehaviour
     {
         isWaiting = true;
 
-        if (!string.IsNullOrEmpty(data.speech))
+        if (!playAtStart)
         {
-            NarrativeSystem.instance.SetText(data.speech);
+            if (!string.IsNullOrEmpty(data.speech))
+                NarrativeSystem.instance.SetText(data.speech);
+            if (data.voiceKey != 0)
+                NarrativeSystem.instance.Play(data.voiceKey);
         }
+
+        playAtStart = false;
 
         yield return new WaitForSeconds(data.waitTime);
 
@@ -109,11 +166,18 @@ public class SpiderMoveToTarget : MonoBehaviour
         {
             currentTargetIndex = 0;
             if (!loop)
+            {
                 isMovementActive = false;
-            else
-                SetAnimationData(targetData[currentTargetIndex]);
+            }
         }
 
         isWaiting = false;
+
+        if (currentTargetIndex == 0 && !loop)
+            yield break;
+
+        SetAnimationData(targetData[currentTargetIndex]);
+        SetEmotion(targetData[currentTargetIndex].emotion);
+
     }
 }
