@@ -3,51 +3,71 @@ using UnityEngine;
 public class TrainController : MonoBehaviour
 {
     public RailPath railPath;
-    public float speed = 5f;
+    public float maxSpeed = 5f;
+    public float acceleration = 1f;
+    public float deceleration = 2f;
+    public bool drive = false;
+    public Vector3 Velocity { get; private set; }
+    [HideInInspector] public float pathProgress;
 
-    private int currentSegment;
-    private float segmentProgress;
+    private float currentSpeed;
     private Vector3 lastPosition;
 
     void Start()
     {
-        currentSegment = 0;
-        segmentProgress = 0f;
+        pathProgress = 0f;
+        currentSpeed = 0f;
         lastPosition = transform.position;
     }
 
     void Update()
     {
-        if (!railPath || railPath.SegmentCount == 0) return;
+        if (!railPath) return;
 
-        float distance = speed * Time.deltaTime;
-        AdvancePosition(distance);
+        // Aktualizacja prêdkoœci
+        float targetSpeed = drive ? maxSpeed : 0f;
+        float accelerationRate = drive ? acceleration : deceleration;
 
-        Vector3 newPos = railPath.GetPosition(currentSegment, segmentProgress);
-        Vector3 direction = (newPos - lastPosition).normalized;
+        currentSpeed = Mathf.MoveTowards(
+            currentSpeed,
+            targetSpeed,
+            accelerationRate * Time.deltaTime
+        );
 
-        transform.position = newPos;
-        if (direction.sqrMagnitude > 0.001f)
-            transform.rotation = Quaternion.LookRotation(direction);
+        // Aktualizacja pozycji
+        if (currentSpeed > 0.01f)
+        {
+            float distance = currentSpeed * Time.deltaTime;
+            pathProgress = CalculateNewProgress(pathProgress, distance);
 
-        lastPosition = newPos;
+            Vector3 newPos = railPath.GetPosition(pathProgress);
+            Vector3 direction = (newPos - lastPosition).normalized;
+
+            transform.position = newPos;
+            if (direction.sqrMagnitude > 0.001f)
+                transform.rotation = Quaternion.LookRotation(direction);
+
+            Velocity = (newPos - lastPosition) / Time.deltaTime;
+            lastPosition = newPos;
+        }
     }
 
-    void AdvancePosition(float distance)
+    float CalculateNewProgress(float currentProgress, float distance)
     {
-        while (distance > 0.001f)
+        if (railPath.closedLoop)
         {
-            float remaining = railPath.GetSegmentLength(currentSegment) * (1f - segmentProgress);
-
-            if (distance <= remaining)
-            {
-                segmentProgress += distance / railPath.GetSegmentLength(currentSegment);
-                break;
-            }
-
-            distance -= remaining;
-            currentSegment = (currentSegment + 1) % railPath.SegmentCount;
-            segmentProgress = 0f;
+            return (currentProgress + distance / railPath.totalLength) % 1f;
         }
+        else
+        {
+            float newProgress = currentProgress + distance / railPath.totalLength;
+            return Mathf.Clamp01(newProgress);
+        }
+    }
+
+    // Dodatkowa metoda do rêcznego sterowania
+    public void ToggleDrive(bool newState)
+    {
+        drive = newState;
     }
 }
