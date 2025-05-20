@@ -12,7 +12,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
     public Camera mainCamera;
     public bool HasShownUI { get; set; }
 
-    void Awake()
+    protected virtual void Awake()
     {
         Init();
     }
