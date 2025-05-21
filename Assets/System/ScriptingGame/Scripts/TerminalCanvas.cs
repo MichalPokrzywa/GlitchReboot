@@ -28,7 +28,12 @@ public class TerminalCanvas : MonoBehaviour
         if(!showRobot) codeText.text = neutral;
         sideNumbers.SetActive(showRobot);
     }
-
+    public void ChangeTextType(string robot, string human)
+    {
+        showRobot = !showRobot;
+        sideNumbers.SetActive(showRobot);
+        codeText.text = showRobot ? robot : human;
+    }
     public void SetImageColor(bool pass)
     {
         passImage.color = pass ? Color.green : Color.red;

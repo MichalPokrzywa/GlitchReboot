@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PuzzleBase : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class PuzzleBase : MonoBehaviour
     public string codeText = "";
 
     protected List<INamedVariableHandler> namedHandlers = new();
+    public UnityEvent<string, string> onCodeUpdate;
 
     void Start()
     {
@@ -36,12 +38,14 @@ public class PuzzleBase : MonoBehaviour
             {
                 canvas.SetCodeText(UpdateTemplate(codeText));
                 canvas.SetNeutralText(UpdateTemplate(naturalText));
+                onCodeUpdate.Invoke(UpdateTemplate(codeText), UpdateTemplate(naturalText));
                 DoTerminalCode();
             });
             plat.variableRemoved.AddListener(n =>
             {
                 canvas.SetCodeText(UpdateTemplate(codeText));
                 canvas.SetNeutralText(UpdateTemplate(naturalText));
+                onCodeUpdate.Invoke(UpdateTemplate(codeText), UpdateTemplate(naturalText));
                 DoTerminalCode();
             });
         }
@@ -91,16 +95,15 @@ public class PuzzleBase : MonoBehaviour
         Debug.LogError("This is base implementation, you need create a DoTerminalCode function in file");
     }
 
-    public void ShowHumanCode()
+    public void SendToTablet()
     {
-        canvas.showRobot = false;
-        canvas.SetNeutralText(UpdateTemplate(naturalText));
+        TabletTerminal.Instance.AssignTerminal(this);
+        TabletTerminal.Instance.SendText(UpdateTemplate(codeText), UpdateTemplate(naturalText));
     }
 
-    public void ShowRobotCode()
+    public void SwapLanguage()
     {
-        canvas.showRobot = true;
-        canvas.SetCodeText(UpdateTemplate(codeText));
+        canvas.ChangeTextType(UpdateTemplate(codeText), UpdateTemplate(naturalText));
     }
 
     #region Utility
