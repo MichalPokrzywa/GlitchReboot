@@ -8,20 +8,25 @@ using UnityEngine.UI;
 public class TerminalCanvas : MonoBehaviour
 {
     public TMP_Text codeText;
-    public TMP_Text neutralText;
-    public Image passImage;
+    public GameObject sideNumbers;
+    [HideInInspector] public Image passImage;
+    public bool showRobot = false;
 
+    public void Start()
+    {
+        sideNumbers.SetActive(showRobot);
+    }
     public void SetCodeText(string code)
     {
-        //prepareText();
         //string cleanedCode = Regex.Replace(code, @"\b\w+:", "").Replace("\t", "   ");
-        codeText.text = code;
+        if(showRobot) codeText.text = code;
+        sideNumbers.SetActive(showRobot);
     }
     public void SetNeutralText(string neutral)
     {
-        //prepareText();
         //string cleanedCode = Regex.Replace(code, @"\b\w+:", "").Replace("\t", "   ");
-        neutralText.text = neutral;
+        if(!showRobot) codeText.text = neutral;
+        sideNumbers.SetActive(showRobot);
     }
 
     public void SetImageColor(bool pass)

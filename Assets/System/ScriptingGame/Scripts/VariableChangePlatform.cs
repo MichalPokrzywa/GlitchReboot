@@ -16,13 +16,14 @@ public class VariableChangePlatform : MonoBehaviour
         {
             o.SetActive(false);
         }
-        if (type == VariableType.Number)
+        switch (type)
         {
-            platformType[(int)VariableType.Number].SetActive(true);
-        }
-        if (type == VariableType.Boolean)
-        {
-            platformType[(int)VariableType.Boolean].SetActive(true);
+            case VariableType.Number:
+                platformType[(int)VariableType.Number].SetActive(true);
+                break;
+            case VariableType.Boolean:
+                platformType[(int)VariableType.Boolean].SetActive(true);
+                break;
         }
     }
 

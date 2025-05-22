@@ -91,6 +91,18 @@ public class PuzzleBase : MonoBehaviour
         Debug.LogError("This is base implementation, you need create a DoTerminalCode function in file");
     }
 
+    public void ShowHumanCode()
+    {
+        canvas.showRobot = false;
+        canvas.SetNeutralText(UpdateTemplate(naturalText));
+    }
+
+    public void ShowRobotCode()
+    {
+        canvas.showRobot = true;
+        canvas.SetCodeText(UpdateTemplate(codeText));
+    }
+
     #region Utility
 
     /// <summary>
