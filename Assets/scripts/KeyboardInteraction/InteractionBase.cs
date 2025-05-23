@@ -1,3 +1,4 @@
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -32,15 +33,25 @@ public class InteractionBase : MonoBehaviour, IInteractable
 
     void Init()
     {
+        // 1) Find the GameObject (active or inactive)
         if (UIHoverObject == null)
         {
-            UIHoverObject = GameObject.Find("UI Hover Text");
-        }
-        if (UIHoverText == null)
-        {
-            UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
+            UIHoverObject = Resources
+                .FindObjectsOfTypeAll<GameObject>()
+                .FirstOrDefault(go => go.name == "UI Hover Text");
+            if (UIHoverObject == null)
+                Debug.LogError("Could not find UI Hover Text in loaded resources!");
         }
 
+        // 2) Grab the TMP component if it wasn’t already set
+        if (UIHoverObject != null && UIHoverText == null)
+        {
+            UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
+            if (UIHoverText == null)
+                Debug.LogError("UI Hover Text object has no TextMeshProUGUI!");
+        }
+
+        // 3) Cache main camera
         if (mainCamera == null)
             mainCamera = Camera.main;
     }
