@@ -8,7 +8,7 @@ public class Interactor : MonoBehaviour
     public float holdSmoothSpeed = 10f;    // how quickly the holdPoint moves
     public Transform holdPoint;
     public Transform handPoint;
-
+    public bool canInteract = true;
     private IInteractable lastInteractor;
     private PickUpObjectInteraction heldObject;
 
@@ -28,6 +28,10 @@ public class Interactor : MonoBehaviour
             desiredHoldPos,
             Time.deltaTime * holdSmoothSpeed
         );
+
+        if(!canInteract)
+            return;
+
         Ray r = new Ray(InteractionSource.position, InteractionSource.forward);
 
 
@@ -89,6 +93,11 @@ public class Interactor : MonoBehaviour
     {
         if (heldObject == obj)
             heldObject = null;
+    }
+
+    public bool IsHoldingObject()
+    {
+        return heldObject != null;
     }
 }
 
