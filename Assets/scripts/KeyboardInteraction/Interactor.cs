@@ -9,6 +9,7 @@ public class Interactor : MonoBehaviour
     public Transform holdPoint;
     public Transform handPoint;
     public bool canInteract = true;
+    public Animator animator;
     private IInteractable lastInteractor;
     private PickUpObjectInteraction heldObject;
 
@@ -39,15 +40,18 @@ public class Interactor : MonoBehaviour
         {
             if (heldObject is PickUpObjectInteraction pickup)
             {
-                if (Input.GetKeyDown(KeyCode.E) && pickup.IsPickedUp)
+                if (Input.GetKeyDown(KeyCode.E) && pickup.IsPickedUp && pickup.onTarget)
                 {
                     pickup.DropInFront();
+                    //swap animation for dropDice
+                    animator.SetTrigger("ThrowDice");
                     heldObject = null;
 
                 }
-                else if (Input.GetKeyDown(KeyCode.Mouse0) && pickup.IsPickedUp)
+                else if (Input.GetKeyDown(KeyCode.Mouse0) && pickup.IsPickedUp && pickup.onTarget)
                 {
                     pickup.Throw();
+                    
                     heldObject = null;
                 }
             }
@@ -63,6 +67,7 @@ public class Interactor : MonoBehaviour
                     {
                         // pass yourself into the pickup
                         pickup.MoveToHand(handPoint, holdPoint, this);
+                        animator.SetTrigger("PickedDice");
                         heldObject = pickup;
                         interactObj.HideUI(); // Hide UI when picked up
                     }

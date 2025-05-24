@@ -447,6 +447,7 @@ public class FirstPersonController : MonoBehaviour
             Vector3 velocity = rb.linearVelocity;
             Vector3 velocityChange = (targetVelocity - velocity);
 
+            animator?.SetFloat("Speed", targetVelocity.magnitude);
             // Continuous slow down when not moving
             if (enableFriction)
                 velocityChange = HandleFriction(targetVelocity, velocity);
