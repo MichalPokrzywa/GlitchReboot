@@ -102,10 +102,15 @@ public class PickUpObjectInteraction : InteractionBase
 
    public void DropInFront()
    {
-       transform.SetParent(null);
-       transform.DOMove(holdPoint.position, 0.4f);
-       transform.DOScale(1f, 0.1f).OnComplete(() =>
+       ownerInteractor.animator.SetTrigger("DropDice");
+       Sequence sequence = DOTween.Sequence();
+       sequence.PrependInterval(0.40f)
+       .OnComplete(() =>
        {
+           transform.SetParent(null);
+           transform.DOScale(1f, 0.1f);
+           //transform.position = holdPoint.position;
+           transform.localRotation = Quaternion.identity;
            handPoint = null;
            holdPoint = null;
            // reset physics
@@ -127,11 +132,11 @@ public class PickUpObjectInteraction : InteractionBase
         ownerInteractor.animator.SetTrigger("ThrowDice");
        Sequence sequence = DOTween.Sequence();
        sequence.PrependInterval(0.35f)
-           .Append(transform.DOScale(1f, 0.1f))
            .OnComplete(() =>
            {
                //transform.position = handPoint.position;
-                transform.SetParent(null);
+               transform.SetParent(null);
+               transform.DOScale(1f, 0.1f);
                handPoint = null;
                holdPoint = null;
                rb.useGravity = true;

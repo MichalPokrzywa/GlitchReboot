@@ -44,7 +44,6 @@ public class Interactor : MonoBehaviour
                 {
                     pickup.DropInFront();
                     //swap animation for dropDice
-                    animator.SetTrigger("ThrowDice");
                     heldObject = null;
 
                 }
@@ -56,7 +55,7 @@ public class Interactor : MonoBehaviour
                 }
             }
         }
-        if (Physics.Raycast(r, out RaycastHit hit, InteractionRange) &&
+        else if (Physics.Raycast(r, out RaycastHit hit, InteractionRange) &&
             hit.collider.gameObject.TryGetComponent(out IInteractable interactObj))
         {
             if (Input.GetKeyDown(KeyCode.E))
