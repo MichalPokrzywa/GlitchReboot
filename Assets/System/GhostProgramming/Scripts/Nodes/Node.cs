@@ -11,9 +11,9 @@ namespace GhostProgramming
 
     public abstract class Node : MonoBehaviour
     {
-        [ReadOnly]
+        [HideInInspector]
         public Node prevNode;
-        [ReadOnly]
+        [HideInInspector]
         public Node nextNode;
     }
 }
