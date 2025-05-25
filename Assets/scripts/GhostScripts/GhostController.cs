@@ -95,8 +95,12 @@ public class GhostController : MonoBehaviour
             return false;
         }
 
-        interactionDistance = agent.stoppingDistance = GetInteractionDistance( InteractionDistance.Far);
+        InteractionDistance dist = InteractionDistance.Far;
+        var marker = newSearchingObject.GetComponent<MarkerScript>();
+        if (marker != null)
+            dist = InteractionDistance.Close;
 
+        interactionDistance = agent.stoppingDistance = GetInteractionDistance(dist);
         searchingObject = newSearchingObject;
         targetUnreachable = false;
         hasReachedTarget = false;

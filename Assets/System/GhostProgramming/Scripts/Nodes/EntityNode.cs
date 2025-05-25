@@ -10,6 +10,26 @@ namespace GhostProgramming
 
         void Start()
         {
+            if (dropdown != null)
+                InitDropdown();
+        }
+
+        public virtual void Update()
+        {
+            if (dropdown != null)
+                HandleDropdown();
+        }
+
+        protected abstract List<T> GetEntityList();
+        protected abstract string GetEnityName();
+
+        public override Object GetValue()
+        {
+            return GetEntityList()[dropdown.value];
+        }
+
+        void InitDropdown()
+        {
             dropdown.options.Clear();
             var list = GetEntityList();
             for (int i = 0; i < list.Count; i++)
@@ -19,12 +39,12 @@ namespace GhostProgramming
             }
         }
 
-        protected abstract List<T> GetEntityList();
-        protected abstract string GetEnityName();
-
-        public override Object GetValue()
+        void HandleDropdown()
         {
-            return GetEntityList()[dropdown.value];
+            // erase deactivated entities
+
+            // add active entities
+
         }
     }
 }

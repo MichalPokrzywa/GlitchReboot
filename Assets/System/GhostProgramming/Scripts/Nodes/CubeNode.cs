@@ -1,6 +1,5 @@
 using GhostProgramming;
 using System.Collections.Generic;
-using UnityEngine;
 
 public class CubeNode : EntityNode<VariableDice>
 {

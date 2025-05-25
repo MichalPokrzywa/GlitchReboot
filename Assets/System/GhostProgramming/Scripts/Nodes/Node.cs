@@ -1,3 +1,4 @@
+using Unity.Collections;
 using UnityEngine;
 
 namespace GhostProgramming
@@ -10,9 +11,9 @@ namespace GhostProgramming
 
     public abstract class Node : MonoBehaviour
     {
-        //[HideInInspector]
+        [ReadOnly]
         public Node prevNode;
-        //[HideInInspector]
+        [ReadOnly]
         public Node nextNode;
     }
 }

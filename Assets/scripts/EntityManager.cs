@@ -26,12 +26,14 @@ public class EntityManager : MonoBehaviour
     public List<GhostController> ghosts { get; } = new List<GhostController>();
     public List<VariableDice> cubes { get; } = new List<VariableDice>();
     public List<VariablePlatform> platforms { get; } = new List<VariablePlatform>();
+    public List<MarkerScript> markers { get; } = new List<MarkerScript>();
 
     public void Register(GameObject obj)
     {
         if (TryRegister<GhostController>(obj, ghosts)) return;
         if (TryRegister<VariableDice>(obj, cubes)) return;
         if (TryRegister<VariablePlatform>(obj, platforms)) return;
+        if (TryRegister<MarkerScript>(obj, markers)) return;
     }
 
     bool TryRegister<T>(GameObject obj, List<T> list) where T : Component
