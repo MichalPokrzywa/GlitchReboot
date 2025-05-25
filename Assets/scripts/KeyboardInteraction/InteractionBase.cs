@@ -23,7 +23,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
         Init();
     }
 
-    void FixedUpdate()
+    public virtual void Update()
     {
         if (HasShownUI)
         {

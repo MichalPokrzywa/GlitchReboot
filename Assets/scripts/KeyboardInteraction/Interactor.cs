@@ -21,7 +21,7 @@ public class Interactor : MonoBehaviour
         {
             // Move just in front of the obstacle (you can subtract a small epsilon if you like)
             desiredHoldPos = InteractionSource.position +
-                             InteractionSource.forward * (obsHit.distance * 0.9f);
+                             InteractionSource.forward * (obsHit.distance * 0.5f);
         }
         // smooth-lerp your holdPoint there
         holdPoint.position = Vector3.Lerp(
@@ -29,6 +29,7 @@ public class Interactor : MonoBehaviour
             desiredHoldPos,
             Time.deltaTime * holdSmoothSpeed
         );
+        //Debug.Log($"{holdPoint.position}, {handPoint.position}");
 
         if(!canInteract)
             return;
@@ -40,17 +41,16 @@ public class Interactor : MonoBehaviour
         {
             if (heldObject is PickUpObjectInteraction pickup)
             {
-                if (Input.GetKeyDown(KeyCode.E) && pickup.IsPickedUp && pickup.onTarget)
+                if (Input.GetKeyDown(KeyCode.E) && pickup.IsPickedUp && pickup.inhand && animator.GetBool("CanPickup"))
                 {
                     pickup.DropInFront();
                     //swap animation for dropDice
                     heldObject = null;
 
                 }
-                else if (Input.GetKeyDown(KeyCode.Mouse0) && pickup.IsPickedUp && pickup.onTarget)
+                else if (Input.GetKeyDown(KeyCode.Mouse0) && pickup.IsPickedUp && pickup.inhand && animator.GetBool("CanPickup"))
                 {
                     pickup.Throw();
-                    
                     heldObject = null;
                 }
             }
@@ -62,11 +62,10 @@ public class Interactor : MonoBehaviour
             {
                 if (interactObj is PickUpObjectInteraction pickup)
                 {
-                    if (!pickup.IsPickedUp && heldObject == null && heldObject != pickup)
+                    if (!pickup.IsPickedUp && heldObject == null && heldObject != pickup && animator.GetBool("CanPickup"))
                     {
                         // pass yourself into the pickup
                         pickup.MoveToHand(handPoint, holdPoint, this);
-                        animator.SetTrigger("PickedDice");
                         heldObject = pickup;
                         interactObj.HideUI(); // Hide UI when picked up
                     }
@@ -77,7 +76,7 @@ public class Interactor : MonoBehaviour
                 }
             }
 
-            if (!interactObj.HasShownUI && heldObject == null)
+            if (!interactObj.HasShownUI && heldObject == null && animator.GetBool("CanPickup"))
             {
                 interactObj.ShowUI();
                 lastInteractor = interactObj;

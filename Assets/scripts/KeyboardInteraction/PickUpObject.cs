@@ -1,4 +1,6 @@
+using System.Collections;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
 
 public class PickUpObjectInteraction : InteractionBase
@@ -14,7 +16,9 @@ public class PickUpObjectInteraction : InteractionBase
    public float moveSpeed = 20f;
    private Interactor ownerInteractor;
    public bool onTarget = false;
-   private bool inhand = false;
+   public bool isAnimationPlaying = false;
+   public bool inhand = false;
+   private Transform diceTransform;
    protected override void Awake()
    {
        base.Awake();
@@ -39,7 +43,7 @@ public class PickUpObjectInteraction : InteractionBase
       //}
    }
 
-   private void Update()
+   public override void Update()
    {
        if (!IsPickedUp && HasShownUI)
        {
@@ -57,7 +61,7 @@ public class PickUpObjectInteraction : InteractionBase
                 else
                 {
                     onTarget = true;
-                    ownerInteractor.animator.SetBool("InHand", onTarget);
+                    
                     transform.position = handPoint.position;
                     //rb.linearVelocity = (handPoint.position - transform.position) * (1 / Time.fixedDeltaTime);
                     rb.MovePosition(Vector3.Lerp(transform.position, handPoint.position, Time.deltaTime * moveSpeed));
@@ -67,8 +71,11 @@ public class PickUpObjectInteraction : InteractionBase
 
                 if (onTarget && !inhand)
                 {
+                    GetComponent<BoxCollider>().enabled = false;
                     transform.SetParent(handPoint);
                     inhand = true;
+                    ownerInteractor.animator.SetBool("InHand", inhand);
+                    isAnimationPlaying = false;
                 }
             }
             else
@@ -84,7 +91,8 @@ public class PickUpObjectInteraction : InteractionBase
    {
        //transform.DOMove(handTransform.position, 0.2f);
        rb.useGravity = false;
-       transform.DOScale(0.3f, 0.2f).OnComplete(() =>
+       isAnimationPlaying = true;
+        transform.DOScale(0.3f, 0.2f).OnComplete(() =>
        {
            rb.linearDamping = 100;
            rb.angularDamping = 10;
@@ -92,9 +100,10 @@ public class PickUpObjectInteraction : InteractionBase
            IsPickedUp = true;
            //transform.SetParent(handTransform);
        });
+       ownerInteractor = interactor;
+       ownerInteractor.animator.SetTrigger("PickedDice");
        handPoint = handTransform;
        holdPoint = dropPoint;
-       ownerInteractor = interactor;
        onTarget = false;
        inhand = false;
        ownerInteractor.animator.SetBool("InHand",onTarget);
@@ -102,55 +111,72 @@ public class PickUpObjectInteraction : InteractionBase
 
    public void DropInFront()
    {
-       ownerInteractor.animator.SetTrigger("DropDice");
-       Sequence sequence = DOTween.Sequence();
-       sequence.PrependInterval(0.40f)
-       .OnComplete(() =>
-       {
-           transform.SetParent(null);
-           transform.DOScale(1f, 0.1f);
-           //transform.position = holdPoint.position;
-           transform.localRotation = Quaternion.identity;
-           handPoint = null;
-           holdPoint = null;
-           // reset physics
-           rb.useGravity = true;
-           rb.linearDamping = 1;
-           rb.constraints = RigidbodyConstraints.None;
-           IsPickedUp = false;
-           onTarget = false;
-           inhand = false;
-           ownerInteractor.animator.SetBool("InHand", onTarget);
-           // let the interactor know to clear its heldObject
-           ownerInteractor?.NotifyDropped(this);
-           ownerInteractor = null;
-       });
+       StartCoroutine(DropDiceCoroutine());
+
    }
+
+   private IEnumerator DropDiceCoroutine()
+   { 
+        isAnimationPlaying = true;
+        ownerInteractor.animator.SetTrigger("DropDice");
+
+        yield return new WaitForSeconds(0.3f);
+
+        transform.SetParent(null);
+        transform.DOScale(1f, 0.1f);
+        transform.DOMove(holdPoint.position, 0.1f);
+        transform.localRotation = Quaternion.identity;
+        rb.useGravity = true;
+        rb.linearDamping = 1;
+        rb.angularDamping = 0.05f;
+        rb.constraints = RigidbodyConstraints.None;
+        handPoint = null;
+        holdPoint = null;
+        IsPickedUp = false;
+        GetComponent<BoxCollider>().enabled = true;
+        onTarget = false;
+        inhand = false;
+        ownerInteractor.animator.SetBool("InHand", onTarget);
+        ownerInteractor?.NotifyDropped(this);
+        ownerInteractor = null;
+
+        isAnimationPlaying = false;
+   }
+
 
    public void Throw()
    {
-        ownerInteractor.animator.SetTrigger("ThrowDice");
-       Sequence sequence = DOTween.Sequence();
-       sequence.PrependInterval(0.35f)
-           .OnComplete(() =>
-           {
-               //transform.position = handPoint.position;
-               transform.SetParent(null);
-               transform.DOScale(1f, 0.1f);
-               handPoint = null;
-               holdPoint = null;
-               rb.useGravity = true;
-               rb.linearDamping = 1f;
-               rb.angularDamping = 0.05f;
-               rb.constraints = RigidbodyConstraints.None;
-               IsPickedUp = false;
-               onTarget = false;
-               inhand = false;
-               ownerInteractor.animator.SetBool("InHand", onTarget);
-               Vector3 dir = mainCamera.transform.forward;
-               rb.AddForce(dir * 30f, ForceMode.Impulse);
-           });
+       StartCoroutine(ThrowDiceCoroutine());
    }
+   public IEnumerator ThrowDiceCoroutine()
+   {
+       ownerInteractor.animator.SetTrigger("ThrowDice");
+       yield return new WaitForSeconds(0.35f);
+       transform.SetParent(null);
+       transform.DOScale(1f, 0.1f);
+
+       if (Vector3.Distance(ownerInteractor.transform.position, holdPoint.position) <
+           Vector3.Distance(ownerInteractor.transform.position, handPoint.position))
+       {
+           transform.position = holdPoint.position;
+       }
+       handPoint = null;
+       holdPoint = null;
+       rb.useGravity = true;
+       rb.linearDamping = 1f;
+       rb.angularDamping = 0.05f;
+       rb.constraints = RigidbodyConstraints.None;
+       IsPickedUp = false;
+       GetComponent<BoxCollider>().enabled = true;
+       onTarget = false;
+       inhand = false;
+       ownerInteractor.animator.SetBool("InHand", onTarget);
+       Vector3 dir = mainCamera.transform.forward;
+       rb.AddForce(dir * 30f, ForceMode.Impulse);
+       ownerInteractor?.NotifyDropped(this);
+       ownerInteractor = null;
+       isAnimationPlaying = false;
+    }
 
 
    public void PickMeUp(Transform point, Interactor interactor)
@@ -165,8 +191,10 @@ public class PickUpObjectInteraction : InteractionBase
        IsPickedUp = true;
    }
 
-   public void DropMe()
+   public bool DropMe()
    {
+       if(IsPickedUp)
+           return true;
        // reset physics
        rb.useGravity = true;
        rb.linearDamping = 1;
@@ -176,5 +204,6 @@ public class PickUpObjectInteraction : InteractionBase
         // let the interactor know to clear its heldObject
         ownerInteractor?.NotifyDropped(this);
        ownerInteractor = null;
+       return false;
    }
 }
