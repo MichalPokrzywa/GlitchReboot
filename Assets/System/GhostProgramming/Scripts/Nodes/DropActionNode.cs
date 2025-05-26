@@ -1,10 +1,11 @@
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GhostProgramming
 {
     public class DropActionNode : ActionNode
     {
-        public override async Task<bool> Execute()
+        public override async Task<bool> Execute(CancellationToken cancelToken)
         {
             if (prevNode is not GhostNode ghostNode)
                 return false;

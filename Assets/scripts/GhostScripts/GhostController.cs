@@ -14,7 +14,7 @@ public class GhostController : MonoBehaviour
     TaskCompletionSource<bool> taskCS;
 
     NavMeshAgent agent;
-    GameObject searchingObject;
+    GameObject target;
     GameObject pickedUpObject;
 
     Coroutine pathCoroutine;
@@ -23,11 +23,11 @@ public class GhostController : MonoBehaviour
 
     float distance;
     float interactionDistance = 2f;
-    bool hasReachedTarget = false;
+
     bool targetUnreachable = false;
     bool stopFollowingWhenReached = true;
 
-    const float pathCalculationInterval = 0.25f;
+    const float pathCalculationInterval = 0.5f;
     const float hysteresisBuffer = 0.2f;
 
     public enum InteractionDistance
@@ -44,48 +44,47 @@ public class GhostController : MonoBehaviour
 
     void Update()
     {
-        if (searchingObject == null)
-        {
+        // If there is no target - do nothing
+        if (target == null)
             return;
-        }
 
         // Check if we should consider path recalculation
+        // It is needed when the target is unreachable, but it might be reachable after some time (e.g. target moved behind a wall)
         if (targetUnreachable && !IsPathRecalculationNeeded())
             return;
 
-        distance = Vector3.Distance(agent.transform.position, searchingObject.transform.position);
+        // Calculate distance to the target
+        distance = Vector3.Distance(agent.transform.position, target.transform.position);
 
         // If target is reached - stop path finding
-        if (!hasReachedTarget && distance < interactionDistance)
+        if (distance < interactionDistance)
         {
             agent.isStopped = true;
-            hasReachedTarget = true;
             agent.ResetPath();
-            Debug.Log("Target reached");
             ResetCoroutine();
             if (stopFollowingWhenReached)
             {
-                searchingObject = null;
+                target = null;
             }
             onTargetReached?.Invoke();
             onTargetReached = null;
+            Debug.Log("--Target reached--");
             return;
         }
-        // if target was reached already, but it moved away - start path finding again
+        // Start path finding
         if (distance > interactionDistance + hysteresisBuffer)
         {
             agent.isStopped = false;
-            hasReachedTarget = false;
 
             if (pathCoroutine == null)
             {
                 pathCoroutine ??= StartCoroutine(MoveToTargetCoroutine());
-                Debug.Log("Coroutine started");
+                Debug.Log("--Coroutine started--");
             }
         }
     }
 
-    public async Task<bool> MoveTo(GameObject newSearchingObject)
+    public async Task<bool> MoveTo(GameObject newSearchingObject, CancellationToken cancelToken)
     {
         taskCS = new TaskCompletionSource<bool>();
 
@@ -101,9 +100,16 @@ public class GhostController : MonoBehaviour
             dist = InteractionDistance.Close;
 
         interactionDistance = agent.stoppingDistance = GetInteractionDistance(dist);
-        searchingObject = newSearchingObject;
+        target = newSearchingObject;
         targetUnreachable = false;
-        hasReachedTarget = false;
+
+        // Cancellation handling
+        CancellationTokenRegistration cancelRegistration = cancelToken.Register(() =>
+        {
+            Stop();
+            onTargetReached = null;
+            taskCS.TrySetResult(false);
+        });
 
         onTargetReached = () =>
         {
@@ -123,23 +129,24 @@ public class GhostController : MonoBehaviour
         }
         catch (TaskCanceledException)
         {
-            Debug.Log("WaitForSeconds canceled");
+            Debug.LogWarning("WaitForSeconds canceled");
         }
     }
 
     public void Stop()
     {
-        if (searchingObject == null)
+        if (target == null)
         {
             Debug.LogWarning("Nothing to stop following.");
             return;
         }
         ResetCoroutine();
-        searchingObject = null;
+        target = null;
         agent.isStopped = true;
+        agent.ResetPath();
     }
 
-    public async Task<bool> PickUp(PickUpObjectInteraction objectToPickUp)
+    public async Task<bool> PickUp(PickUpObjectInteraction objectToPickUp, CancellationToken cancelToken)
     {
         if (objectToPickUp == null)
         {
@@ -147,7 +154,7 @@ public class GhostController : MonoBehaviour
             return false;
         }
 
-        bool reachedDest = await MoveTo(objectToPickUp.gameObject);
+        bool reachedDest = await MoveTo(objectToPickUp.gameObject, cancelToken);
         if (!reachedDest)
         {
             Debug.LogWarning("Failed to reach the object.");
@@ -175,21 +182,21 @@ public class GhostController : MonoBehaviour
     {
         pickedUpObject = objectToPickUp.gameObject;
         objectToPickUp.PickMeUp(holdPoint, null);
-        searchingObject = null;
+        target = null;
     }
 
     bool IsPathRecalculationNeeded()
     {
-        lastTargetUnreachablePosition ??= searchingObject.transform.position;
+        lastTargetUnreachablePosition ??= target.transform.position;
         lastMyUnreachablePosition ??= agent.transform.position;
 
         // Check if the target has moved significantly
-        if (Vector3.Distance(lastTargetUnreachablePosition.Value, searchingObject.transform.position) > hysteresisBuffer)
+        if (Vector3.Distance(lastTargetUnreachablePosition.Value, target.transform.position) > hysteresisBuffer)
         {
-            lastTargetUnreachablePosition = searchingObject.transform.position;
+            lastTargetUnreachablePosition = target.transform.position;
             // log only once
             if (pathCoroutine == null)
-                Debug.Log("Target moved");
+                Debug.Log("---Target moved---");
 
             return true;
         }
@@ -200,7 +207,7 @@ public class GhostController : MonoBehaviour
             lastMyUnreachablePosition = agent.transform.position;
             // log only once
             if (pathCoroutine == null)
-                Debug.Log("Agent moved");
+                Debug.Log("---Agent moved---");
 
             return true;
         }
@@ -225,7 +232,7 @@ public class GhostController : MonoBehaviour
         while (true)
         {
             // if there is no object to follow - stop coroutine
-            if (searchingObject == null)
+            if (target == null)
                 yield break;
 
             // if agent is already on the path or on off-mesh link - let him finish
@@ -237,21 +244,21 @@ public class GhostController : MonoBehaviour
 
             // thanks to this function, path should be ALWAYS calculated immediately
             // it means that agent should not try to reach an object that is unreachable (like following object moving behind a wall)
-            agent.CalculatePath(searchingObject.transform.position, path);
+            agent.CalculatePath(target.transform.position, path);
 
             if (path.status == NavMeshPathStatus.PathComplete)
             {
                 targetUnreachable = false;
                 agent.isStopped = false;
-                if (!agent.hasPath || Vector3.Distance(agent.destination, searchingObject.transform.position) > 2*hysteresisBuffer)
+                if (!agent.hasPath || Vector3.Distance(agent.destination, target.transform.position) > 2*hysteresisBuffer)
                 {
-                    Debug.Log("Setting new path");
+                    Debug.Log("--Setting new path--");
                     agent.SetPath(path);
                 }
             }
             else
             {
-                Debug.LogWarning("Path is invalid. Target unreachable");
+                Debug.LogWarning("--Path is invalid. Target unreachable--");
                 agent.ResetPath();
                 agent.isStopped = true;
                 targetUnreachable = true;
@@ -259,7 +266,7 @@ public class GhostController : MonoBehaviour
                 yield break;
             }
 
-            // Wait for a short time before checking again
+            // Wait for a short time before trying to recalculate path in case the target is moving
             yield return new WaitForSeconds(pathCalculationInterval);
         }
     }

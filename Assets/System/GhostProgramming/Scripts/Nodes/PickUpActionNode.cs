@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace GhostProgramming
 {
     public class PickUpActionNode : ActionNode
     {
-        public override async Task<bool> Execute()
+        public override async Task<bool> Execute(CancellationToken cancelToken)
         {
             if (prevNode is not GhostNode ghostNode)
                 return false;
@@ -20,7 +21,7 @@ namespace GhostProgramming
             if (pickable == null)
                 return false;
 
-            return await ghost.PickUp(pickable);
+            return await ghost.PickUp(pickable, cancelToken);
         }
 
     }

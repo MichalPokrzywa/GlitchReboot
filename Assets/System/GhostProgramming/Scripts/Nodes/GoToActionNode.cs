@@ -1,3 +1,4 @@
+using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -5,7 +6,7 @@ namespace GhostProgramming
 {
     public class GoToActionNode : ActionNode
     {
-        public override async Task<bool> Execute()
+        public override async Task<bool> Execute(CancellationToken cancelToken)
         {
             if (prevNode is not GhostNode ghostNode)
                 return false;
@@ -16,7 +17,7 @@ namespace GhostProgramming
 
             var target = targetNode.GetValue() as MonoBehaviour;
 
-            return await ghost.MoveTo(target?.gameObject);
+            return await ghost.MoveTo(target?.gameObject, cancelToken);
         }
 
     }
