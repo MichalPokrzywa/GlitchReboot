@@ -168,7 +168,7 @@ public class GhostController : MonoBehaviour
     {
         if (pickedUpObject == null)
         {
-            Debug.Log("Nothing to drop...");
+            Debug.LogWarning("Nothing to drop...");
             return false;
         }
 
@@ -221,7 +221,7 @@ public class GhostController : MonoBehaviour
         {
             StopCoroutine(pathCoroutine);
             pathCoroutine = null;
-            Debug.Log("Coroutine stopped");
+            Debug.Log("--Coroutine stopped--");
         }
     }
 
@@ -252,13 +252,13 @@ public class GhostController : MonoBehaviour
                 agent.isStopped = false;
                 if (!agent.hasPath || Vector3.Distance(agent.destination, target.transform.position) > 2*hysteresisBuffer)
                 {
-                    Debug.Log("--Setting new path--");
+                    Debug.Log("--Setting path--");
                     agent.SetPath(path);
                 }
             }
             else
             {
-                Debug.LogWarning("--Path is invalid. Target unreachable--");
+                Debug.LogWarning("Path is invalid. Target unreachable");
                 agent.ResetPath();
                 agent.isStopped = true;
                 targetUnreachable = true;

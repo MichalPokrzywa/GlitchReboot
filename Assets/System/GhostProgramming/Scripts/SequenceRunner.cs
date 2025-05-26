@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,6 +16,7 @@ public class SequenceRunner : MonoBehaviour
     [SerializeField] SequenceManager sequenceManager;
 
     const string noSelectedSequencesInfo = "You have to select sequences you want to run";
+    const string incorrectBlockInSequenceInfo = "There is invalid node in the sequence";
 
     Dictionary<BlockSequence, CancellationTokenSource> runningSequences = new();
 
@@ -76,6 +78,13 @@ public class SequenceRunner : MonoBehaviour
             if (runningSequences.ContainsKey(sequence))
                 continue;
 
+            // if the sequence has invalid blocks, skip it
+            if (sequence.Blocks.Any(b => b.BlockNode != null && b.BlockNode.isValid == false))
+            {
+                infoLabel.text = incorrectBlockInSequenceInfo;
+                continue;
+            }
+
             var cts = new CancellationTokenSource();
             runningSequences[sequence] = cts;
 
@@ -90,17 +99,36 @@ public class SequenceRunner : MonoBehaviour
     {
         foreach (var block in sequence.Blocks)
         {
-            cancelToken.ThrowIfCancellationRequested();
+            block.BlockNode.isInRunningSequence = true;
+        }
 
-            var node = block.BlockNode;
-            if (node == null)
+        try
+        {
+            foreach (var block in sequence.Blocks)
             {
-                Debug.LogWarning($"Node is null for block: {block.BlockInfo.name}");
-                return;
-            }
+                cancelToken.ThrowIfCancellationRequested();
 
-            if (node is ActionNode actionNode)
-                await actionNode.Execute(cancelToken);
+                var node = block.BlockNode;
+                if (node == null)
+                {
+                    Debug.LogWarning($"Node is null for block: {block.BlockInfo.name}");
+                    return;
+                }
+
+                if (node is ActionNode actionNode)
+                    await actionNode.Execute(cancelToken);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            Debug.LogWarning($"Sequence was canceled.");
+        }
+        finally
+        {
+            foreach (var block in sequence.Blocks)
+            {
+                block.BlockNode.isInRunningSequence = false;
+            }
         }
     }
 }

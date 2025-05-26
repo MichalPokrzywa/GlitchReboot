@@ -8,6 +8,8 @@ namespace GhostProgramming
 {
     public abstract class EntityNode<T> : ArgumentNode where T : Object
     {
+        // NOTE: This class should be factored out and there should be a separate class named "DropdownArgumentNode"
+        // cause not all entity nodes need to have a dropdown
         [SerializeField] TMP_Dropdown dropdown;
 
         List<Toggle> toggles = new List<Toggle>();
@@ -74,10 +76,11 @@ namespace GhostProgramming
         {
             var list = GetEntityList();
 
-            // check if selected object is active in hierarchy
+            // check if selected object is active in hierarchy and set interactability accordingly
             if (list[dropdown.value] is MonoBehaviour monoB && monoB.gameObject.activeSelf)
             {
                 dropdown.interactable = true;
+                this.isValid = true;
                 return;
             }
 
@@ -95,10 +98,12 @@ namespace GhostProgramming
             {
                 dropdown.Hide();
                 dropdown.interactable = false;
+                this.isValid = false;
             }
             else
             {
                 dropdown.interactable = true;
+                this.isValid = true;
                 dropdown.value = firstActiveIndex;
                 dropdown.RefreshShownValue();
             }

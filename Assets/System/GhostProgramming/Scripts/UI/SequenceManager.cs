@@ -162,7 +162,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         // Swap the original block with the copy in the list
         Block blockCopyComponent = blockCopy.GetComponent<Block>();
         blocksInSelectionBox[index] = blockCopyComponent;
-        blockCopyComponent.RaycastTargetActivation(false);
+        blockCopyComponent.UpdateInteractability(false);
         RegisterToSelectionBoxEvents(blockCopyComponent);
 
         SelectBlock(block);
@@ -243,7 +243,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     {
         foreach (var b in blocksInSelectionBox)
         {
-            b.RaycastTargetActivation(true);
+            b.UpdateInteractability(true);
         }
     }
 
@@ -251,7 +251,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     {
         foreach (var b in blocksInSelectionBox)
         {
-            b.RaycastTargetActivation(false);
+            b.UpdateInteractability(false);
         }
     }
 

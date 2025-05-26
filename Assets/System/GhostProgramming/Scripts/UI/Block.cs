@@ -43,6 +43,7 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     [SerializeField] BlockUIData blockUIData;
 
     bool selected = false;
+    bool interactable = true;
     Node node;
     Vector3 offset;
     List<Image> images = new List<Image>();
@@ -51,6 +52,14 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     {
         images = new List<Image>(GetComponentsInChildren<Image>(true));
         node = GetComponent<Node>();
+    }
+
+    void Update()
+    {
+        // update raycast based on the node's state (running or not)
+        // only if the block is interactable
+        if (interactable)
+            RaycastTargetActivation(!node.isInRunningSequence);
     }
 
     void OnValidate()
@@ -73,19 +82,17 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         selectionIndicator.SetActive(select);
     }
 
-    public void RaycastTargetActivation(bool active)
+    public void UpdateInteractability(bool interactable)
     {
-        foreach (var img in images)
-        {
-            img.raycastTarget = active;
-        }
+        this.interactable = interactable;
+        RaycastTargetActivation(interactable);
     }
 
     #region InterfacesImplementation
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        RaycastTargetActivation(false);
+        UpdateInteractability(false);
         OnDragged?.Invoke(this);
     }
 
@@ -102,7 +109,15 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        RaycastTargetActivation(true);
+        UpdateInteractability(true);
+    }
+
+    void RaycastTargetActivation(bool active)
+    {
+        foreach (var img in images)
+        {
+            img.raycastTarget = active;
+        }
     }
 
     #endregion
