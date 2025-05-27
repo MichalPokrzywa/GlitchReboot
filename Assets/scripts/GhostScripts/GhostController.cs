@@ -275,7 +275,7 @@ public class GhostController : MonoBehaviour
     {
         return type switch
         {
-            InteractionDistance.Far => 2f,
+            InteractionDistance.Far => 2.5f,
             InteractionDistance.Close => 0.3f,
             _ => 0.5f
         };
