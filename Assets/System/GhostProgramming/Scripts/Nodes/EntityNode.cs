@@ -6,10 +6,14 @@ using UnityEngine.UI;
 
 namespace GhostProgramming
 {
-    public abstract class EntityNode<T> : ArgumentNode where T : Object
+    public interface IEntityNode
     {
-        // NOTE: This class should be factored out and there should be a separate class named "DropdownArgumentNode"
-        // cause not all entity nodes need to have a dropdown
+        EntityBase GetEntity();
+    }
+
+    public abstract class EntityNode<T> : ArgumentNode<T>, IEntityNode where T : EntityBase
+    {
+        // NOTE: If we would want to store e.g. primitive types this class should be factored out and there should be a separate class named "DropdownArgumentNode"
         [SerializeField] TMP_Dropdown dropdown;
 
         List<Toggle> toggles = new List<Toggle>();
@@ -32,11 +36,16 @@ namespace GhostProgramming
         }
 
         protected abstract List<T> GetEntityList();
-        protected abstract string GetEnityName();
+        protected abstract string GetEntityName();
 
-        public override Object GetValue()
+        public override T GetValue()
         {
             return GetEntityList()[dropdown.value];
+        }
+
+        public EntityBase GetEntity()
+        {
+            return GetValue();
         }
 
         void InitDropdown()
@@ -45,9 +54,10 @@ namespace GhostProgramming
             var list = GetEntityList();
             for (int i = 0; i < list.Count; i++)
             {
-                string objName = $"{GetEnityName()} {i + 1}";
-                dropdown.options.Add(new TMP_Dropdown.OptionData(objName));
+                var label = BuildEntityLabel(list[i]);
+                dropdown.options.Add(new TMP_Dropdown.OptionData(label));
             }
+            dropdown.RefreshShownValue();
         }
 
         void HandleDropdownContent()
@@ -57,10 +67,7 @@ namespace GhostProgramming
             var list = GetEntityList();
             for (int i = 0; i < list.Count; i++)
             {
-                if (list[i] is MonoBehaviour mb)
-                {
-                    DropdownOptionActivationIndicator(i, mb.gameObject.activeSelf);
-                }
+                DropdownOptionActivationIndicator(i, list[i].gameObject.activeSelf);
             }
         }
 
@@ -76,8 +83,10 @@ namespace GhostProgramming
         {
             var list = GetEntityList();
 
+            RefreshDropdownIfChanged();
+
             // check if selected object is active in hierarchy and set interactability accordingly
-            if (list[dropdown.value] is MonoBehaviour monoB && monoB.gameObject.activeSelf)
+            if (list[dropdown.value].gameObject.activeSelf)
             {
                 dropdown.interactable = true;
                 this.isValid = true;
@@ -88,7 +97,7 @@ namespace GhostProgramming
             int firstActiveIndex = -1;
             for (int i = 0; i < list.Count; i++)
             {
-                if (list[i] is MonoBehaviour mb && mb.gameObject.activeSelf)
+                if (list[i].gameObject.activeSelf)
                 {
                     firstActiveIndex = i;
                     break;
@@ -107,6 +116,30 @@ namespace GhostProgramming
                 dropdown.value = firstActiveIndex;
                 dropdown.RefreshShownValue();
             }
+        }
+
+        void RefreshDropdownIfChanged()
+        {
+            var list = GetEntityList();
+            if (list.Count != dropdown.options.Count)
+            {
+                InitDropdown();
+                return;
+            }
+            for (int i = 0; i < list.Count; i++)
+            {
+                var currentLabel = BuildEntityLabel(list[i]);
+                if (dropdown.options[i].text != currentLabel)
+                {
+                    InitDropdown();
+                    return;
+                }
+            }
+        }
+
+        string BuildEntityLabel(T entity)
+        {
+            return $"{GetEntityName()} {entity.entityId} {entity.entityNameSuffix}";
         }
     }
 }

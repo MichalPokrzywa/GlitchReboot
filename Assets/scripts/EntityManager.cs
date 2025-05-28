@@ -1,4 +1,7 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EntityManager : MonoBehaviour
@@ -23,28 +26,44 @@ public class EntityManager : MonoBehaviour
         }
     }
 
-    public List<GhostController> ghosts { get; } = new List<GhostController>();
-    public List<VariableDice> cubes { get; } = new List<VariableDice>();
-    public List<VariablePlatform> platforms { get; } = new List<VariablePlatform>();
-    public List<MarkerScript> markers { get; } = new List<MarkerScript>();
-
-    public void Register(GameObject obj)
+    readonly Dictionary<Type, IList> entityLists = new()
     {
-        if (TryRegister<GhostController>(obj, ghosts)) return;
-        if (TryRegister<VariableDice>(obj, cubes)) return;
-        if (TryRegister<VariablePlatform>(obj, platforms)) return;
-        if (TryRegister<MarkerScript>(obj, markers)) return;
+        { typeof(GhostController), new List<GhostController>() },
+        { typeof(VariableDice), new List<VariableDice>() },
+        { typeof(VariablePlatform), new List<VariablePlatform>() },
+        { typeof(MarkerScript), new List<MarkerScript>() }
+    };
+
+    public void Register<T>(T entity) where T : EntityBase
+    {
+        var list = GetList<T>();
+        if (list == null)
+        {
+            Debug.LogWarning($"[EntityManager] Unsupported entity type: {typeof(T).Name}");
+            return;
+        }
+
+        int finalId = entity.entityId > 0 ? entity.entityId : 1;
+
+        var usedIds = list.Select(e => e.entityId).ToHashSet();
+        while (usedIds.Contains(finalId))
+            finalId++;
+
+        entity.entityId = finalId;
+        list.Add(entity);
+
+        Debug.Log($"[EntityManager] Registered {typeof(T).Name} \"{entity.name}\" with ID {finalId} and suffix \"{entity.entityNameSuffix}\"");
     }
 
-    bool TryRegister<T>(GameObject obj, List<T> list) where T : Component
+    public  List<T> GetEntities<T>() where T : EntityBase
     {
-        T component = obj.GetComponent<T>();
-        if (component != null)
-        {
-            list.Add(component);
-            Debug.Log(typeof(T).Name + " registered: " + component.name);
-            return true;
-        }
-        return false;
+        return GetList<T>() ?? new List<T>();
+    }
+
+    List<T> GetList<T>() where T : EntityBase
+    {
+        if (entityLists.TryGetValue(typeof(T), out var list))
+            return list as List<T>;
+        return null;
     }
 }

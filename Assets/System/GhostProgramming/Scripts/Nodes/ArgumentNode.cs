@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace GhostProgramming
 {
-    public abstract class ArgumentNode : Node
+    public abstract class ArgumentNode<T> : Node
     {
-        public abstract Object GetValue();
+        public abstract T GetValue();
     }
 }

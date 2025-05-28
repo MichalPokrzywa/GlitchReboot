@@ -12,12 +12,10 @@ namespace GhostProgramming
                 return false;
             if (ghostNode.GetValue() is not GhostController ghost)
                 return false;
-            if (nextNode is not ArgumentNode targetNode)
+            if (nextNode is not IEntityNode entityNode)
                 return false;
 
-            var pickable = (targetNode.GetValue() as MonoBehaviour)
-                ?.GetComponent<PickUpObjectInteraction>();
-
+            var pickable = entityNode.GetEntity().GetComponent<PickUpObjectInteraction>();
             if (pickable == null)
                 return false;
 

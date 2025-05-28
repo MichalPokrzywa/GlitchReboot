@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
-public class VariableDice : MonoBehaviour
+public class VariableDice : EntityBase
 {
     public VariableType type;
     public List<TMP_Text> textList;
@@ -13,9 +14,23 @@ public class VariableDice : MonoBehaviour
 
     private IVariableTypeHandler handler;
 
+    void Awake()
+    {
+        EntityManager.instance.Register<VariableDice>(this);
+    }
+
     void Start()
     {
         InitializeHandler();
+        UpdateEntityNameSuffix();
+    }
+
+    public override void UpdateEntityNameSuffix()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("value: ");
+        sb.Append(GetCurrentValue());
+        entityNameSuffix = sb.ToString();
     }
 
     void InitializeHandler()
@@ -51,7 +66,9 @@ public class VariableDice : MonoBehaviour
         {
             handler.UpdateTextValue(text);
         }
+        UpdateEntityNameSuffix();
     }
+
     private void OnTriggerEnter(Collider other)
     {
         //DependencyManager.audioManager.PlaySound(Sound.None);
@@ -107,7 +124,6 @@ public class VariableDice : MonoBehaviour
             }
         }
     }
-
 }
 public interface IVariableTypeHandler
 {

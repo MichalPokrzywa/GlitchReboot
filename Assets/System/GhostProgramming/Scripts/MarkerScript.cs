@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class MarkerScript : MonoBehaviour
+public class MarkerScript : EntityBase
 {
     [SerializeField] TextMeshProUGUI markerText;
     [SerializeField] Transform target;
@@ -10,7 +10,8 @@ public class MarkerScript : MonoBehaviour
 
     void Awake()
     {
-        EntityManager.instance.Register(gameObject);
+        UpdateEntityNameSuffix();
+        EntityManager.instance.Register<MarkerScript>(this);
         this.gameObject.SetActive(false);
     }
 

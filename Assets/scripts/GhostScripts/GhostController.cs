@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-public class GhostController : MonoBehaviour
+public class GhostController : EntityBase
 {
     [SerializeField] Transform holdPoint;
 
@@ -48,7 +48,8 @@ public class GhostController : MonoBehaviour
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
-        EntityManager.instance.Register(gameObject);
+        UpdateEntityNameSuffix();
+        EntityManager.instance.Register<GhostController>(this);
     }
 
     void Update()
@@ -116,12 +117,14 @@ public class GhostController : MonoBehaviour
             onTargetReached = null;
             hasWaitedBeforeAction = false;
             errorType = ErrorType.Stopped;
+            Debug.LogError("STOP");
             taskCS.TrySetResult(false);
         });
 
         onTargetReached = () =>
         {
             onTargetReached = null;
+            Debug.LogError("REACHED");
             taskCS.TrySetResult(true);
         };
 
@@ -129,13 +132,13 @@ public class GhostController : MonoBehaviour
         {
             onTargetUnreachable = null;
             errorType = ErrorType.TargetUnreachable;
+            Debug.LogError("UNREACHABLE");
             taskCS.TrySetResult(false);
         };
 
         bool taskValue = await taskCS.Task;
         if (waited)
             hasWaitedBeforeAction = false;
-
 
         return taskValue;
     }

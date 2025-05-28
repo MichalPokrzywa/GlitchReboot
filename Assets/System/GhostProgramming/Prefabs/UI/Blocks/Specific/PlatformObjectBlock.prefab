@@ -8,13 +8,49 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2828459005683322, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_Size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 49270203765597437, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 115552733709935594, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
       value: Platform 1
       objectReference: {fileID: 0}
+    - target: {fileID: 441839493596661945, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 441839493596661945, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 441839493596661945, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 441839493596661945, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 581488799136815027, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 629271105261784354, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: blockData.name
       value: Platform
+      objectReference: {fileID: 0}
+    - target: {fileID: 1226614255234405202, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 1226614255234405202, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1231441090622467352, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_SizeDelta.x
@@ -132,12 +168,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlatformObjectBlock
       objectReference: {fileID: 0}
+    - target: {fileID: 7278219672860690993, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_text
+      value: Platform 1 value_x
+      objectReference: {fileID: 0}
+    - target: {fileID: 7278219672860690993, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 15
+      objectReference: {fileID: 0}
     - target: {fileID: 7963538955674282222, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_text
       value: Platform 1
       objectReference: {fileID: 0}
     - target: {fileID: 7963538955674282222, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_fontSizeBase
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963538955674282222, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129754827824556227, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129754827824556227, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9129754827824556227, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -167,6 +227,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prevNode: {fileID: 0}
   nextNode: {fileID: 0}
+  isInRunningSequence: 0
+  isValid: 1
   dropdown: {fileID: 5618336071132433008}
 --- !u!114 &5618336071132433008 stripped
 MonoBehaviour:

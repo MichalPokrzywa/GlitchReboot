@@ -12,12 +12,10 @@ namespace GhostProgramming
                 return false;
             if (ghostNode.GetValue() is not GhostController ghost)
                 return false;
-            if (nextNode is not ArgumentNode targetNode)
+            if (nextNode is not IEntityNode entityNode)
                 return false;
 
-            var target = targetNode.GetValue() as MonoBehaviour;
-
-            return await ghost.MoveTo(target?.gameObject, cancelToken);
+            return await ghost.MoveTo(entityNode.GetEntity().gameObject, cancelToken);
         }
 
     }

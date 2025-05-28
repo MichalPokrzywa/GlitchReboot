@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Text;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class VariablePlatform : MonoBehaviour
+public class VariablePlatform : EntityBase
 {
     [SerializeField]
     public string variableName = "x_value";
@@ -17,7 +18,7 @@ public class VariablePlatform : MonoBehaviour
 
     void Awake()
     {
-        EntityManager.instance.Register(gameObject);
+        EntityManager.instance.Register<VariablePlatform>(this);
     }
 
     void Start()
@@ -26,7 +27,14 @@ public class VariablePlatform : MonoBehaviour
         {
             text.text = variableName;
         }
+        UpdateEntityNameSuffix();
     }
+
+    public override void UpdateEntityNameSuffix()
+    {
+        entityNameSuffix = variableName;
+    }
+
     public void ReceiveValue(object value)
     {
         // Handle the received value

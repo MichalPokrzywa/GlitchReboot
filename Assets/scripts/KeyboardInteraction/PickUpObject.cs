@@ -10,11 +10,6 @@ public class PickUpObjectInteraction : InteractionBase
    public float rotationSpeed = 20f;
    private Interactor ownerInteractor;
 
-   void Awake()
-   {
-       EntityManager.instance.Register(gameObject);
-    }
-
    private void Start()
    {
       rb = GetComponent<Rigidbody>();
