@@ -11,6 +11,8 @@ public class GhostController : MonoBehaviour
     [SerializeField] Transform holdPoint;
 
     Action onTargetReached;
+    Action onTargetUnreachable;
+
     TaskCompletionSource<bool> taskCS;
 
     NavMeshAgent agent;
@@ -20,20 +22,27 @@ public class GhostController : MonoBehaviour
     Coroutine pathCoroutine;
     Vector3? lastTargetUnreachablePosition = null;
     Vector3? lastMyUnreachablePosition = null;
+    ErrorType errorType = ErrorType.None;
 
     float distance;
 
     bool targetUnreachable = false;
-    bool stopFollowingWhenReached = true;
     bool hasWaitedBeforeAction = false;
 
-    const float pathCalculationInterval = 0.5f;
+    const float pathCalculationInterval = 1f;
     const float hysteresisBuffer = 0.2f;
 
     public enum InteractionDistance
     {
         Close,
         Far
+    }
+
+    enum ErrorType
+    {
+        None,
+        TargetUnreachable,
+        Stopped
     }
 
     void Awake()
@@ -50,40 +59,37 @@ public class GhostController : MonoBehaviour
 
         // Check if we should consider path recalculation
         // It is needed when the target is unreachable, but it might be reachable after some time (e.g. target moved behind a wall)
-        if (targetUnreachable && !IsPathRecalculationNeeded())
+        //if (targetUnreachable && !IsPathRecalculationNeeded())
+        //    return;
+
+        // If target is unreachable - stop recalculating path
+        if (targetUnreachable)
+        {
+            ResetState();
+            onTargetUnreachable?.Invoke();
             return;
+        }
 
         // Calculate distance to the target
         distance = Vector3.Distance(agent.transform.position, target.transform.position);
 
-        // If target is reached - stop path finding
+        // If target is reached - stop recalculating path
         if (distance < agent.stoppingDistance)
         {
-            agent.isStopped = true;
-            agent.ResetPath();
-            ResetCoroutine();
-            if (stopFollowingWhenReached)
-            {
-                target = null;
-            }
+            ResetState();
             onTargetReached?.Invoke();
             return;
         }
         // Start path finding
-        if (distance > agent.stoppingDistance + hysteresisBuffer)
+        if (distance > agent.stoppingDistance + hysteresisBuffer && pathCoroutine == null && !targetUnreachable)
         {
-            agent.isStopped = false;
-
-            if (pathCoroutine == null)
-            {
-                pathCoroutine ??= StartCoroutine(MoveToTargetCoroutine());
-                Debug.Log("--Coroutine started--");
-            }
+            pathCoroutine ??= StartCoroutine(MoveToTargetCoroutine());
         }
     }
 
     public async Task<bool> MoveTo(GameObject newSearchingObject, CancellationToken cancelToken)
     {
+        errorType = ErrorType.None;
         if (newSearchingObject == null)
         {
             Debug.LogWarning("New searching object is null.");
@@ -97,8 +103,9 @@ public class GhostController : MonoBehaviour
         var marker = newSearchingObject.GetComponent<MarkerScript>();
         if (marker != null)
             dist = InteractionDistance.Close;
-
         agent.stoppingDistance = GetInteractionDistance(dist);
+
+        // Reset target
         target = newSearchingObject;
         targetUnreachable = false;
 
@@ -108,6 +115,7 @@ public class GhostController : MonoBehaviour
             Stop();
             onTargetReached = null;
             hasWaitedBeforeAction = false;
+            errorType = ErrorType.Stopped;
             taskCS.TrySetResult(false);
         });
 
@@ -115,6 +123,13 @@ public class GhostController : MonoBehaviour
         {
             onTargetReached = null;
             taskCS.TrySetResult(true);
+        };
+
+        onTargetUnreachable = () =>
+        {
+            onTargetUnreachable = null;
+            errorType = ErrorType.TargetUnreachable;
+            taskCS.TrySetResult(false);
         };
 
         bool taskValue = await taskCS.Task;
@@ -127,6 +142,7 @@ public class GhostController : MonoBehaviour
 
     public async Task WaitForSeconds(float time, CancellationToken token)
     {
+        errorType = ErrorType.None;
         int milliseconds = Mathf.RoundToInt(time * 1000f);
         try
         {
@@ -140,19 +156,18 @@ public class GhostController : MonoBehaviour
 
     public void Stop()
     {
+        errorType = ErrorType.None;
         if (target == null)
         {
             Debug.LogWarning("Nothing to stop following.");
             return;
         }
-        ResetCoroutine();
-        target = null;
-        agent.isStopped = true;
-        agent.ResetPath();
+        ResetState();
     }
 
     public async Task<bool> PickUp(PickUpObjectInteraction objectToPickUp, CancellationToken cancelToken)
     {
+        errorType = ErrorType.None;
         if (objectToPickUp == null)
         {
             Debug.LogWarning("Object to pick up is null.");
@@ -182,6 +197,7 @@ public class GhostController : MonoBehaviour
 
     public bool Drop()
     {
+        errorType = ErrorType.None;
         if (pickedUpObject == null)
             return false;
 
@@ -195,7 +211,6 @@ public class GhostController : MonoBehaviour
     {
         pickedUpObject = objectToPickUp.gameObject;
         objectToPickUp.PickMeUp(holdPoint, null);
-        target = null;
     }
 
     bool IsPathRecalculationNeeded()
@@ -228,14 +243,16 @@ public class GhostController : MonoBehaviour
         return false;
     }
 
-    void ResetCoroutine()
+    void ResetState()
     {
         if (pathCoroutine != null)
         {
             StopCoroutine(pathCoroutine);
             pathCoroutine = null;
-            Debug.Log("--Coroutine stopped--");
         }
+        agent.isStopped = true;
+        agent.ResetPath();
+        target = null;
     }
 
     IEnumerator MoveToTargetCoroutine()
@@ -265,17 +282,13 @@ public class GhostController : MonoBehaviour
                 agent.isStopped = false;
                 if (!agent.hasPath || Vector3.Distance(agent.destination, target.transform.position) > 2*hysteresisBuffer)
                 {
-                    Debug.Log("--Setting path--");
                     agent.SetPath(path);
                 }
             }
             else
             {
-                Debug.LogWarning("Path is invalid. Target unreachable");
-                agent.ResetPath();
-                agent.isStopped = true;
+                Debug.LogWarning("--Path is invalid. Target unreachable--");
                 targetUnreachable = true;
-                ResetCoroutine();
                 yield break;
             }
 
