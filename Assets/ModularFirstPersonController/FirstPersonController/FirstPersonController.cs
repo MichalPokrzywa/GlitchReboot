@@ -197,13 +197,16 @@ public class FirstPersonController : MonoBehaviour
     private void Update()
     {
         HandleZoom();
+        if (cameraCanMove)
+            HandleCameraMovement();
     }
 
     private void FixedUpdate()
     {
+        /*
         if(cameraCanMove)
             HandleCameraMovement();
-
+        */
         if(enableSprint)
             HandleSprinting();
 

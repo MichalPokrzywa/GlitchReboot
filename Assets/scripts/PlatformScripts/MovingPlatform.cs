@@ -9,8 +9,9 @@ public class MovingPlatform : ParentOnTrigger, IActivatable
     public float moveInterval = 1f; // Czas pomiędzy ruchem do następnego waypointa
     public float stoppingDistance = 0.05f; // Dystans, przy którym uznajemy, że dotarliśmy do celu
     public bool startMoving = false; // Flaga do rozpoczęcia ruchu
+    public float rotate = 0.0f;
 
-    private List<Transform> waypoints; // Lista waypointów
+    public List<Transform> waypoints; // Lista waypointów
     private int index = 0; // Indeks aktualnego waypointa
     private float timer;
     private bool objectInMotion = false;
@@ -49,6 +50,11 @@ public class MovingPlatform : ParentOnTrigger, IActivatable
         if (objectInMotion && waypoints.Count > 0)
         {
             Move(); // Wywołanie metody poruszania się
+        }
+
+        if(rotate != 0)
+        {
+            transform.Rotate(0, rotate, 0);
         }
     }
 
