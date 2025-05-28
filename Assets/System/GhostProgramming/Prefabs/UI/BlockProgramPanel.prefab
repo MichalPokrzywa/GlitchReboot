@@ -91,8 +91,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6849498959159174d9b997818b5f41e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  executeButton: {fileID: 5537942278810289271}
-  stopExecution: {fileID: 2614373523520262073}
+  runButton: {fileID: 5537942278810289271}
+  cancelButton: {fileID: 2614373523520262073}
   infoLabel: {fileID: 628501198094126937}
   sequenceManager: {fileID: 4003541511975551902}
 --- !u!1 &1770562868894737375
@@ -1813,11 +1813,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1026659141750670980, guid: 0aeaf7a1ad1e1454ab15cb3c57cc7626, type: 3}
       propertyPath: m_text
-      value: Execute
+      value: Run
       objectReference: {fileID: 0}
     - target: {fileID: 4938246243982821076, guid: 0aeaf7a1ad1e1454ab15cb3c57cc7626, type: 3}
       propertyPath: m_Name
-      value: ExecuteButton
+      value: RunButton
       objectReference: {fileID: 0}
     - target: {fileID: 7875493822503667589, guid: 0aeaf7a1ad1e1454ab15cb3c57cc7626, type: 3}
       propertyPath: m_Pivot.x
@@ -2360,11 +2360,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1026659141750670980, guid: 0aeaf7a1ad1e1454ab15cb3c57cc7626, type: 3}
       propertyPath: m_text
-      value: Stop
+      value: Cancel
       objectReference: {fileID: 0}
     - target: {fileID: 4938246243982821076, guid: 0aeaf7a1ad1e1454ab15cb3c57cc7626, type: 3}
       propertyPath: m_Name
-      value: StopButton
+      value: CancelButton
       objectReference: {fileID: 0}
     - target: {fileID: 7875493822503667589, guid: 0aeaf7a1ad1e1454ab15cb3c57cc7626, type: 3}
       propertyPath: m_Pivot.x

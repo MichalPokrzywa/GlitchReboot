@@ -10,8 +10,8 @@ using UnityEngine.UI;
 
 public class SequenceRunner : MonoBehaviour
 {
-    [SerializeField] Button executeButton;
-    [SerializeField] Button stopExecution;
+    [SerializeField] Button runButton;
+    [SerializeField] Button cancelButton;
     [SerializeField] TextMeshProUGUI infoLabel;
     [SerializeField] SequenceManager sequenceManager;
 
@@ -22,9 +22,9 @@ public class SequenceRunner : MonoBehaviour
 
     void Awake()
     {
-        executeButton.onClick.AddListener(OnExecuteClicked);
-        stopExecution.onClick.AddListener(OnStopExecutionClicked);
-        stopExecution.gameObject.SetActive(false);
+        runButton.onClick.AddListener(OnExecuteClicked);
+        cancelButton.onClick.AddListener(OnStopExecutionClicked);
+        cancelButton.gameObject.SetActive(false);
     }
 
     void Update()
@@ -32,13 +32,13 @@ public class SequenceRunner : MonoBehaviour
         bool anySelectedRunning = sequenceManager.GetSelectedSequences()
             .Any(seq => runningSequences.ContainsKey(seq));
 
-        stopExecution.gameObject.SetActive(anySelectedRunning);
+        cancelButton.gameObject.SetActive(anySelectedRunning);
     }
 
     void OnDestroy()
     {
-        executeButton.onClick.RemoveListener(OnExecuteClicked);
-        stopExecution.onClick.RemoveListener(OnStopExecutionClicked);
+        runButton.onClick.RemoveListener(OnExecuteClicked);
+        cancelButton.onClick.RemoveListener(OnStopExecutionClicked);
     }
 
     void OnStopExecutionClicked()
@@ -55,6 +55,7 @@ public class SequenceRunner : MonoBehaviour
         }
         foreach (var seq in toCancel)
         {
+            runningSequences[seq].Dispose();
             runningSequences.Remove(seq);
         }
     }
@@ -88,8 +89,7 @@ public class SequenceRunner : MonoBehaviour
             var cts = new CancellationTokenSource();
             runningSequences[sequence] = cts;
 
-            sequenceTasks.Add(RunSequenceAsync(sequence, cts.Token)
-                .ContinueWith(_ => runningSequences.Remove(sequence)));
+            sequenceTasks.Add(RunSequenceAsync(sequence, cts.Token));
         }
 
         await Task.WhenAll(sequenceTasks);
@@ -106,7 +106,7 @@ public class SequenceRunner : MonoBehaviour
         {
             foreach (var block in sequence.Blocks)
             {
-                cancelToken.ThrowIfCancellationRequested();
+                //cancelToken.ThrowIfCancellationRequested();
 
                 var node = block.BlockNode;
                 if (node == null)
@@ -128,6 +128,11 @@ public class SequenceRunner : MonoBehaviour
             foreach (var block in sequence.Blocks)
             {
                 block.BlockNode.isInRunningSequence = false;
+            }
+            if (runningSequences.TryGetValue(sequence, out var cts))
+            {
+                cts.Dispose();
+                runningSequences.Remove(sequence);
             }
         }
     }

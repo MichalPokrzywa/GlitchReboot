@@ -22,10 +22,10 @@ public class GhostController : MonoBehaviour
     Vector3? lastMyUnreachablePosition = null;
 
     float distance;
-    float interactionDistance = 2f;
 
     bool targetUnreachable = false;
     bool stopFollowingWhenReached = true;
+    bool hasWaitedBeforeAction = false;
 
     const float pathCalculationInterval = 0.5f;
     const float hysteresisBuffer = 0.2f;
@@ -57,7 +57,7 @@ public class GhostController : MonoBehaviour
         distance = Vector3.Distance(agent.transform.position, target.transform.position);
 
         // If target is reached - stop path finding
-        if (distance < interactionDistance)
+        if (distance < agent.stoppingDistance)
         {
             agent.isStopped = true;
             agent.ResetPath();
@@ -67,12 +67,10 @@ public class GhostController : MonoBehaviour
                 target = null;
             }
             onTargetReached?.Invoke();
-            onTargetReached = null;
-            Debug.Log("--Target reached--");
             return;
         }
         // Start path finding
-        if (distance > interactionDistance + hysteresisBuffer)
+        if (distance > agent.stoppingDistance + hysteresisBuffer)
         {
             agent.isStopped = false;
 
@@ -86,20 +84,21 @@ public class GhostController : MonoBehaviour
 
     public async Task<bool> MoveTo(GameObject newSearchingObject, CancellationToken cancelToken)
     {
-        taskCS = new TaskCompletionSource<bool>();
-
         if (newSearchingObject == null)
         {
             Debug.LogWarning("New searching object is null.");
             return false;
         }
 
+        bool waited = await WaitOnceBeforeAction(cancelToken);
+        taskCS = new TaskCompletionSource<bool>();
+
         InteractionDistance dist = InteractionDistance.Far;
         var marker = newSearchingObject.GetComponent<MarkerScript>();
         if (marker != null)
             dist = InteractionDistance.Close;
 
-        interactionDistance = agent.stoppingDistance = GetInteractionDistance(dist);
+        agent.stoppingDistance = GetInteractionDistance(dist);
         target = newSearchingObject;
         targetUnreachable = false;
 
@@ -108,16 +107,22 @@ public class GhostController : MonoBehaviour
         {
             Stop();
             onTargetReached = null;
+            hasWaitedBeforeAction = false;
             taskCS.TrySetResult(false);
         });
 
         onTargetReached = () =>
         {
-            taskCS.TrySetResult(true);
             onTargetReached = null;
+            taskCS.TrySetResult(true);
         };
 
-        return await taskCS.Task;
+        bool taskValue = await taskCS.Task;
+        if (waited)
+            hasWaitedBeforeAction = false;
+
+
+        return taskValue;
     }
 
     public async Task WaitForSeconds(float time, CancellationToken token)
@@ -154,23 +159,31 @@ public class GhostController : MonoBehaviour
             return false;
         }
 
+        bool waited = await WaitOnceBeforeAction(cancelToken);
+
+        // make sure to drop previous object
+        Drop();
+
         bool reachedDest = await MoveTo(objectToPickUp.gameObject, cancelToken);
         if (!reachedDest)
         {
             Debug.LogWarning("Failed to reach the object.");
             return false;
         }
+
         DoPickUp(objectToPickUp);
+
+        // reset waiting flag after action
+        if (waited)
+            hasWaitedBeforeAction = false;
+
         return true;
     }
 
     public bool Drop()
     {
         if (pickedUpObject == null)
-        {
-            Debug.LogWarning("Nothing to drop...");
             return false;
-        }
 
         var pickUpComponent = pickedUpObject.GetComponent<PickUpObjectInteraction>();
         pickUpComponent.DropMe();
@@ -269,6 +282,16 @@ public class GhostController : MonoBehaviour
             // Wait for a short time before trying to recalculate path in case the target is moving
             yield return new WaitForSeconds(pathCalculationInterval);
         }
+    }
+
+    async Task<bool> WaitOnceBeforeAction(CancellationToken cancelToken)
+    {
+        if (hasWaitedBeforeAction)
+            return false;
+
+        hasWaitedBeforeAction = true;
+        await WaitForSeconds(0.5f, cancelToken);
+        return true;
     }
 
     public static float GetInteractionDistance(InteractionDistance type)
