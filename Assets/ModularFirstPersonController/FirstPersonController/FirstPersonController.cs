@@ -196,7 +196,8 @@ public class FirstPersonController : MonoBehaviour
 
     private void Update()
     {
-        HandleZoom();
+        if (cameraCanMove)
+            HandleZoom();
         if (cameraCanMove)
             HandleCameraMovement();
     }
@@ -227,6 +228,23 @@ public class FirstPersonController : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, transform.forward * 2);
+    }
+
+    public void StopMovement()
+    {
+        cameraCanMove = false;
+        playerCanMove = false;
+        enableHeadBob = false;
+        rb.linearVelocity = Vector3.zero;
+        enableJump = false;
+    }
+
+    public void StartMovement()
+    {
+        cameraCanMove = true;
+        playerCanMove = true;
+        enableHeadBob = true;
+        enableJump = true;
     }
 
     public void Rotate(float pitch, float yaw)
@@ -429,6 +447,7 @@ public class FirstPersonController : MonoBehaviour
             Vector3 velocity = rb.linearVelocity;
             Vector3 velocityChange = (targetVelocity - velocity);
 
+            animator?.SetFloat("Speed", targetVelocity.magnitude);
             // Continuous slow down when not moving
             if (enableFriction)
                 velocityChange = HandleFriction(targetVelocity, velocity);

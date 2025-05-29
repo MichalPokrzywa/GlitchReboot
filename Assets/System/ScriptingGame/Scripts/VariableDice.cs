@@ -92,11 +92,13 @@ public class VariableDice : EntityBase
             VariablePlatform platform = other.gameObject.GetComponent<VariablePlatform>();
             if (platform != null)
             {
-                GetComponent<PickUpObjectInteraction>().DropMe();
-                platform.MoveObjectToPosition(this.gameObject);
-                // Get the dice's current value and send it to the platform
-                object currentValue = handler?.GetValue();
-                platform.ReceiveValue(currentValue);
+                if (!GetComponent<PickUpObjectInteraction>().DropMe())
+                {
+                    platform.MoveObjectToPosition(this.gameObject);
+                    // Get the dice's current value and send it to the platform
+                    object currentValue = handler?.GetValue();
+                    platform.ReceiveValue(currentValue);
+                }
             }
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("VariableChangePlatform"))
@@ -104,14 +106,15 @@ public class VariableDice : EntityBase
             VariableChangePlatform platform = other.gameObject.GetComponent<VariableChangePlatform>();
             if (platform != null)
             {
-                GetComponent<PickUpObjectInteraction>().DropMe();
-                platform.MoveObjectToPosition(this.gameObject);
-                // Get the dice and send it to the platform
-                platform.ReceiveValue(this);
+                if (!GetComponent<PickUpObjectInteraction>().DropMe())
+                {
+                    platform.MoveObjectToPosition(this.gameObject);
+                    // Get the dice and send it to the platform
+                    platform.ReceiveValue(this);
+                }
 
             }
         }
-
     }
 
     private void OnTriggerExit(Collider other)
