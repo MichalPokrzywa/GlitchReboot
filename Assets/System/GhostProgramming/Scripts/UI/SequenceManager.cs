@@ -201,7 +201,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         int insertIndex = sequence.transform.childCount;
 
         RectTransform sequenceRect = sequence.GetComponent<RectTransform>();
-        Camera eventCamera = pointerData.enterEventCamera; // Kamera u¿ywana przez system EventSystem
+        Camera eventCamera = pointerData.enterEventCamera;
 
         Vector2 localPoint;
         if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(sequenceRect, pointerData.position, eventCamera, out localPoint))

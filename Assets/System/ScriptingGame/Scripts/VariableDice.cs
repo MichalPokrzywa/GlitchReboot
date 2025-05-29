@@ -92,7 +92,8 @@ public class VariableDice : EntityBase
             VariablePlatform platform = other.gameObject.GetComponent<VariablePlatform>();
             if (platform != null)
             {
-                if (!GetComponent<PickUpObjectInteraction>().DropMe())
+                var pickUpObject = GetComponent<PickUpObjectInteraction>();
+                if (!pickUpObject.DropMe() && !pickUpObject.inhand)
                 {
                     platform.MoveObjectToPosition(this.gameObject);
                     // Get the dice's current value and send it to the platform
@@ -106,7 +107,8 @@ public class VariableDice : EntityBase
             VariableChangePlatform platform = other.gameObject.GetComponent<VariableChangePlatform>();
             if (platform != null)
             {
-                if (!GetComponent<PickUpObjectInteraction>().DropMe())
+                var pickUpObject = GetComponent<PickUpObjectInteraction>();
+                if (!pickUpObject.DropMe() && !pickUpObject.inhand)
                 {
                     platform.MoveObjectToPosition(this.gameObject);
                     // Get the dice and send it to the platform

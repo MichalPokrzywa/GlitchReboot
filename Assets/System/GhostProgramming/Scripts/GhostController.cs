@@ -164,6 +164,9 @@ public class GhostController : EntityBase
             return false;
         }
 
+        // make sure that object is not already picked up by someone else
+        objectToPickUp.DropMe();
+
         bool waited = await WaitOnceBeforeAction(cancelToken);
 
         // make sure to drop previous object

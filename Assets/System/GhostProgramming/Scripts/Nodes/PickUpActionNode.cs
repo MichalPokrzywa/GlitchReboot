@@ -27,9 +27,9 @@ namespace GhostProgramming
                 return false;
             }
 
-            currentlyExecuting = true;
+            currentlyExecuting = prevNode.currentlyExecuting = nextNode.currentlyExecuting = true;
             var taskResult =  await ghost.PickUp(pickable, cancelToken, result);
-            currentlyExecuting = false;
+            currentlyExecuting = prevNode.currentlyExecuting = nextNode.currentlyExecuting = false;
             return taskResult;
         }
 

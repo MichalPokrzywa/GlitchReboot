@@ -14,9 +14,9 @@ namespace GhostProgramming
                 return false;
             }
 
-            currentlyExecuting = true;
+            currentlyExecuting = prevNode.currentlyExecuting = true;
             bool taskResult = await ghost.Drop(cancelToken, result);
-            currentlyExecuting = false;
+            currentlyExecuting = prevNode.currentlyExecuting = false;
             return taskResult;
         }
     }

@@ -51,7 +51,7 @@ public class PickUpObjectInteraction : InteractionBase
        }
        if (IsPickedUp)
        {
-            if (handPoint  != null) 
+            if (handPoint  != null)
             {
                 if (Vector3.Distance(handPoint.position, transform.position) > 0.2f && !onTarget)
                 {
@@ -61,7 +61,7 @@ public class PickUpObjectInteraction : InteractionBase
                 else
                 {
                     onTarget = true;
-                    
+
                     transform.position = handPoint.position;
                     //rb.linearVelocity = (handPoint.position - transform.position) * (1 / Time.fixedDeltaTime);
                     rb.MovePosition(Vector3.Lerp(transform.position, handPoint.position, Time.deltaTime * moveSpeed));
@@ -116,7 +116,7 @@ public class PickUpObjectInteraction : InteractionBase
    }
 
    private IEnumerator DropDiceCoroutine()
-   { 
+   {
         isAnimationPlaying = true;
         ownerInteractor.animator.SetTrigger("DropDice");
 
@@ -187,14 +187,14 @@ public class PickUpObjectInteraction : InteractionBase
        rb.useGravity = false;
        rb.linearDamping = 10;
        onTarget = false;
-       rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
+       //rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
        IsPickedUp = true;
    }
 
    public bool DropMe()
    {
-       if(IsPickedUp)
-           return true;
+       //if(IsPickedUp)
+       //    return true;
        // reset physics
        rb.useGravity = true;
        rb.linearDamping = 1;
