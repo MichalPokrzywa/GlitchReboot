@@ -11,7 +11,7 @@ public class VariableAddedEvent : UnityEvent<string, object> { }
 [Serializable]
 public class VariableRemovedEvent : UnityEvent<string> { }
 
-public class VariablePlatform : MonoBehaviour
+public class VariablePlatform : EntityBase
 {
     [Header("Identity")]
     [Tooltip("Variable used for terminal")]
@@ -40,7 +40,6 @@ public class VariablePlatform : MonoBehaviour
 
     [HideInInspector] public VariableAddedEvent variableAdded = new();
     [HideInInspector] public VariableRemovedEvent variableRemoved = new();
-    
 
     private void Awake()
     {
@@ -59,7 +58,8 @@ public class VariablePlatform : MonoBehaviour
             type,
             core
         );
-	EntityManager.instance.Register(gameObject);
+
+        EntityManager.instance.Register<VariablePlatform>(this);
     }
 
     private void Start()
@@ -69,6 +69,9 @@ public class VariablePlatform : MonoBehaviour
         {
             t.text = namedHandler.VariableName;
         }
+
+        UpdateEntityNameSuffix();
+
         var rend = GetComponentInChildren<Renderer>();
         if (rend != null)
             rend.material.color = VariableTypeColor.GetColor(type);
@@ -112,5 +115,10 @@ public class VariablePlatform : MonoBehaviour
               rb.angularVelocity = Vector3.zero;
               rb.useGravity = true;
           });
+    }
+
+    public override void UpdateEntityNameSuffix()
+    {
+        entityNameSuffix = variableName;
     }
 }

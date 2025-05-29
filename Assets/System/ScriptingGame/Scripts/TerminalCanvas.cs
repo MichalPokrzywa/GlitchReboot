@@ -7,15 +7,26 @@ using UnityEngine.UI;
 
 public class TerminalCanvas : MonoBehaviour
 {
+    [SerializeField] GameObject blocksPanel;
+
     public TMP_Text codeText;
     public GameObject sideNumbers;
     [HideInInspector] public Image passImage;
     public bool showRobot = false;
 
+    bool blocksPanelOn = false;
+
     public void Start()
     {
         sideNumbers.SetActive(showRobot);
     }
+
+    public void OnSwitchButtonClicked()
+    {
+        blocksPanelOn = !blocksPanelOn;
+        blocksPanel.SetActive(blocksPanelOn);
+    }
+
     public void SetCodeText(string code)
     {
         //string cleanedCode = Regex.Replace(code, @"\b\w+:", "").Replace("\t", "   ");

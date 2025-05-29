@@ -45,7 +45,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         List<BlockSequence> selectedSequences = new List<BlockSequence>();
         foreach (var sequence in sequences)
         {
-            if (sequence.IsSelected)
+            if (sequence != null && sequence.IsSelected)
             {
                 selectedSequences.Add(sequence);
             }
@@ -128,7 +128,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         DestroyEmptySequence(previousSequence);
     }
 
-    void OnNoDropZoneDropped()
+    public void OnNoDropZoneDropped()
     {
         if (selectedBlock == null)
             return;
@@ -162,7 +162,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         // Swap the original block with the copy in the list
         Block blockCopyComponent = blockCopy.GetComponent<Block>();
         blocksInSelectionBox[index] = blockCopyComponent;
-        blockCopyComponent.RaycastTargetActivation(false);
+        blockCopyComponent.UpdateInteractability(false);
         RegisterToSelectionBoxEvents(blockCopyComponent);
 
         SelectBlock(block);
@@ -198,23 +198,30 @@ public class SequenceManager : MonoBehaviour, IDropHandler
 
     int GetIndexInSequence(BlockSequence sequence, PointerEventData pointerData)
     {
-        // Calculate the position of the block in the new sequence according to the drop position
-        // Default to end
         int insertIndex = sequence.transform.childCount;
+
+        RectTransform sequenceRect = sequence.GetComponent<RectTransform>();
+        Camera eventCamera = pointerData.enterEventCamera;
+
+        Vector2 localPoint;
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(sequenceRect, pointerData.position, eventCamera, out localPoint))
+            return insertIndex;
+
         for (int i = 0; i < sequence.transform.childCount; i++)
         {
             RectTransform child = sequence.transform.GetChild(i) as RectTransform;
-            // Skip self if already present
+
             if (child == selectedBlock.transform)
                 continue;
 
-            Vector3 worldPos = child.position;
-            if (pointerData.position.x < worldPos.x)
+            Vector3 childLocalPos = sequenceRect.InverseTransformPoint(child.position);
+            if (localPoint.x < childLocalPos.x)
             {
                 insertIndex = i;
                 break;
             }
         }
+
         return insertIndex;
     }
 
@@ -243,7 +250,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     {
         foreach (var b in blocksInSelectionBox)
         {
-            b.RaycastTargetActivation(true);
+            b.UpdateInteractability(true);
         }
     }
 
@@ -251,7 +258,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     {
         foreach (var b in blocksInSelectionBox)
         {
-            b.RaycastTargetActivation(false);
+            b.UpdateInteractability(false);
         }
     }
 

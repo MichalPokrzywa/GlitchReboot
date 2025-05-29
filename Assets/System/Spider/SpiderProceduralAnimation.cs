@@ -112,7 +112,7 @@ public class SpiderProceduralAnimation : MonoBehaviour
             // Sample ground under body to get accurate base height
             RaycastHit bodyHit;
             float groundY = transform.position.y;
-            Vector3 bodyOrigin = transform.position + Vector3.up * raycastRange;
+            Vector3 bodyOrigin = transform.position + Vector3.up ;
             if (Physics.Raycast(bodyOrigin, Vector3.down, out bodyHit, raycastRange * 2))
                 groundY = bodyHit.point.y;
 
@@ -160,22 +160,10 @@ public class SpiderProceduralAnimation : MonoBehaviour
     Vector3 SampleGround(Vector3 point)
     {
         RaycastHit hit;
-        Vector3 origin = point + Vector3.up * raycastRange;
+        Vector3 origin = point + Vector3.up;
         if (Physics.Raycast(origin, Vector3.down, out hit, raycastRange * 2))
             return hit.point;
         return point;
-    }
-    void MaintainMinimumHeight()
-    {
-        RaycastHit hit;
-        Vector3 origin = transform.position + Vector3.up * raycastRange;
-        if (Physics.Raycast(origin, Vector3.down, out hit, raycastRange * 2))
-        {
-            float currentHeight = hit.distance;
-            float offset = minBodyHeight - currentHeight;
-            if (offset > 0f)
-                transform.position += Vector3.up * offset;
-        }
     }
 
 
@@ -190,5 +178,19 @@ public class SpiderProceduralAnimation : MonoBehaviour
             Vector3 basePos = Application.isPlaying ? SampleGround(transform.TransformPoint(defaultLegPositions[i])) : transform.TransformPoint(defaultLegPositions[i]);
             Gizmos.DrawWireSphere(basePos, stepSize);
         }
+    }
+    void OnDrawGizmos()
+    {
+        if (!Application.isPlaying)
+            return;
+
+        Gizmos.color = Color.green;
+        Vector3 samplePoint = transform.position;
+        Vector3 sampleOrigin = samplePoint + Vector3.up;
+        Gizmos.DrawLine(transform.position, sampleOrigin + Vector3.down * raycastRange);
+
+        //Gizmos.color = Color.cyan;
+        //Vector3 bodyOrigin = transform.position + Vector3.up * raycastRange;
+        //Gizmos.DrawLine(bodyOrigin, bodyOrigin + Vector3.down * raycastRange * 2);
     }
 }

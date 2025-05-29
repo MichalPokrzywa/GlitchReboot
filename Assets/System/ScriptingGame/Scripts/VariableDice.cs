@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
-public class VariableDice : MonoBehaviour
+public class VariableDice : EntityBase
 {
     public VariableType type;
     public List<TMP_Text> textList;
@@ -15,9 +16,23 @@ public class VariableDice : MonoBehaviour
 
     private IVariableValueHandler handler;
 
+    void Awake()
+    {
+        EntityManager.instance.Register<VariableDice>(this);
+    }
+
     void Start()
     {
         InitializeHandler();
+        UpdateEntityNameSuffix();
+    }
+
+    public override void UpdateEntityNameSuffix()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.Append("value: ");
+        sb.Append(GetCurrentValue());
+        entityNameSuffix = sb.ToString();
     }
 
     void InitializeHandler()
@@ -64,7 +79,9 @@ public class VariableDice : MonoBehaviour
         {
             handler.UpdateTextValue(text,false);
         }
+        UpdateEntityNameSuffix();
     }
+
     private void OnTriggerEnter(Collider other)
     {
         //DependencyManager.audioManager.PlaySound(Sound.None);
@@ -75,11 +92,14 @@ public class VariableDice : MonoBehaviour
             VariablePlatform platform = other.gameObject.GetComponent<VariablePlatform>();
             if (platform != null)
             {
-                GetComponent<PickUpObjectInteraction>().DropMe();
-                platform.MoveObjectToPosition(this.gameObject);
-                // Get the dice's current value and send it to the platform
-                object currentValue = handler?.GetValue();
-                platform.ReceiveValue(currentValue);
+                var pickUpObject = GetComponent<PickUpObjectInteraction>();
+                if (!pickUpObject.DropMe() && !pickUpObject.inhand)
+                {
+                    platform.MoveObjectToPosition(this.gameObject);
+                    // Get the dice's current value and send it to the platform
+                    object currentValue = handler?.GetValue();
+                    platform.ReceiveValue(currentValue);
+                }
             }
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer("VariableChangePlatform"))
@@ -87,14 +107,16 @@ public class VariableDice : MonoBehaviour
             VariableChangePlatform platform = other.gameObject.GetComponent<VariableChangePlatform>();
             if (platform != null)
             {
-                GetComponent<PickUpObjectInteraction>().DropMe();
-                platform.MoveObjectToPosition(this.gameObject);
-                // Get the dice and send it to the platform
-                platform.ReceiveValue(this);
+                var pickUpObject = GetComponent<PickUpObjectInteraction>();
+                if (!pickUpObject.DropMe() && !pickUpObject.inhand)
+                {
+                    platform.MoveObjectToPosition(this.gameObject);
+                    // Get the dice and send it to the platform
+                    platform.ReceiveValue(this);
+                }
 
             }
         }
-
     }
 
     private void OnTriggerExit(Collider other)
@@ -120,5 +142,4 @@ public class VariableDice : MonoBehaviour
             }
         }
     }
-
 }
