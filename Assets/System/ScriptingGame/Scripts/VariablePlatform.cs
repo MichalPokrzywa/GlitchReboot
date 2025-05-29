@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
@@ -41,11 +40,9 @@ public class VariablePlatform : EntityBase
 
     [HideInInspector] public VariableAddedEvent variableAdded = new();
     [HideInInspector] public VariableRemovedEvent variableRemoved = new();
-    
 
     private void Awake()
     {
-        EntityManager.instance.Register<VariablePlatform>(this);
         // 1) create the core value-handler
         IVariableValueHandler core = type switch
         {
@@ -61,7 +58,8 @@ public class VariablePlatform : EntityBase
             type,
             core
         );
-	EntityManager.instance.Register(gameObject);
+
+        EntityManager.instance.Register<VariablePlatform>(this);
     }
 
     private void Start()
@@ -71,7 +69,9 @@ public class VariablePlatform : EntityBase
         {
             t.text = namedHandler.VariableName;
         }
+
         UpdateEntityNameSuffix();
+
         var rend = GetComponentInChildren<Renderer>();
         if (rend != null)
             rend.material.color = VariableTypeColor.GetColor(type);
