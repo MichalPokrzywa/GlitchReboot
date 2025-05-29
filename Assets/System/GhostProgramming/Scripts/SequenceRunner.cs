@@ -15,11 +15,42 @@ public class SequenceRunner : MonoBehaviour
     [SerializeField] TextMeshProUGUI infoLabel;
     [SerializeField] SequenceManager sequenceManager;
 
-    const string noSelectedSequencesInfo = "You have to select sequences you want to run";
+    const string noSelectedSequenceInfo = "You have to select sequences you want to run";
     const string incorrectBlockInSequenceInfo = "There is invalid node in the sequence";
     const string ghostRepeatInSequencesInfo = "A ghost cannot have multiple sequences running simultaneously";
+    const string noGhostBeforeActionInfo = "Who you gonna call? Nobody, apparently. Assign a ghost first!";
+    const string noObjectAfterActionInfo = "This ghost is ready, but there's nothing to interact with. Add a target object!";
+    const string noActionInfo = "There are no actions in the sequence";
+    const string targetUnreachableInfo = "404: Target not found... or just somewhere the ghost can't reach";
+    const string canceledInfo = "Sequence was canceled";
+    const string notPickableInfo = "Nope. Too heavy, too slippery, or just too stubborn to be picked up";
+    const string nothingToDropInfo = "The ghost is not holding anything to drop";
+
+    const string successInfo = "Task done!";
 
     Dictionary<BlockSequence, CancellationTokenSource> runningSequences = new();
+    ExecutionResult executionResult;
+
+    public class ExecutionResult
+    {
+        public ErrorCode errorCode;
+    }
+
+    public enum ErrorCode
+    {
+        None,
+        NoGhostBeforeAction,
+        NoObjectAfterAction,
+        NoAction,
+        TargetUnreachable,
+        Canceled,
+        NotPickable,
+        NothingToDrop,
+
+        NoSelectedSequence,
+        IncorrectBlockInSequence,
+        GhostRepeatInSequences
+    }
 
     void Awake()
     {
@@ -64,11 +95,13 @@ public class SequenceRunner : MonoBehaviour
     async void OnExecuteClicked()
     {
         infoLabel.text = string.Empty;
+        executionResult = new ExecutionResult { errorCode = ErrorCode.None };
 
         var sequences = sequenceManager.GetSelectedSequences();
         if (sequences.Count == 0)
         {
-            infoLabel.text = noSelectedSequencesInfo;
+            executionResult.errorCode = ErrorCode.NoSelectedSequence;
+            DisplayErrorInfo();
             return;
         }
 
@@ -76,7 +109,8 @@ public class SequenceRunner : MonoBehaviour
         bool ghostsRepeat = IsSameGhostInManySequences(sequences);
         if (ghostsRepeat)
         {
-            infoLabel.text = ghostRepeatInSequencesInfo;
+            executionResult.errorCode = ErrorCode.GhostRepeatInSequences;
+            DisplayErrorInfo();
             return;
         }
 
@@ -91,8 +125,9 @@ public class SequenceRunner : MonoBehaviour
             // if the sequence has invalid blocks, skip it
             if (sequence.Blocks.Any(b => b.BlockNode != null && b.BlockNode.isValid == false))
             {
-                infoLabel.text = incorrectBlockInSequenceInfo;
-                continue;
+                executionResult.errorCode = ErrorCode.IncorrectBlockInSequence;
+                DisplayErrorInfo();
+                return;
             }
 
             var cts = new CancellationTokenSource();
@@ -102,6 +137,7 @@ public class SequenceRunner : MonoBehaviour
         }
 
         await Task.WhenAll(sequenceTasks);
+        DisplayErrorInfo();
     }
 
     async Task RunSequenceAsync(BlockSequence sequence, CancellationToken cancelToken)
@@ -110,6 +146,8 @@ public class SequenceRunner : MonoBehaviour
         {
             block.BlockNode.isInRunningSequence = true;
         }
+
+        int actionsCount = 0;
 
         try
         {
@@ -125,7 +163,10 @@ public class SequenceRunner : MonoBehaviour
                 }
 
                 if (node is ActionNode actionNode)
-                    await actionNode.Execute(cancelToken);
+                {
+                    actionsCount++;
+                    await actionNode.Execute(cancelToken, executionResult);
+                }
             }
         }
         catch (OperationCanceledException)
@@ -142,6 +183,11 @@ public class SequenceRunner : MonoBehaviour
             {
                 cts.Dispose();
                 runningSequences.Remove(sequence);
+            }
+
+            if (actionsCount == 0)
+            {
+                executionResult.errorCode = ErrorCode.NoAction;
             }
         }
     }
@@ -172,5 +218,50 @@ public class SequenceRunner : MonoBehaviour
         }
 
         return ghostToSequences.Values.Any(set => set.Count > 1);
+    }
+
+    void DisplayErrorInfo()
+    {
+        infoLabel.color = executionResult.errorCode == ErrorCode.None ? Color.green : Color.red;
+
+        switch (executionResult.errorCode)
+        {
+            case ErrorCode.NoSelectedSequence:
+                infoLabel.text = noSelectedSequenceInfo;
+                break;
+            case ErrorCode.IncorrectBlockInSequence:
+                infoLabel.text = incorrectBlockInSequenceInfo;
+                break;
+            case ErrorCode.GhostRepeatInSequences:
+                infoLabel.text = ghostRepeatInSequencesInfo;
+                break;
+            case ErrorCode.NoGhostBeforeAction:
+                infoLabel.text = noGhostBeforeActionInfo;
+                break;
+            case ErrorCode.NoObjectAfterAction:
+                infoLabel.text = noObjectAfterActionInfo;
+                break;
+            case ErrorCode.NoAction:
+                infoLabel.text = noActionInfo;
+                break;
+            case ErrorCode.TargetUnreachable:
+                infoLabel.text = targetUnreachableInfo;
+                break;
+            case ErrorCode.Canceled:
+                infoLabel.text = canceledInfo;
+                break;
+            case ErrorCode.NotPickable:
+                infoLabel.text = notPickableInfo;
+                break;
+            case ErrorCode.NothingToDrop:
+                infoLabel.text = nothingToDropInfo;
+                break;
+            case ErrorCode.None:
+                infoLabel.text = successInfo;
+                break;
+            default:
+                infoLabel.text = string.Empty;
+                break;
+        }
     }
 }

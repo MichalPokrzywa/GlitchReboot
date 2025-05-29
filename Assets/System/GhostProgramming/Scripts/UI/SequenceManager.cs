@@ -45,7 +45,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         List<BlockSequence> selectedSequences = new List<BlockSequence>();
         foreach (var sequence in sequences)
         {
-            if (sequence.IsSelected)
+            if (sequence != null && sequence.IsSelected)
             {
                 selectedSequences.Add(sequence);
             }

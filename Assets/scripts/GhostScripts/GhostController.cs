@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.AI;
+using static SequenceRunner;
 
 [RequireComponent(typeof(NavMeshAgent))]
 public class GhostController : EntityBase
@@ -22,7 +24,6 @@ public class GhostController : EntityBase
     Coroutine pathCoroutine;
     Vector3? lastTargetUnreachablePosition = null;
     Vector3? lastMyUnreachablePosition = null;
-    ErrorType errorType = ErrorType.None;
 
     float distance;
 
@@ -36,13 +37,6 @@ public class GhostController : EntityBase
     {
         Close,
         Far
-    }
-
-    enum ErrorType
-    {
-        None,
-        TargetUnreachable,
-        Stopped
     }
 
     void Awake()
@@ -88,9 +82,8 @@ public class GhostController : EntityBase
         }
     }
 
-    public async Task<bool> MoveTo(GameObject newSearchingObject, CancellationToken cancelToken)
+    public async Task<bool> MoveTo(GameObject newSearchingObject, CancellationToken cancelToken, ExecutionResult result)
     {
-        errorType = ErrorType.None;
         if (newSearchingObject == null)
         {
             Debug.LogWarning("New searching object is null.");
@@ -116,23 +109,20 @@ public class GhostController : EntityBase
             Stop();
             onTargetReached = null;
             hasWaitedBeforeAction = false;
-            errorType = ErrorType.Stopped;
-            Debug.LogError("STOP");
+            result.errorCode = ErrorCode.Canceled;
             taskCS.TrySetResult(false);
         });
 
         onTargetReached = () =>
         {
             onTargetReached = null;
-            Debug.LogError("REACHED");
             taskCS.TrySetResult(true);
         };
 
         onTargetUnreachable = () =>
         {
             onTargetUnreachable = null;
-            errorType = ErrorType.TargetUnreachable;
-            Debug.LogError("UNREACHABLE");
+            result.errorCode = ErrorCode.TargetUnreachable;
             taskCS.TrySetResult(false);
         };
 
@@ -145,7 +135,6 @@ public class GhostController : EntityBase
 
     public async Task WaitForSeconds(float time, CancellationToken token)
     {
-        errorType = ErrorType.None;
         int milliseconds = Mathf.RoundToInt(time * 1000f);
         try
         {
@@ -159,7 +148,6 @@ public class GhostController : EntityBase
 
     public void Stop()
     {
-        errorType = ErrorType.None;
         if (target == null)
         {
             Debug.LogWarning("Nothing to stop following.");
@@ -168,12 +156,11 @@ public class GhostController : EntityBase
         ResetState();
     }
 
-    public async Task<bool> PickUp(PickUpObjectInteraction objectToPickUp, CancellationToken cancelToken)
+    public async Task<bool> PickUp(PickUpObjectInteraction objectToPickUp, CancellationToken cancelToken, ExecutionResult result)
     {
-        errorType = ErrorType.None;
         if (objectToPickUp == null)
         {
-            Debug.LogWarning("Object to pick up is null.");
+            result.errorCode = ErrorCode.NotPickable;
             return false;
         }
 
@@ -182,7 +169,7 @@ public class GhostController : EntityBase
         // make sure to drop previous object
         Drop();
 
-        bool reachedDest = await MoveTo(objectToPickUp.gameObject, cancelToken);
+        bool reachedDest = await MoveTo(objectToPickUp.gameObject, cancelToken, result);
         if (!reachedDest)
         {
             Debug.LogWarning("Failed to reach the object.");
@@ -198,11 +185,14 @@ public class GhostController : EntityBase
         return true;
     }
 
-    public bool Drop()
+    public bool Drop([CanBeNull] ExecutionResult result = null)
     {
-        errorType = ErrorType.None;
         if (pickedUpObject == null)
+        {
+            if (result != null)
+                result.errorCode = ErrorCode.NothingToDrop;
             return false;
+        }
 
         var pickUpComponent = pickedUpObject.GetComponent<PickUpObjectInteraction>();
         pickUpComponent.DropMe();
