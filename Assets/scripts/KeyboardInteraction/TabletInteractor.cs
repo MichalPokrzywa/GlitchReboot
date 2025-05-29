@@ -6,6 +6,7 @@ public class TabletInteractor : MonoBehaviour
     public GameObject tabletTerminal;
     public TabletTerminal terminal;
     public FirstPersonController firstPersonController;
+    public MarkerPointsSpawner markerSpawner;
     public Interactor interactor;
 
     public Vector3 tabletPosition;
@@ -61,6 +62,7 @@ public class TabletInteractor : MonoBehaviour
             .OnComplete(() =>
             {
                 firstPersonController.StartMovement();
+                markerSpawner.active = true;
                 interactor.canInteract = true;
                 tabletTerminal.SetActive(false);
                 isOn = false;
@@ -75,6 +77,7 @@ public class TabletInteractor : MonoBehaviour
         showSequence
             .OnStart(() => {
                 firstPersonController.StopMovement();
+                markerSpawner.active = false;
                 interactor.canInteract = false;
                 tabletTerminal.SetActive(true);
             })

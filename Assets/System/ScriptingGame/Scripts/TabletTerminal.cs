@@ -3,12 +3,21 @@ using UnityEngine;
 
 public class TabletTerminal : Singleton<TabletTerminal>
 {
+    [SerializeField] GameObject blocksPanel;
+
     public TMP_Text codeText;
     public GameObject sideNumbers;
     public PuzzleBase assignedTerminal;
     private string humanCode;
     private string robotCode;
     public bool showRobot = false;
+
+    private bool blocksPanelOn = false;
+
+    void Awake()
+    {
+        blocksPanel.SetActive(false);
+    }
 
     public void SendText(string robot,string human)
     {
@@ -45,5 +54,11 @@ public class TabletTerminal : Singleton<TabletTerminal>
             assignedTerminal.onCodeUpdate.AddListener(Instance.UpdateTerminal);
 
         }
+    }
+
+    public void OnSwitchButtonClicked()
+    {
+        blocksPanelOn = !blocksPanelOn;
+        blocksPanel.SetActive(blocksPanelOn);
     }
 }

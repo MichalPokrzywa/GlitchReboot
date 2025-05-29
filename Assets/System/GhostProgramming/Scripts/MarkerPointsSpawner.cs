@@ -8,6 +8,7 @@ public class MarkerPointsSpawner : MonoBehaviour
     [SerializeField] Transform target;
 
     public List<MarkerScript> markers => markerPoints;
+    public bool active = true;
 
     List<MarkerScript> markerPoints = new List<MarkerScript>();
 
@@ -41,6 +42,9 @@ public class MarkerPointsSpawner : MonoBehaviour
 
     void Update()
     {
+        if (!active)
+            return;
+
         int index = 0;
         foreach (MarkerPointKey key in Enum.GetValues(typeof(MarkerPointKey)))
         {

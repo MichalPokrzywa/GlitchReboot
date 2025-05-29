@@ -190,6 +190,7 @@ GameObject:
   - component: {fileID: 2522820247213193502}
   - component: {fileID: 8249341823645166126}
   - component: {fileID: 4148668123788954654}
+  - component: {fileID: 5726948738813419294}
   m_Layer: 0
   m_Name: Terminal
   m_TagString: Terminal
@@ -260,6 +261,26 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   waypoint: {fileID: 0}
+--- !u!114 &5726948738813419294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1685512951273789960}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &2336943141743631129
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,6 +572,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 31aa2117c2e32bc4d8ae0e0553371dc9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blocksPanel: {fileID: 0}
   codeText: {fileID: 5179896711296084329}
   sideNumbers: {fileID: 7289387049972354575}
   passImage: {fileID: 0}

@@ -128,7 +128,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         DestroyEmptySequence(previousSequence);
     }
 
-    void OnNoDropZoneDropped()
+    public void OnNoDropZoneDropped()
     {
         if (selectedBlock == null)
             return;
