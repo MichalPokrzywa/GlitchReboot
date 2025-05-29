@@ -17,6 +17,7 @@ public class SequenceRunner : MonoBehaviour
 
     const string noSelectedSequencesInfo = "You have to select sequences you want to run";
     const string incorrectBlockInSequenceInfo = "There is invalid node in the sequence";
+    const string ghostRepeatInSequencesInfo = "A ghost cannot have multiple sequences running simultaneously";
 
     Dictionary<BlockSequence, CancellationTokenSource> runningSequences = new();
 
@@ -68,6 +69,14 @@ public class SequenceRunner : MonoBehaviour
         if (sequences.Count == 0)
         {
             infoLabel.text = noSelectedSequencesInfo;
+            return;
+        }
+
+        // don't allow running multiple sequences with the same ghost
+        bool ghostsRepeat = IsSameGhostInManySequences(sequences);
+        if (ghostsRepeat)
+        {
+            infoLabel.text = ghostRepeatInSequencesInfo;
             return;
         }
 
@@ -135,5 +144,33 @@ public class SequenceRunner : MonoBehaviour
                 runningSequences.Remove(sequence);
             }
         }
+    }
+
+    bool IsSameGhostInManySequences(List<BlockSequence> sequences)
+    {
+        var ghostToSequences = new Dictionary<GhostController, HashSet<BlockSequence>>();
+
+        foreach (var seq in sequences)
+        {
+            foreach (var block in seq.Blocks)
+            {
+                if (block.BlockNode is GhostNode ghostNode)
+                {
+                    var ghost = ghostNode.GetValue();
+                    if (ghost == null)
+                        continue;
+
+                    if (!ghostToSequences.TryGetValue(ghost, out var seqSet))
+                    {
+                        seqSet = new HashSet<BlockSequence>();
+                        ghostToSequences[ghost] = seqSet;
+                    }
+
+                    seqSet.Add(seq);
+                }
+            }
+        }
+
+        return ghostToSequences.Values.Any(set => set.Count > 1);
     }
 }
