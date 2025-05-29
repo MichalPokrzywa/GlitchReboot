@@ -167,7 +167,7 @@ public class GhostController : EntityBase
         bool waited = await WaitOnceBeforeAction(cancelToken);
 
         // make sure to drop previous object
-        Drop();
+        await Drop(cancelToken);
 
         bool reachedDest = await MoveTo(objectToPickUp.gameObject, cancelToken, result);
         if (!reachedDest)
@@ -185,7 +185,7 @@ public class GhostController : EntityBase
         return true;
     }
 
-    public bool Drop([CanBeNull] ExecutionResult result = null)
+    public async Task<bool> Drop(CancellationToken cancelToken, [CanBeNull] ExecutionResult result = null)
     {
         if (pickedUpObject == null)
         {
@@ -194,9 +194,15 @@ public class GhostController : EntityBase
             return false;
         }
 
+        bool waited = await WaitOnceBeforeAction(cancelToken);
+
         var pickUpComponent = pickedUpObject.GetComponent<PickUpObjectInteraction>();
         pickUpComponent.DropMe();
         pickedUpObject = null;
+
+        if (waited)
+            hasWaitedBeforeAction = false;
+
         return true;
     }
 
@@ -296,7 +302,7 @@ public class GhostController : EntityBase
             return false;
 
         hasWaitedBeforeAction = true;
-        await WaitForSeconds(0.5f, cancelToken);
+        await WaitForSeconds(0.25f, cancelToken);
         return true;
     }
 

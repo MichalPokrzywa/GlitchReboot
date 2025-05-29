@@ -41,6 +41,7 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     [SerializeField] [CanBeNull] TextMeshProUGUI inLabel;
     [SerializeField] [CanBeNull] TextMeshProUGUI outLabel;
     [SerializeField] BlockUIData blockUIData;
+    [SerializeField] UIColorEcho uiColorEcho;
 
     bool selected = false;
     bool interactable = true;
@@ -60,6 +61,8 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
         // only if the block is interactable
         if (interactable)
             RaycastTargetActivation(!node.isInRunningSequence);
+
+        uiColorEcho.active = node.currentlyExecuting;
     }
 
     void OnValidate()

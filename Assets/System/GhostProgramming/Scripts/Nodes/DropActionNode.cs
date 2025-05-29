@@ -14,7 +14,10 @@ namespace GhostProgramming
                 return false;
             }
 
-            return ghost.Drop(result);
+            currentlyExecuting = true;
+            bool taskResult = await ghost.Drop(cancelToken, result);
+            currentlyExecuting = false;
+            return taskResult;
         }
     }
 }

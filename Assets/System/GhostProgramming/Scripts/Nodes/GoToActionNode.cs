@@ -20,7 +20,10 @@ namespace GhostProgramming
                 return false;
             }
 
-            return await ghost.MoveTo(entityNode.GetEntity().gameObject, cancelToken, result);
+            currentlyExecuting = true;
+            var taskResult = await ghost.MoveTo(entityNode.GetEntity().gameObject, cancelToken, result);
+            currentlyExecuting = false;
+            return taskResult;
         }
 
     }

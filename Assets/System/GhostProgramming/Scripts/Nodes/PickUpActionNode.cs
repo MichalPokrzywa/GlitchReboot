@@ -27,8 +27,10 @@ namespace GhostProgramming
                 return false;
             }
 
-
-            return await ghost.PickUp(pickable, cancelToken, result);
+            currentlyExecuting = true;
+            var taskResult =  await ghost.PickUp(pickable, cancelToken, result);
+            currentlyExecuting = false;
+            return taskResult;
         }
 
     }
