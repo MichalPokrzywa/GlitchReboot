@@ -10,6 +10,12 @@ public class PickUpObjectInteraction : InteractionBase
    public float rotationSpeed = 20f;
    private Interactor ownerInteractor;
 
+   protected override void Awake()
+   {
+       base.Awake();
+
+   }
+
    private void Start()
    {
       rb = GetComponent<Rigidbody>();

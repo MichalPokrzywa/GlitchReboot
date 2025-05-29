@@ -11,8 +11,10 @@ public class VariableDice : EntityBase
 
     [SerializeField] private int baseNumberValue = 1; // Initial value for Number
     [SerializeField] private bool baseBooleanValue = false; // Initial value for Boolean
+    [SerializeField] private string baseStringValue = ""; // Initial value for Boolean
+    [SerializeField] private GameObject baseGameObjectValue; // Initial value for Boolean
 
-    private IVariableTypeHandler handler;
+    private IVariableValueHandler handler;
 
     void Awake()
     {
@@ -45,7 +47,18 @@ public class VariableDice : EntityBase
                 handler = new BooleanHandler(baseBooleanValue);
                 UpdateValue(baseBooleanValue);
                 break;
+            case VariableType.String:
+                handler = new StringHandler(baseStringValue);
+                UpdateValue(baseStringValue);
+                break;
+            case VariableType.GameObject:
+                handler = new GameObjectHandler(baseGameObjectValue);
+                UpdateValue(baseGameObjectValue);
+                break;
         }
+        var rend = GetComponentInChildren<Renderer>();
+        if (rend != null)
+            rend.material.color = VariableTypeColor.GetColor(type);
     }
 
     public object GetCurrentValue()
@@ -64,7 +77,7 @@ public class VariableDice : EntityBase
         handler.UpdateValue(value);
         foreach (TMP_Text text in textList)
         {
-            handler.UpdateTextValue(text);
+            handler.UpdateTextValue(text,false);
         }
         UpdateEntityNameSuffix();
     }
@@ -124,63 +137,4 @@ public class VariableDice : EntityBase
             }
         }
     }
-}
-public interface IVariableTypeHandler
-{
-    void UpdateValue(object value);
-    void UpdateTextValue(TMP_Text text);
-    object GetValue(); // Returns the current value
-}
-
-public class NumberHandler : IVariableTypeHandler
-{
-    private int currentValue;
-    public NumberHandler(int initialValue)
-    {
-        currentValue = initialValue;
-    }
-    public void UpdateValue(object value)
-    {
-        currentValue = Convert.ToInt32(value);
-    }
-
-    public void UpdateTextValue(TMP_Text text)
-    {
-        text.text = currentValue.ToString();
-    }
-
-    public object GetValue()
-    {
-        return currentValue;
-    }
-}
-public class BooleanHandler : IVariableTypeHandler
-{
-    private bool currentValue;
-
-    public BooleanHandler(bool initialValue)
-    {
-        currentValue = initialValue;
-    }
-
-    public void UpdateValue(object value)
-    {
-        currentValue = Convert.ToBoolean(value);
-    }
-
-    public void UpdateTextValue(TMP_Text text)
-    {
-        text.text = currentValue ? "True" : "False";
-    }
-
-    public object GetValue()
-    {
-        return currentValue;
-    }
-}
-
-public enum VariableType
-{
-    Number = 0,
-    Boolean = 1
 }

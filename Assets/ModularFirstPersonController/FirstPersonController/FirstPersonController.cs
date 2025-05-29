@@ -6,6 +6,7 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -142,6 +143,14 @@ public class FirstPersonController : MonoBehaviour
     float timer = 0;
 
     #endregion
+
+    #region Animations
+
+    public Animator animator;
+    private float speed;
+
+    #endregion
+
     #endregion
 
     private void Awake()
@@ -188,12 +197,12 @@ public class FirstPersonController : MonoBehaviour
     private void Update()
     {
         HandleZoom();
+        if (cameraCanMove)
+            HandleCameraMovement();
     }
 
     private void FixedUpdate()
     {
-        if(cameraCanMove)
-            HandleCameraMovement();
 
         if(enableSprint)
             HandleSprinting();
@@ -302,9 +311,12 @@ public class FirstPersonController : MonoBehaviour
         if (isSprinting)
         {
             isZoomed = false;
-            if (playerCamera != null)
-                playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.deltaTime);
-
+            if (playerCamera != null && playerCamera.fieldOfView != sprintFOV)
+            {
+                playerCamera.DOFieldOfView(sprintFOV, sprintFOVStepTime);
+            }
+                //playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.fixedDeltaTime);
+                
             // Drain sprint remaining while sprinting
             if (!unlimitedSprint)
             {
@@ -319,6 +331,8 @@ public class FirstPersonController : MonoBehaviour
         else
         {
             // Regain sprint while not sprinting
+            if (playerCamera != null && playerCamera.fieldOfView != fov)
+                playerCamera.DOFieldOfView(fov, sprintFOVStepTime);
             sprintRemaining = Mathf.Clamp(sprintRemaining += 1 * Time.deltaTime, 0, sprintDuration);
         }
 
@@ -468,6 +482,7 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
+            //playerCamera.DOFieldOfView(targetFOV, zoomStepTime);
     void HandleCrouch()
     {
         // If player is not grounded, stop crouching
@@ -668,6 +683,15 @@ public class FirstPersonController : MonoBehaviour
 
         EditorGUILayout.Space();
         EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+        #endregion
+
+        #region Animator
+        GUILayout.Label("Animator Setup (NOT REQUIRED)", new GUIStyle(GUI.skin.label) { alignment = TextAnchor.MiddleCenter, fontStyle = FontStyle.Bold, fontSize = 13 }, GUILayout.ExpandWidth(true));
+        EditorGUILayout.Space();
+        fpc.animator = (Animator)EditorGUILayout.ObjectField(new GUIContent("Animator", "Animator for character"), fpc.animator, typeof(Animator), true);
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
         #endregion
 
         #region Camera Setup
