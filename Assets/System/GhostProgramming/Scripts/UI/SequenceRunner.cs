@@ -18,8 +18,8 @@ public class SequenceRunner : MonoBehaviour
     const string noSelectedSequenceInfo = "You have to select sequences you want to run";
     const string incorrectBlockInSequenceInfo = "There is invalid node in the sequence";
     const string ghostRepeatInSequencesInfo = "A ghost cannot have multiple sequences running simultaneously";
-    const string noGhostBeforeActionInfo = "Who you gonna call? Nobody, apparently. Assign a ghost first!";
-    const string noObjectAfterActionInfo = "This ghost is ready, but there's nothing to interact with. Add a target object!";
+    const string noGhostBeforeActionInfo = "A ghost must appear before the action";
+    const string noObjectAfterActionInfo = "A target must appear after the action";
     const string noActionInfo = "There are no actions in the sequence";
     const string targetUnreachableInfo = "404: Target not found... or just somewhere the ghost can't reach";
     const string canceledInfo = "Sequence was canceled";

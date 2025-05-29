@@ -198,23 +198,30 @@ public class SequenceManager : MonoBehaviour, IDropHandler
 
     int GetIndexInSequence(BlockSequence sequence, PointerEventData pointerData)
     {
-        // Calculate the position of the block in the new sequence according to the drop position
-        // Default to end
         int insertIndex = sequence.transform.childCount;
+
+        RectTransform sequenceRect = sequence.GetComponent<RectTransform>();
+        Camera eventCamera = pointerData.enterEventCamera; // Kamera u¿ywana przez system EventSystem
+
+        Vector2 localPoint;
+        if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(sequenceRect, pointerData.position, eventCamera, out localPoint))
+            return insertIndex;
+
         for (int i = 0; i < sequence.transform.childCount; i++)
         {
             RectTransform child = sequence.transform.GetChild(i) as RectTransform;
-            // Skip self if already present
+
             if (child == selectedBlock.transform)
                 continue;
 
-            Vector3 worldPos = child.position;
-            if (pointerData.position.x < worldPos.x)
+            Vector3 childLocalPos = sequenceRect.InverseTransformPoint(child.position);
+            if (localPoint.x < childLocalPos.x)
             {
                 insertIndex = i;
                 break;
             }
         }
+
         return insertIndex;
     }
 

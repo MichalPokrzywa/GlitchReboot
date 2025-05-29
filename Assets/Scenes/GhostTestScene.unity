@@ -2666,7 +2666,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7507279128487975809, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0.00075230334
+      value: 0.0029894884
       objectReference: {fileID: 0}
     - target: {fileID: 7507279128487975809, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -5546,6 +5546,11 @@ Transform:
   - {fileID: 1507141150}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!20 &1579434454 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 7528634406910017431, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
+  m_PrefabInstance: {fileID: 2030633734978919574}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &1607603736
 Mesh:
   m_ObjectHideFlags: 0
@@ -8379,6 +8384,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6281912334384856504, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1579434454}
     - target: {fileID: 6303430703856430115, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
       propertyPath: m_text
       value: Ghost
