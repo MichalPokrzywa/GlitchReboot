@@ -5,10 +5,10 @@ public class GhostNode : EntityNode<GhostController>
 {
     protected override List<GhostController> GetEntityList()
     {
-        return EntityManager.instance.ghosts;
+        return EntityManager.instance.GetEntities<GhostController>();
     }
 
-    protected override string GetEnityName()
+    protected override string GetEntityName()
     {
         return "Ghost";
     }

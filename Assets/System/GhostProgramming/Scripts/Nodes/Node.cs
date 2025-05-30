@@ -10,9 +10,11 @@ namespace GhostProgramming
 
     public abstract class Node : MonoBehaviour
     {
-        //[HideInInspector]
         public Node prevNode;
-        //[HideInInspector]
         public Node nextNode;
+        public bool isInRunningSequence = false;
+        // false if dropdown is empty
+        public bool isValid = true;
+        public bool currentlyExecuting = false;
     }
 }
