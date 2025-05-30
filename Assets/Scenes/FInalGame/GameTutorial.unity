@@ -1065,6 +1065,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23816301089692062, guid: 6c58b9fbb6ab1ca4399843d44a681bbb, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 23816301089692062, guid: 6c58b9fbb6ab1ca4399843d44a681bbb, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 52ddafc28aa757a4eb817307dfe794d0, type: 2}
+    - target: {fileID: 23816301089692062, guid: 6c58b9fbb6ab1ca4399843d44a681bbb, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f834016e53f12c42a12baecd4450e34, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1423,7 +1435,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
@@ -2012,7 +2024,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
@@ -4704,7 +4716,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
@@ -4841,7 +4853,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4634396060969346, guid: ac253d3141994af42b63188c6a06a7d0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.40002775
+      value: -0.396
       objectReference: {fileID: 0}
     - target: {fileID: 4634396060969346, guid: ac253d3141994af42b63188c6a06a7d0, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4875,6 +4887,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 23221690752157200, guid: ac253d3141994af42b63188c6a06a7d0, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 23221690752157200, guid: ac253d3141994af42b63188c6a06a7d0, type: 3}
+      propertyPath: 'm_Materials.Array.data[1]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 2f834016e53f12c42a12baecd4450e34, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -5162,7 +5182,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
@@ -5283,7 +5303,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
@@ -5484,7 +5504,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7298361572275906364, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7528634406053254403, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
       propertyPath: m_Name
@@ -6214,7 +6234,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
@@ -8912,6 +8932,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2084823304404013905, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084823304404013905, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2084823304404013905, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -8949,6 +8977,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8756873562803346675, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756873562803346675, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8756873562803346675, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8756873562803346675, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
@@ -9347,7 +9383,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
@@ -10621,6 +10657,10 @@ PrefabInstance:
       propertyPath: UIHoverObject
       value: 
       objectReference: {fileID: 1808342509}
+    - target: {fileID: 1913034377260784222, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
+      propertyPath: onButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1689486272}
     - target: {fileID: 2522820247213193502, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.915
@@ -10781,10 +10821,18 @@ PrefabInstance:
       propertyPath: UIHoverObject
       value: 
       objectReference: {fileID: 1808342509}
-    m_RemovedComponents: []
+    - target: {fileID: 8413040469145090015, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
+      propertyPath: onButtonPressed.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1689486272}
+    m_RemovedComponents:
+    - {fileID: 4148668123788954654, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1685512951273789960, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1689486272}
     - targetCorrespondingSourceObject: {fileID: 2336943141743631129, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
       insertIndex: -1
       addedObject: {fileID: 0}
@@ -10792,6 +10840,64 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 0}
   m_SourcePrefab: {fileID: 100100000, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
+--- !u!1 &1689486269 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1685512951273789960, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
+  m_PrefabInstance: {fileID: 1689486268}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1689486270 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8228694075074644896, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
+  m_PrefabInstance: {fileID: 1689486268}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 31aa2117c2e32bc4d8ae0e0553371dc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1689486271 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8249341823645166126, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
+  m_PrefabInstance: {fileID: 1689486268}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689486269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a8a997f992ecc6418f3be0b2632d233, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1689486272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689486269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d26f21a897ae6d4d84a4f6057306015, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  assignedObjects: {fileID: 1689486271}
+  canvas: {fileID: 1689486270}
+  allLevelPlatforms:
+  - {fileID: 1785388743}
+  continuousExecution: 0
+  naturalText: 'Hello Object#82137F!  To leave this room you need put VARIABLE DICE
+    on VARIABLE PLATFORM!
+
+    To open Door you need {value_x.name} to set OPEN.
+
+    Now
+    {value_x.name} is set {value_x}.'
+  codeText: 'Debug.Log("Hello Object#82137F!");
+
+    Doors.ShouldOpen({value_x} ({value_x.name}));'
+  onCodeUpdate:
+    m_PersistentCalls:
+      m_Calls: []
+  waypoint: {fileID: 0}
 --- !u!4 &1705817253 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4199643915940068, guid: 425701d948ecf3044ae2edd074e463d4, type: 3}
@@ -11051,7 +11157,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
       propertyPath: baseStringValue
-      value: Empty
+      value: No
       objectReference: {fileID: 0}
     - target: {fileID: 6167516445082615344, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
       propertyPath: m_Name
@@ -11939,7 +12045,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
@@ -12531,7 +12637,7 @@ Light:
   serializedVersion: 11
   m_Type: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 3
+  m_Intensity: 12
   m_Range: 10.31
   m_SpotAngle: 130.57372
   m_InnerSpotAngle: 99.758255
