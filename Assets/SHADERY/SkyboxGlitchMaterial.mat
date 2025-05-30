@@ -49,9 +49,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 14192b23ccac7384d9a058da6ed632fa, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
+        m_Texture: {fileID: 2800000, guid: aa0c741df9dd8634c8d84fd9ba2b0e3d, type: 3}
+        m_Scale: {x: 22, y: 22}
+        m_Offset: {x: 7.72, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -67,6 +67,10 @@ Material:
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _TriangleTex:
+        m_Texture: {fileID: 2800000, guid: d52ad868dcb05c44bb88a2202283cc04, type: 3}
+        m_Scale: {x: 0, y: 0}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
         m_Texture: {fileID: 0}
@@ -87,6 +91,7 @@ Material:
     - _AlphaToMask: 0
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
+    - _Blur: 0.002
     - _BumpScale: 1
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -98,18 +103,24 @@ Material:
     - _DstBlendAlpha: 0
     - _EdgeWidth: 0.2
     - _EnvironmentReflections: 1
-    - _FadeRange: 0.246
+    - _FadeRange: 0.336
     - _Frequency: 33.67
+    - _GlitchAmplitude: 1
+    - _GlitchBlocky: 3.6
+    - _GlitchMinimizer: 10
+    - _GlitchNarrow: 4.93
     - _GlitchOffset: 0.68
     - _GlitchSpeed: 10
     - _GlitchThreshold: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
     - _GlossyReflections: 0
+    - _GridScale: 216
     - _HexCount: 16
     - _HexFrequency: 2.55
+    - _LineBlur: 0.028
     - _LineThickness: 0.02
-    - _LineWidth: 0.242
+    - _LineWidth: 0.945
     - _Metallic: 0
     - _MinLineWidth: 0.01
     - _OcclusionStrength: 1
@@ -117,7 +128,8 @@ Material:
     - _Parallax: 0.005
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Scale: 709
+    - _Rotation: 0
+    - _Scale: 205
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1

@@ -90,11 +90,9 @@ Shader "Custom/GlitchHexSkyboxNew"
             {
                 float time = _Time.y;
                 float2 uv = i.uv;
-                float2 res = _Resolution.xy;
-
-                float2 a = float2(uv.x * (res.x / res.y), uv.y);
-                float2 uv2 = float2(a.x / res.x, exp(a.y));
-                uv2.y += time * 0.5; // add vertical motion for animation
+               
+                float2 uv2 = float2((uv.x * 1.5) / 2000, exp(uv.y));
+                uv2.y += time *0.4; // add vertical motion for animation
 
                 float2 id = floor(uv * 8.0);
                 float shift = _GlitchAmplitude * pow(
@@ -102,7 +100,7 @@ Shader "Custom/GlitchHexSkyboxNew"
                     _GlitchMinimizer
                 );
 
-                float scanline = abs(cos(uv.y * 400.0));
+                float scanline = abs(cos(uv.y * 600.0));
                 scanline = smoothstep(0.0, 2.0, scanline);
                 shift = smoothstep(0.00001, 0.2, shift);
 
@@ -110,7 +108,7 @@ Shader "Custom/GlitchHexSkyboxNew"
                 float colG = tex2D(_MainTex, uv - float2(shift, 0)).g * (1.0 - shift) + rand(id, time) * shift;
                 float colB = tex2D(_MainTex, uv - float2(shift, 0)).b * (1.0 - shift);
 
-                float3 f = float3(colR, colG, colB) - (0.1 * scanline);
+                float3 f = float3(colR, colG, colB) - (0.01 * scanline);
 
                 return float4(f, 1.0);
             }
