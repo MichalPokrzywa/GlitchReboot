@@ -14,6 +14,7 @@ Shader "Custom/GlitchHexSkybox"
         _GlitchNarrow    ("Glitch Narrowness",  Float) = 4.0
         _GlitchBlocky    ("Glitch Blockiness",  Float) = 2.0
         _GlitchMinimizer ("Glitch Minimizer",   Float) = 5.0
+        _GlitchNumCell   ("Glitch Cells",      int) = 8
         _GlitchColor     ("Gltich Efect Color", Color) = (1,1,1,1)
 
         [Space]
@@ -36,7 +37,9 @@ Shader "Custom/GlitchHexSkybox"
         [Space]
         [Header(Scan lines Settings)]
         [Space]
+        [Toggle] _EnableTime("Enable Time?", Float) = 1
         _TimeMultiplayer ("Time Multiplayer", Range(0.0,1.0)) = 0.4
+        _ScanLineWidth ("Scan Line Width", Range(50.0,1000.0)) = 200
 
     }
     SubShader
@@ -55,10 +58,11 @@ Shader "Custom/GlitchHexSkybox"
             //–– Properties
             sampler2D _MainTex;      float4 _MainTex_ST;
             float4   _LineColor, _GlitchColor;
-            float    _LineWidth, _GridScale, _LineBlur,_TimeMultiplayer;
+            float    _LineWidth, _GridScale, _LineBlur;
             float4   _GroundColor;   float _FadeRange;
             float    _GlitchAmplitude, _GlitchNarrow, _GlitchBlocky, _GlitchMinimizer;
-            float4   _Resolution;
+            float _ScanLineWidth,_TimeMultiplayer, _EnableTime;
+            int _GlitchNumCell;
 
 
             struct appdata
@@ -159,19 +163,19 @@ Shader "Custom/GlitchHexSkybox"
 
                 // 3) Glitch-distort that UV before sampling
                 float time = _Time.y;
-                float2 uv2 = float2((sphUV.x * 1.5) / 4000, exp(sphUV.y));
-                uv2.y += time * _TimeMultiplayer;
+                float2 uv2 = float2((sphUV.x * 1.5) / 2000, exp(sphUV.y));
+                if(_EnableTime == 1)
+                    uv2.y += time * _TimeMultiplayer;
 
-                float2 cell = floor(sphUV * 8.0);
+                float2 cell = floor(sphUV * _GlitchNumCell);
                 float fbmVal = fbm(uv2, int(rand(cell,time)*6+1), _GlitchBlocky, _GlitchNarrow, time);
                 float shift = _GlitchAmplitude * pow(fbmVal, _GlitchMinimizer);
                 shift = smoothstep(0.00001, 0.2, shift);
 
 
                 // 4) Creating Scanlines
-
                 // scanline darkening
-                float scan = abs(cos(sphUV.y * 400.0));
+                float scan = abs(cos(sphUV.y * _ScanLineWidth));
                 scan = smoothstep(0,2,scan);
 
                 // 5) Sample your panorama

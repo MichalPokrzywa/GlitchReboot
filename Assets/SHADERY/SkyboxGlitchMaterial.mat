@@ -12,7 +12,8 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _ENABLETIME_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
@@ -49,7 +50,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 14192b23ccac7384d9a058da6ed632fa, type: 3}
+        m_Texture: {fileID: 2800000, guid: 37cec8d528699904db6c507a64fb994e, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -102,13 +103,15 @@ Material:
     - _DstBlend: 0
     - _DstBlendAlpha: 0
     - _EdgeWidth: 0.2
+    - _EnableTime: 1
     - _EnvironmentReflections: 1
-    - _FadeRange: 0.453
+    - _FadeRange: 0.323
     - _Frequency: 33.67
-    - _GlitchAmplitude: 0.1
-    - _GlitchBlocky: 7.17
-    - _GlitchMinimizer: 3.11
-    - _GlitchNarrow: 2
+    - _GlitchAmplitude: 0.2
+    - _GlitchBlocky: 5
+    - _GlitchMinimizer: 13.5
+    - _GlitchNarrow: 5
+    - _GlitchNumCell: 32
     - _GlitchOffset: 0.68
     - _GlitchSpeed: 10
     - _GlitchThreshold: 0
@@ -119,7 +122,7 @@ Material:
     - _HexCount: 16
     - _HexFrequency: 2.55
     - _Invert: 0
-    - _LineBlur: 0
+    - _LineBlur: 0.263
     - _LineThickness: 0.02
     - _LineWidth: 0.917
     - _Metallic: 0
@@ -131,13 +134,14 @@ Material:
     - _ReceiveShadows: 1
     - _Rotation: 0
     - _Scale: 205
+    - _ScanLineWidth: 400
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
-    - _TimeMultiplayer: 0.4
+    - _TimeMultiplayer: 0.127
     - _TimeScale: 0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -145,7 +149,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GlitchColor: {r: 0.035848916, g: 1, b: 0.10407111, a: 0.9490196}
+    - _GlitchColor: {r: 0, g: 1, b: 0.067638874, a: 0.9490196}
     - _GroundColor: {r: 0, g: 0, b: 0, a: 1}
     - _HexLineColor: {r: 0.2474635, g: 0.7830189, b: 0.55378586, a: 1}
     - _LineColor: {r: 0, g: 0, b: 0, a: 1}
