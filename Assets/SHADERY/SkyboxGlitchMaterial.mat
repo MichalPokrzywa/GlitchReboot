@@ -49,9 +49,9 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: aa0c741df9dd8634c8d84fd9ba2b0e3d, type: 3}
-        m_Scale: {x: 22, y: 22}
-        m_Offset: {x: 7.72, y: 0}
+        m_Texture: {fileID: 2800000, guid: 14192b23ccac7384d9a058da6ed632fa, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -103,12 +103,12 @@ Material:
     - _DstBlendAlpha: 0
     - _EdgeWidth: 0.2
     - _EnvironmentReflections: 1
-    - _FadeRange: 0.336
+    - _FadeRange: 0.453
     - _Frequency: 33.67
-    - _GlitchAmplitude: 1
-    - _GlitchBlocky: 3.6
-    - _GlitchMinimizer: 10
-    - _GlitchNarrow: 4.93
+    - _GlitchAmplitude: 0.1
+    - _GlitchBlocky: 7.17
+    - _GlitchMinimizer: 3.11
+    - _GlitchNarrow: 2
     - _GlitchOffset: 0.68
     - _GlitchSpeed: 10
     - _GlitchThreshold: 0
@@ -118,9 +118,10 @@ Material:
     - _GridScale: 216
     - _HexCount: 16
     - _HexFrequency: 2.55
-    - _LineBlur: 0.028
+    - _Invert: 0
+    - _LineBlur: 0
     - _LineThickness: 0.02
-    - _LineWidth: 0.945
+    - _LineWidth: 0.917
     - _Metallic: 0
     - _MinLineWidth: 0.01
     - _OcclusionStrength: 1
@@ -136,6 +137,7 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _TimeMultiplayer: 0.4
     - _TimeScale: 0.5
     - _WorkflowMode: 1
     - _ZWrite: 1
@@ -143,7 +145,7 @@ Material:
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
-    - _GlitchColor: {r: 1, g: 0, b: 0, a: 1}
+    - _GlitchColor: {r: 0.035848916, g: 1, b: 0.10407111, a: 0.9490196}
     - _GroundColor: {r: 0, g: 0, b: 0, a: 1}
     - _HexLineColor: {r: 0.2474635, g: 0.7830189, b: 0.55378586, a: 1}
     - _LineColor: {r: 0, g: 0, b: 0, a: 1}

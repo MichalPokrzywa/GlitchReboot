@@ -5,14 +5,21 @@ Shader "Custom/GlitchHexSkybox"
     Properties
     {
         // Sky/Panorama
-        _MainTex         ("Sky Panorama",       2D)    = "white" {}
+        _MainTex         ("Skybox Texture",       2D)    = "white" {}
 
+        [Header(Glitch Settings)]
+        [Space]
         // Glitch parameters
         _GlitchAmplitude ("Glitch Amplitude",   Float) = 0.2
         _GlitchNarrow    ("Glitch Narrowness",  Float) = 4.0
         _GlitchBlocky    ("Glitch Blockiness",  Float) = 2.0
         _GlitchMinimizer ("Glitch Minimizer",   Float) = 5.0
+        _GlitchColor     ("Gltich Efect Color", Color) = (1,1,1,1)
 
+        [Space]
+        [Header(Triangle Grid Settings)]
+        [Space]
+        //[Toggle] _Invert("Invert color?", Float) = 0
         // Grid overlay
         _LineColor       ("Grid Line Color",    Color) = (0,0,0,1)
         _LineWidth       ("Grid Line Width",    Range(0.0001,1)) = 0.02
@@ -20,8 +27,17 @@ Shader "Custom/GlitchHexSkybox"
         _LineBlur        ("Grid Line Softness", Range(0,1))      = 0.002
 
         // Horizon/fade
+        [Space]
+        [Header(Fade Settings)]
+        [Space]
         _GroundColor     ("Ground Color",       Color) = (0.2,0.2,0.2,1)
         _FadeRange       ("Horizon Fade",       Range(0.01,0.5)) = 0.1
+
+        [Space]
+        [Header(Scan lines Settings)]
+        [Space]
+        _TimeMultiplayer ("Time Multiplayer", Range(0.0,1.0)) = 0.4
+
     }
     SubShader
     {
@@ -38,8 +54,8 @@ Shader "Custom/GlitchHexSkybox"
 
             //–– Properties
             sampler2D _MainTex;      float4 _MainTex_ST;
-            float4   _LineColor;
-            float    _LineWidth, _GridScale, _LineBlur;
+            float4   _LineColor, _GlitchColor;
+            float    _LineWidth, _GridScale, _LineBlur,_TimeMultiplayer;
             float4   _GroundColor;   float _FadeRange;
             float    _GlitchAmplitude, _GlitchNarrow, _GlitchBlocky, _GlitchMinimizer;
             float4   _Resolution;
@@ -62,6 +78,7 @@ Shader "Custom/GlitchHexSkybox"
                 o.viewDir = UnityObjectToWorldDir(v.vertex.xyz);
                 return o;
             }
+
             // Simple 2D random & noise for glitch
             float rand(float2 p, float t) 
             { 
@@ -141,47 +158,43 @@ Shader "Custom/GlitchHexSkybox"
                 float2 texUV = TRANSFORM_TEX(sphUV, _MainTex);
 
                 // 3) Glitch-distort that UV before sampling
-                float2 uv2 = float2((sphUV.x * 1.5) / 2000, exp(sphUV.y));
                 float time = _Time.y;
-                uv2.y += time * 0.4;
+                float2 uv2 = float2((sphUV.x * 1.5) / 4000, exp(sphUV.y));
+                uv2.y += time * _TimeMultiplayer;
+
                 float2 cell = floor(sphUV * 8.0);
-                float shift = _GlitchAmplitude *
-                    pow(fbm(texUV, int(rand(cell,time)*6+1), _GlitchBlocky, _GlitchNarrow, time),
-                        _GlitchMinimizer);
-                shift = smoothstep(0.00001,0.2, shift);
+                float fbmVal = fbm(uv2, int(rand(cell,time)*6+1), _GlitchBlocky, _GlitchNarrow, time);
+                float shift = _GlitchAmplitude * pow(fbmVal, _GlitchMinimizer);
+                shift = smoothstep(0.00001, 0.2, shift);
+
+
+                // 4) Creating Scanlines
 
                 // scanline darkening
                 float scan = abs(cos(sphUV.y * 400.0));
                 scan = smoothstep(0,2,scan);
+
+                // 5) Sample your panorama
                 // final glitch UV offset
                 float2 gUV = texUV + float2(shift, 0);
-
-                // 4) Sample your panorama
                 float4 skyCol = tex2D(_MainTex,gUV);
-                float colR = tex2D(_MainTex, gUV + float2(shift, 0)).r * (1.0 - shift);
-                float colG = tex2D(_MainTex, gUV - float2(shift, 0)).g * (1.0 - shift) + rand(cell, time) * shift;
-                float colB = tex2D(_MainTex, gUV - float2(shift, 0)).b * (1.0 - shift);
-                float3 f = float3(colR, colG, colB) - (0.01 * scan);
-                skyCol.rgb = f;
+                float colR = tex2D(_MainTex, gUV + float2(shift, 0)).r * (1.0 - shift)+ rand(cell, time) * shift * _GlitchColor.r;
+                float colG = tex2D(_MainTex, gUV - float2(shift, 0)).g * (1.0 - shift) + rand(cell, time) * shift * _GlitchColor.g;
+                float colB = tex2D(_MainTex, gUV - float2(shift, 0)).b * (1.0 - shift)+ rand(cell, time) * shift * _GlitchColor.b;
+                skyCol.rgb = float3(colR, colG, colB) - (0.01 * scan);
 
-                // 5) Build triangle grid in a *second* UVspace
+                // 6) Build triangle grid in a *second* UVspace
                 float2 gridUV  = (sphUV + float2(shift,0)) * _GridScale;
                 float3 bary    = SimplexGrid(gridUV);
                 float3 cUv     = frac(bary);
 
-                // 6) Edge mask
-                float edge = 0;
-                [unroll] for(int j=0;j<3;j++)
-                {
-                    edge = max(edge, smoothstep(_LineWidth-_LineBlur, _LineWidth+_LineBlur, cUv[j]));
-                    edge = max(edge, smoothstep(_LineWidth-_LineBlur, _LineWidth+_LineBlur, 1-cUv[j]));
-                }
-                edge = saturate(edge);
+                // 7) Edge mask
+                float edge = SampleTriangleEdgeBary(cUv,_LineWidth,_LineBlur);
 
-                // 7) Overlay grid lines
+                // 8) Overlay grid lines
                 float4 col = lerp(skyCol, _LineColor, edge);
 
-                // 8) Finally horizon‐fade to ground color
+                // 9) Finally horizon‐fade to ground color
                 return lerp(_GroundColor, col, fade);
             }
             ENDCG
