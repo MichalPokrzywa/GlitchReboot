@@ -183,11 +183,6 @@ public class FirstPersonController : MonoBehaviour
 
     void Start()
     {
-        if(playerCamera != null && lockCursor)
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-        }
-
         HandleCrosshair();
         HandleSprintBar();
     }
@@ -196,29 +191,30 @@ public class FirstPersonController : MonoBehaviour
 
     private void Update()
     {
+        HandleCursor();
+
         if (cameraCanMove)
             HandleZoom();
         if (cameraCanMove)
             HandleCameraMovement();
+
+        if (enableSprint)
+            HandleSprinting();
+
+        CheckGround();
+
+        if (enableHeadBob)
+            HeadBob();
     }
 
     private void FixedUpdate()
     {
-
-        if(enableSprint)
-            HandleSprinting();
-
         // Gets input and calls jump method
         if(enableJump && ImplementedInput.IsJumping() && isGrounded)
             Jump();
 
         if (enableCrouch)
             HandleCrouch();
-
-        CheckGround();
-
-        if(enableHeadBob)
-            HeadBob();
 
         if (playerCanMove)
             HandleMovement();
@@ -228,6 +224,17 @@ public class FirstPersonController : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawRay(transform.position, transform.forward * 2);
+    }
+
+    void HandleCursor()
+    {
+        if (playerCamera == null)
+            return;
+
+        if (lockCursor)
+            Cursor.lockState = CursorLockMode.Locked;
+        else
+            Cursor.lockState = CursorLockMode.None;
     }
 
     public void StopMovement()
@@ -334,7 +341,7 @@ public class FirstPersonController : MonoBehaviour
                 playerCamera.DOFieldOfView(sprintFOV, sprintFOVStepTime);
             }
                 //playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.fixedDeltaTime);
-                
+
             // Drain sprint remaining while sprinting
             if (!unlimitedSprint)
             {
@@ -425,7 +432,7 @@ public class FirstPersonController : MonoBehaviour
 
                 if (sprintBarCG != null && hideBarWhenFull && !unlimitedSprint)
                 {
-                    sprintBarCG.alpha += 5 * Time.deltaTime;
+                    sprintBarCG.alpha += 5 * Time.fixedDeltaTime;
                 }
             }
 
@@ -438,7 +445,7 @@ public class FirstPersonController : MonoBehaviour
 
             if (sprintBarCG != null && hideBarWhenFull && sprintRemaining == sprintDuration)
             {
-                sprintBarCG.alpha -= 3 * Time.deltaTime;
+                sprintBarCG.alpha -= 3 * Time.fixedDeltaTime;
             }
 
             targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
