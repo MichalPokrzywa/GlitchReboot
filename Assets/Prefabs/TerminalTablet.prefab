@@ -340,7 +340,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2574840562065126707}
   - component: {fileID: 6044354980112378675}
-  - component: {fileID: 247031912117702212}
+  - component: {fileID: 9005839933074309900}
   - component: {fileID: 4912431938009002711}
   - component: {fileID: 7376075901604246354}
   m_Layer: 0
@@ -358,7 +358,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7799125307761306831}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.0012000035}
+  m_LocalPosition: {x: 0, y: 0, z: -0.0012}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -367,8 +367,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 1202.1285, y: -33.994537}
-  m_SizeDelta: {x: -3233.346, y: -1379.6624}
+  m_AnchoredPosition: {x: 1201.65, y: -40.49}
+  m_SizeDelta: {x: -3236.73, y: -1404.25}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6044354980112378675
 CanvasRenderer:
@@ -378,7 +378,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7799125307761306831}
   m_CullTransparentMesh: 1
---- !u!114 &247031912117702212
+--- !u!114 &9005839933074309900
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -391,14 +391,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 024f2fb908eaaaf40ac482cdcce85058, type: 3}
+  m_Sprite: {fileID: 0}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -427,11 +427,11 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
-    m_NormalColor: {r: 0.39607844, g: 0.39607844, b: 0.39607844, a: 0.42745098}
-    m_HighlightedColor: {r: 1, g: 0, b: 0, a: 0.2}
-    m_PressedColor: {r: 1, g: 0, b: 0, a: 0.4}
+    m_NormalColor: {r: 1, g: 1, b: 1, a: 0.5019608}
+    m_HighlightedColor: {r: 1, g: 0, b: 0, a: 0.5019608}
+    m_PressedColor: {r: 0.835, g: 0, b: 0, a: 0.5019608}
     m_SelectedColor: {r: 0, g: 0, b: 0, a: 0}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
@@ -448,7 +448,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 247031912117702212}
+  m_TargetGraphic: {fileID: 3762176378258077486}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -615,7 +615,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 303445139427950903, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.6666675
       objectReference: {fileID: 0}
     - target: {fileID: 304498080308478268, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSize
@@ -751,15 +751,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1441510764358435098, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_text
-      value: 'Cube 1 value: False'
+      value: 'Variable Dice 1: False'
       objectReference: {fileID: 0}
     - target: {fileID: 1441510764358435098, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSize
-      value: 22
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 1441510764358435098, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSizeBase
-      value: 22
+      value: 21
       objectReference: {fileID: 0}
     - target: {fileID: 1461223422989690397, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_SizeDelta.x
@@ -851,11 +851,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2270944650817758149, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSize
-      value: 18
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 2270944650817758149, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSizeBase
-      value: 18
+      value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 2273124824113980366, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_AnchorMax.x
@@ -1709,6 +1709,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 50
       objectReference: {fileID: 0}
+    - target: {fileID: 7746372990444681894, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.00019836426
+      objectReference: {fileID: 0}
     - target: {fileID: 7751714472654324972, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -1865,9 +1869,21 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 60
       objectReference: {fileID: 0}
+    - target: {fileID: 8831390009291722638, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_Size
+      value: 0.6666675
+      objectReference: {fileID: 0}
     - target: {fileID: 8872069836366465566, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
-      value: 'Cube 1 value: False'
+      value: 'Variable Dice 1: False'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8899073519908970721, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -50
+      objectReference: {fileID: 0}
+    - target: {fileID: 8899073519908970721, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8951356543525528630, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_SizeDelta.x

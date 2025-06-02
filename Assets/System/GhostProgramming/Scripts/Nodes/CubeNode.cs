@@ -11,6 +11,6 @@ public class CubeNode : EntityNode<VariableDice>
 
     protected override string GetEntityName()
     {
-        return "Cube";
+        return "Variable Dice";
     }
 }

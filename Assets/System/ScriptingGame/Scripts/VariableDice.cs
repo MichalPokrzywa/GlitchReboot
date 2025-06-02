@@ -29,10 +29,7 @@ public class VariableDice : EntityBase
 
     public override void UpdateEntityNameSuffix()
     {
-        StringBuilder sb = new StringBuilder();
-        sb.Append("value: ");
-        sb.Append(GetCurrentValue());
-        entityNameSuffix = sb.ToString();
+        entityNameSuffix = ": " + GetCurrentValue().ToString();
     }
 
     void InitializeHandler()
