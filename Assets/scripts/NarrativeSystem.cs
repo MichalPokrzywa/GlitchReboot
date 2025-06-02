@@ -4,35 +4,35 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class NarrativeSystem : MonoBehaviour
+public class NarrativeSystem : Singleton<NarrativeSystem>
 {
     [SerializeField] AudioSource audioSource;
     [SerializeField] TextMeshProUGUI textDisplay;
     [SerializeField] float fadeDuration = 1f;
     [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
 
-    static NarrativeSystem _instance;
+    //static NarrativeSystem _instance;
 
     Coroutine fadeCoroutine;
     Color startColor;
 
-    public static NarrativeSystem instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindFirstObjectByType<NarrativeSystem>();
-                if (_instance == null)
-                {
-                    GameObject singletonGO = new GameObject("NarrativeSystem (Singleton)");
-                    _instance = singletonGO.AddComponent<NarrativeSystem>();
-                }
-            }
+    //public static NarrativeSystem instance
+    //{
+    //    get
+    //    {
+    //        if (_instance == null)
+    //        {
+    //            _instance = FindFirstObjectByType<NarrativeSystem>();
+    //            if (_instance == null)
+    //            {
+    //                GameObject singletonGO = new GameObject("NarrativeSystem (Singleton)");
+    //                _instance = singletonGO.AddComponent<NarrativeSystem>();
+    //            }
+    //        }
 
-            return _instance;
-        }
-    }
+    //        return _instance;
+    //    }
+    //}
 
     void Awake()
     {

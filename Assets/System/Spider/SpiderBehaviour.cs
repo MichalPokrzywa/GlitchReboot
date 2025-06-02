@@ -57,9 +57,9 @@ public class SpiderBehaviour : MonoBehaviour
             SetAnimationData(targetData[0]);
             SetEmotion(targetData[0].emotion);
             if (!string.IsNullOrEmpty(targetData[0].speech))
-                NarrativeSystem.instance.SetText(targetData[0].speech);
+                NarrativeSystem.Instance.SetText(targetData[0].speech);
             if (targetData[0].voiceKey != 0)
-                NarrativeSystem.instance.Play(targetData[0].voiceKey);
+                NarrativeSystem.Instance.Play(targetData[0].voiceKey);
         }
         else
         {
@@ -152,9 +152,9 @@ public class SpiderBehaviour : MonoBehaviour
         if (!playAtStart)
         {
             if (!string.IsNullOrEmpty(data.speech))
-                NarrativeSystem.instance.SetText(data.speech);
+                NarrativeSystem.Instance.SetText(data.speech);
             if (data.voiceKey != 0)
-                NarrativeSystem.instance.Play(data.voiceKey);
+                NarrativeSystem.Instance.Play(data.voiceKey);
         }
 
         playAtStart = false;

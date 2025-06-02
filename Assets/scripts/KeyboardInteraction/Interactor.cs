@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Interactor : MonoBehaviour
@@ -65,6 +66,7 @@ public class Interactor : MonoBehaviour
                     if (!pickup.IsPickedUp && heldObject == null && heldObject != pickup && animator.GetBool("CanPickup"))
                     {
                         // pass yourself into the pickup
+                        gameObject.layer = LayerMask.NameToLayer("PlayerWithObject");
                         pickup.MoveToHand(handPoint, holdPoint, this);
                         heldObject = pickup;
                         interactObj.HideUI(); // Hide UI when picked up

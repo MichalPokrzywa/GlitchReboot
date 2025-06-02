@@ -142,7 +142,7 @@ public static class VariableTypeColor
     {
         return type switch
         {
-            VariableType.Number => new Color(46f/255f, 153f / 255f, 28f / 255f),
+            VariableType.Number => Color.red,
             VariableType.Boolean => Color.cyan,
             VariableType.String => Color.green,
             VariableType.GameObject => Color.cyan,
