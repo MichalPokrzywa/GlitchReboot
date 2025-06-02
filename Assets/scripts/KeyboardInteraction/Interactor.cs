@@ -62,7 +62,7 @@ public class Interactor : MonoBehaviour
             {
                 if (interactObj is PickUpObjectInteraction pickup)
                 {
-                    if (!pickup.IsPickedUp && heldObject == null && heldObject != pickup && animator.GetBool("CanPickup"))
+                    if (pickup.IsDropped && heldObject == null && heldObject != pickup && animator.GetBool("CanPickup"))
                     {
                         // pass yourself into the pickup
                         pickup.MoveToHand(handPoint, holdPoint, this);

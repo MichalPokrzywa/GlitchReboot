@@ -12,6 +12,9 @@ public class GhostController : EntityBase
 {
     [SerializeField] Transform holdPoint;
 
+    public Action onPickingUp;
+    public Action onDropped;
+
     Action onTargetReached;
     Action onTargetUnreachable;
 
@@ -32,6 +35,7 @@ public class GhostController : EntityBase
 
     const float pathCalculationInterval = 1f;
     const float hysteresisBuffer = 0.2f;
+    const float actionDelay = 0.25f;
 
     public enum InteractionDistance
     {
@@ -44,6 +48,20 @@ public class GhostController : EntityBase
         agent = GetComponent<NavMeshAgent>();
         UpdateEntityNameSuffix();
         EntityManager.instance.Register<GhostController>(this);
+
+        float intensity = 5f;
+        switch (entityId)
+        {
+            case 1:
+                SetColor(Color.blue * intensity);
+                break;
+            case 2:
+                SetColor(Color.green * intensity);
+                break;
+            default:
+                SetColor(Color.red * intensity);
+                break;
+        }
     }
 
     void Update()
@@ -90,7 +108,7 @@ public class GhostController : EntityBase
             return false;
         }
 
-        bool waited = await WaitOnceBeforeAction(cancelToken);
+        await WaitForSeconds(actionDelay, cancelToken);
         taskCS = new TaskCompletionSource<bool>();
 
         InteractionDistance dist = InteractionDistance.Far;
@@ -127,8 +145,6 @@ public class GhostController : EntityBase
         };
 
         bool taskValue = await taskCS.Task;
-        if (waited)
-            hasWaitedBeforeAction = false;
 
         return taskValue;
     }
@@ -164,26 +180,37 @@ public class GhostController : EntityBase
             return false;
         }
 
-        // make sure that object is not already picked up by someone else
-        objectToPickUp.DropMe();
+        // object is already picked
+        if (objectToPickUp == pickedUpObject)
+            return true;
 
-        bool waited = await WaitOnceBeforeAction(cancelToken);
+        await WaitForSeconds(actionDelay, cancelToken);
+
+        // make sure that object is not already picked up by someone else
+        if (!objectToPickUp.IsDropped)
+        {
+            result.errorCode = ErrorCode.NotPickable;
+            return false;
+        }
 
         // make sure to drop previous object
         await Drop(cancelToken);
 
+        // search for the object to pick up
         bool reachedDest = await MoveTo(objectToPickUp.gameObject, cancelToken, result);
+
         if (!reachedDest)
         {
             Debug.LogWarning("Failed to reach the object.");
             return false;
         }
 
-        DoPickUp(objectToPickUp);
-
-        // reset waiting flag after action
-        if (waited)
-            hasWaitedBeforeAction = false;
+        bool canPickUp = await DoPickUp(objectToPickUp, result);
+        if (!canPickUp)
+        {
+            result.errorCode = ErrorCode.NotPickable;
+            return false;
+        }
 
         return true;
     }
@@ -197,22 +224,36 @@ public class GhostController : EntityBase
             return false;
         }
 
-        bool waited = await WaitOnceBeforeAction(cancelToken);
+        await WaitForSeconds(actionDelay, CancellationToken.None);
 
         var pickUpComponent = pickedUpObject.GetComponent<PickUpObjectInteraction>();
         pickUpComponent.DropMe();
         pickedUpObject = null;
-
-        if (waited)
-            hasWaitedBeforeAction = false;
+        onDropped?.Invoke();
 
         return true;
     }
 
-    void DoPickUp(PickUpObjectInteraction objectToPickUp)
+    async Task<bool> DoPickUp(PickUpObjectInteraction objectToPickUp, ExecutionResult result)
     {
-        pickedUpObject = objectToPickUp.gameObject;
+        // check if object is pickable
+        if (!objectToPickUp.IsDropped)
+            return false;
+
+        onPickingUp?.Invoke();
+        await WaitForSeconds(actionDelay, CancellationToken.None);
+
+        // check if object is still pickable after waiting
+        if (!objectToPickUp.IsDropped)
+        {
+            onDropped?.Invoke();
+            return false;
+        }
+
         objectToPickUp.PickMeUp(holdPoint, null);
+        pickedUpObject = objectToPickUp.gameObject;
+
+        return true;
     }
 
     bool IsPathRecalculationNeeded()
@@ -274,6 +315,14 @@ public class GhostController : EntityBase
                 continue;
             }
 
+            var pickable = target.GetComponent<PickUpObjectInteraction>();
+            if (pickable != null && !pickable.IsDropped)
+            {
+                Debug.LogWarning("--Target is picked up by someone else--");
+                targetUnreachable = true;
+                yield break;
+            }
+
             // thanks to this function, path should be ALWAYS calculated immediately
             // it means that agent should not try to reach an object that is unreachable (like following object moving behind a wall)
             agent.CalculatePath(target.transform.position, path);
@@ -299,14 +348,13 @@ public class GhostController : EntityBase
         }
     }
 
-    async Task<bool> WaitOnceBeforeAction(CancellationToken cancelToken)
+    void SetColor(Color color)
     {
-        if (hasWaitedBeforeAction)
-            return false;
-
-        hasWaitedBeforeAction = true;
-        await WaitForSeconds(0.25f, cancelToken);
-        return true;
+        var renderers = GetComponentsInChildren<Renderer>();
+        foreach (var rend in renderers)
+        {
+            rend.material.SetColor("_MainColor", color);
+        }
     }
 
     public static float GetInteractionDistance(InteractionDistance type)

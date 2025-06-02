@@ -27,8 +27,8 @@ public class GhostAnimatorController : MonoBehaviour
     void Start()
     {
         previousPosition = transform.position;
-        ghostController.onPickUp += OnPickUp;
-        ghostController.onDrop += OnDrop;
+        ghostController.onPickingUp += OnPickUp;
+        ghostController.onDropped += OnDrop;
 
         startTime = StartAnimTime;
         stopTime = StopAnimTime;
@@ -36,8 +36,8 @@ public class GhostAnimatorController : MonoBehaviour
 
     void OnDestroy()
     {
-        ghostController.onPickUp -= OnPickUp;
-        ghostController.onDrop -= OnDrop;
+        ghostController.onPickingUp -= OnPickUp;
+        ghostController.onDropped -= OnDrop;
     }
 
     void Update()

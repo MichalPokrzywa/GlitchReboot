@@ -79,7 +79,7 @@ public class VariableDice : EntityBase
         UpdateEntityNameSuffix();
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         //DependencyManager.audioManager.PlaySound(Sound.None);
         // Check if the other object is on the correct layer
@@ -90,7 +90,7 @@ public class VariableDice : EntityBase
             if (platform != null)
             {
                 var pickUpObject = GetComponent<PickUpObjectInteraction>();
-                if (!pickUpObject.DropMe() && !pickUpObject.inhand)
+                if (pickUpObject.IsDropped)
                 {
                     platform.MoveObjectToPosition(this.gameObject);
                     // Get the dice's current value and send it to the platform
@@ -105,7 +105,7 @@ public class VariableDice : EntityBase
             if (platform != null)
             {
                 var pickUpObject = GetComponent<PickUpObjectInteraction>();
-                if (!pickUpObject.DropMe() && !pickUpObject.inhand)
+                if (pickUpObject.IsDropped)
                 {
                     platform.MoveObjectToPosition(this.gameObject);
                     // Get the dice and send it to the platform
