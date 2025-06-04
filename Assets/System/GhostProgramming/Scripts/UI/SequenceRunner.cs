@@ -170,6 +170,11 @@ public class SequenceRunner : MonoBehaviour
                 {
                     actionsCount++;
                     await actionNode.Execute(cancelToken, executionResult);
+                    if (executionResult.errorCode != ErrorCode.None)
+                    {
+                        Debug.LogWarning($"Execution error ({executionResult.errorCode}) — stopping further actions in this sequence.");
+                        break;
+                    }
                 }
             }
         }

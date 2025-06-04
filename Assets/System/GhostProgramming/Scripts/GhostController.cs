@@ -166,7 +166,6 @@ public class GhostController : EntityBase
     {
         if (target == null)
         {
-            Debug.LogWarning("Nothing to stop following.");
             return;
         }
         ResetState();
@@ -181,7 +180,7 @@ public class GhostController : EntityBase
         }
 
         // object is already picked
-        if (objectToPickUp == pickedUpObject)
+        if (objectToPickUp.gameObject == pickedUpObject?.gameObject)
             return true;
 
         await WaitForSeconds(actionDelay, cancelToken);
@@ -201,7 +200,6 @@ public class GhostController : EntityBase
 
         if (!reachedDest)
         {
-            Debug.LogWarning("Failed to reach the object.");
             return false;
         }
 
@@ -318,7 +316,6 @@ public class GhostController : EntityBase
             var pickable = target.GetComponent<PickUpObjectInteraction>();
             if (pickable != null && !pickable.IsDropped)
             {
-                Debug.LogWarning("--Target is picked up by someone else--");
                 targetUnreachable = true;
                 yield break;
             }
@@ -338,7 +335,6 @@ public class GhostController : EntityBase
             }
             else
             {
-                Debug.LogWarning("--Path is invalid. Target unreachable--");
                 targetUnreachable = true;
                 yield break;
             }
