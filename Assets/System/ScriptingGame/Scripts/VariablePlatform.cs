@@ -11,7 +11,7 @@ public class VariableAddedEvent : UnityEvent<string, object> { }
 [Serializable]
 public class VariableRemovedEvent : UnityEvent<string> { }
 
-public class VariablePlatform : EntityBase
+public class VariablePlatform : VariablePlatformBase
 {
     [Header("Identity")]
     [Tooltip("Variable used for terminal")]
@@ -41,8 +41,9 @@ public class VariablePlatform : EntityBase
     [HideInInspector] public VariableAddedEvent variableAdded = new();
     [HideInInspector] public VariableRemovedEvent variableRemoved = new();
 
-    private void Awake()
+    public override void Awake()
     {
+        base.Awake();
         // 1) create the core value-handler
         IVariableValueHandler core = type switch
         {
@@ -58,8 +59,6 @@ public class VariablePlatform : EntityBase
             type,
             core
         );
-
-        EntityManager.instance.Register<VariablePlatform>(this);
     }
 
     private void Start()
@@ -77,7 +76,7 @@ public class VariablePlatform : EntityBase
             rend.material.color = VariableTypeColor.GetColor(type);
     }
 
-    public void ReceiveValue(object v)
+    public override void ReceiveValue(object v)
     {
         if (!namedHandler.Accepts(v))
             return;
@@ -89,7 +88,7 @@ public class VariablePlatform : EntityBase
         namedHandler.UpdateHighlight(textList, true);
     }
 
-    public void ClearValue()
+    public override void ClearValue()
     {
         namedHandler.ResetToBase();
         variableRemoved.Invoke(namedHandler.VariableName);
@@ -101,7 +100,7 @@ public class VariablePlatform : EntityBase
         return namedHandler;
     }
 
-    public void MoveObjectToPosition(GameObject go)
+    public override void MoveObjectToPosition(GameObject go)
     {
         var rb = go.GetComponent<Rigidbody>();
         rb.useGravity = false;

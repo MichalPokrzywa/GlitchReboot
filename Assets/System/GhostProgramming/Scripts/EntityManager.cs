@@ -31,7 +31,7 @@ public class EntityManager : MonoBehaviour
     {
         { typeof(GhostController), new List<GhostController>() },
         { typeof(VariableDice), new List<VariableDice>() },
-        { typeof(VariablePlatform), new List<VariablePlatform>() },
+        { typeof(VariablePlatformBase), new List<VariablePlatformBase>() },
         { typeof(MarkerScript), new List<MarkerScript>() }
     };
 

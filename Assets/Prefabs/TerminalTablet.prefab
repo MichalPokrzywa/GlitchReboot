@@ -626,6 +626,10 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 377131251383166176, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_text
+      value: Platform 1 Value change Boolean
+      objectReference: {fileID: 0}
+    - target: {fileID: 377131251383166176, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSize
       value: 18
       objectReference: {fileID: 0}
@@ -735,11 +739,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1062450010736035391, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSize
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062450010736035391, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_margin.w
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062450010736035391, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_margin.y
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062450010736035391, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_fontSizeMax
       value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 1062450010736035391, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSizeBase
-      value: 24
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 1062450010736035391, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1133931993340257251, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_fontSize
@@ -1519,7 +1539,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6959664676910058028, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 7032282454840438768, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1815,7 +1835,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8160372929370406275, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 50
+      value: 80
       objectReference: {fileID: 0}
     - target: {fileID: 8256425093151129159, guid: a3b0267a669b7c445815c66675a0dba1, type: 3}
       propertyPath: m_IsActive

@@ -40,6 +40,7 @@ public class GhostController : EntityBase
     public enum InteractionDistance
     {
         Close,
+        Average,
         Far
     }
 
@@ -100,7 +101,7 @@ public class GhostController : EntityBase
         }
     }
 
-    public async Task<bool> MoveTo(GameObject newSearchingObject, CancellationToken cancelToken, ExecutionResult result)
+    public async Task<bool> MoveTo(GameObject newSearchingObject, InteractionDistance dist, CancellationToken cancelToken, ExecutionResult result)
     {
         if (newSearchingObject == null)
         {
@@ -111,10 +112,6 @@ public class GhostController : EntityBase
         await WaitForSeconds(actionDelay, cancelToken);
         taskCS = new TaskCompletionSource<bool>();
 
-        InteractionDistance dist = InteractionDistance.Far;
-        var marker = newSearchingObject.GetComponent<MarkerScript>();
-        if (marker != null)
-            dist = InteractionDistance.Close;
         agent.stoppingDistance = GetInteractionDistance(dist);
 
         // Reset target
@@ -196,7 +193,7 @@ public class GhostController : EntityBase
         await Drop(cancelToken);
 
         // search for the object to pick up
-        bool reachedDest = await MoveTo(objectToPickUp.gameObject, cancelToken, result);
+        bool reachedDest = await MoveTo(objectToPickUp.gameObject, InteractionDistance.Far, cancelToken, result);
 
         if (!reachedDest)
         {
@@ -358,6 +355,7 @@ public class GhostController : EntityBase
         return type switch
         {
             InteractionDistance.Far => 2.5f,
+            InteractionDistance.Average => 2f,
             InteractionDistance.Close => 0.3f,
             _ => 0.5f
         };
