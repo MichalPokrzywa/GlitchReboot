@@ -26,7 +26,7 @@ public class PuzzleBase : MonoBehaviour
     protected List<INamedVariableHandler> namedHandlers = new();
     public UnityEvent<string, string> onCodeUpdate;
 
-    void Start()
+    protected virtual void Start()
     {
         foreach (VariablePlatform plat in allLevelPlatforms)
         {
