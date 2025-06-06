@@ -51,7 +51,7 @@ public class PuzzleBase : MonoBehaviour
         }
         canvas.SetCodeText(UpdateTemplate(codeText));
         canvas.SetNeutralText(UpdateTemplate(naturalText));
-        DoTerminalCode();
+        //DoTerminalCode();
     }
 
     protected virtual void Update()

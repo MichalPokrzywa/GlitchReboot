@@ -507,6 +507,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &50982670
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3503,6 +3509,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &323043136
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3877,6 +3889,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &373993588
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5773,17 +5791,6 @@ Mesh:
     offset: 0
     size: 0
     path: 
---- !u!114 &631185967 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
-  m_PrefabInstance: {fileID: 1509094510}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df62234e674f445838a0c4729493e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &634501469 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 386226973884872072, guid: 2acfbc85fc9ad344e94d31a7c70ab336, type: 3}
@@ -8533,6 +8540,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &854634080
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9144,6 +9157,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &882311445
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9836,37 +9855,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45699614f9df4ce4da39a42f124077cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointParent: {fileID: 577835281}
-  platformx: {fileID: 1289559270}
-  platformy: {fileID: 2103985293}
-  platformz: {fileID: 631185967}
-  platformBaseHight: {fileID: 1455683311}
-  penis: {fileID: 7122535686620654060}
-  logika: "Dla ka\u017Cdego punktu, kt\xF3ry ma wyznacza\u0107 stopie\u0144 schod\xF3w,
-    obliczane jest jego dok\u0142adne po\u0142o\u017Cenie w \u015Bwiecie gry. To
-    po\u0142o\u017Cenie jest wyznaczane na podstawie dw\xF3ch rzeczy:\n\nAktualnej
-    pozycji ca\u0142ych schod\xF3w: Wyobra\u017A sobie, \u017Ce ca\u0142e schody
-    s\u0105 jak ruchoma baza. Pozycja ka\u017Cdego stopnia jest liczona wzgl\u0119dem
-    tej bazy.\n\nWarto\u015Bci 'krok\xF3w' w trzech kierunkach (X, Y, Z) i numeru
-    stopnia: Mamy trzy warto\u015Bci (platformx, platformy, platformz), kt\xF3re
-    m\xF3wi\u0105, o ile ka\u017Cdy kolejny stopie\u0144 ma by\u0107 przesuni\u0119ty
-    wzd\u0142u\u017C odpowiedniej osi. Dodatkowo, u\u017Cywamy numeru stopnia (pierwszy
-    ma numer 0, drugi 1, trzeci 2 i tak dalej).\n\nDla pierwszego stopnia (numer
-    0), te warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez 0, co oznacza,
-    \u017Ce pierwszy stopie\u0144 jest umieszczany bezpo\u015Brednio na pozycji bazowej
-    schod\xF3w (z ewentualnym przesuni\u0119ciem od transform.position).\nDla drugiego
-    stopnia (numer 1), warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez
-    1, wi\u0119c stopie\u0144 jest przesuni\u0119ty o dok\u0142adnie te warto\u015Bci
-    od pozycji bazowej schod\xF3w.\nDla trzeciego stopnia (numer 2), warto\u015Bci
-    przesuni\u0119cia s\u0105 mno\u017Cone przez 2, wi\u0119c stopie\u0144 jest przesuni\u0119ty
-    dwa razy dalej od pozycji bazowej schod\xF3w i tak dalej.\nW efekcie, mno\u017C\u0105c
-    te 'kroki' przez numer stopnia, tworzymy efekt schod\xF3w. Ka\u017Cdy kolejny
-    stopie\u0144 jest umieszczany dalej wzd\u0142u\u017C osi X, Y i Z, tworz\u0105c
-    wizualn\u0105 struktur\u0119 schod\xF3w. Po obliczeniu tej nowej pozycji, dany
-    punkt (waypoint) jest fizycznie umieszczany w tym miejscu w \u015Bwiecie gry."
-  waypoints: []
-  basicPosition: {x: 0, y: 0, z: 0}
-  czasZmianyLogiki: 3
 --- !u!1 &932317488
 GameObject:
   m_ObjectHideFlags: 0
@@ -9997,6 +9985,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &933833077
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10620,37 +10614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45699614f9df4ce4da39a42f124077cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointParent: {fileID: 1605450687}
-  platformx: {fileID: 1289559270}
-  platformy: {fileID: 2103985293}
-  platformz: {fileID: 631185967}
-  platformBaseHight: {fileID: 1455683311}
-  penis: {fileID: 7122535686620654060}
-  logika: "Dla ka\u017Cdego punktu, kt\xF3ry ma wyznacza\u0107 stopie\u0144 schod\xF3w,
-    obliczane jest jego dok\u0142adne po\u0142o\u017Cenie w \u015Bwiecie gry. To
-    po\u0142o\u017Cenie jest wyznaczane na podstawie dw\xF3ch rzeczy:\n\nAktualnej
-    pozycji ca\u0142ych schod\xF3w: Wyobra\u017A sobie, \u017Ce ca\u0142e schody
-    s\u0105 jak ruchoma baza. Pozycja ka\u017Cdego stopnia jest liczona wzgl\u0119dem
-    tej bazy.\n\nWarto\u015Bci 'krok\xF3w' w trzech kierunkach (X, Y, Z) i numeru
-    stopnia: Mamy trzy warto\u015Bci (platformx, platformy, platformz), kt\xF3re
-    m\xF3wi\u0105, o ile ka\u017Cdy kolejny stopie\u0144 ma by\u0107 przesuni\u0119ty
-    wzd\u0142u\u017C odpowiedniej osi. Dodatkowo, u\u017Cywamy numeru stopnia (pierwszy
-    ma numer 0, drugi 1, trzeci 2 i tak dalej).\n\nDla pierwszego stopnia (numer
-    0), te warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez 0, co oznacza,
-    \u017Ce pierwszy stopie\u0144 jest umieszczany bezpo\u015Brednio na pozycji bazowej
-    schod\xF3w (z ewentualnym przesuni\u0119ciem od transform.position).\nDla drugiego
-    stopnia (numer 1), warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez
-    1, wi\u0119c stopie\u0144 jest przesuni\u0119ty o dok\u0142adnie te warto\u015Bci
-    od pozycji bazowej schod\xF3w.\nDla trzeciego stopnia (numer 2), warto\u015Bci
-    przesuni\u0119cia s\u0105 mno\u017Cone przez 2, wi\u0119c stopie\u0144 jest przesuni\u0119ty
-    dwa razy dalej od pozycji bazowej schod\xF3w i tak dalej.\nW efekcie, mno\u017C\u0105c
-    te 'kroki' przez numer stopnia, tworzymy efekt schod\xF3w. Ka\u017Cdy kolejny
-    stopie\u0144 jest umieszczany dalej wzd\u0142u\u017C osi X, Y i Z, tworz\u0105c
-    wizualn\u0105 struktur\u0119 schod\xF3w. Po obliczeniu tej nowej pozycji, dany
-    punkt (waypoint) jest fizycznie umieszczany w tym miejscu w \u015Bwiecie gry."
-  waypoints: []
-  basicPosition: {x: 0, y: 0, z: 0}
-  czasZmianyLogiki: 3
 --- !u!43 &1021631314
 Mesh:
   m_ObjectHideFlags: 0
@@ -11091,6 +11054,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1061989173
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11465,6 +11434,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1066391885
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13629,6 +13604,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1189190326
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -13945,11 +13926,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!4 &1195000173 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7528634406910017424, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
-  m_PrefabInstance: {fileID: 2030633734978919574}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1198913111
 GameObject:
   m_ObjectHideFlags: 0
@@ -14348,37 +14324,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45699614f9df4ce4da39a42f124077cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointParent: {fileID: 5661152375219723365}
-  platformx: {fileID: 1289559270}
-  platformy: {fileID: 2103985293}
-  platformz: {fileID: 631185967}
-  platformBaseHight: {fileID: 1455683311}
-  penis: {fileID: 7122535686620654060}
-  logika: "Dla ka\u017Cdego punktu, kt\xF3ry ma wyznacza\u0107 stopie\u0144 schod\xF3w,
-    obliczane jest jego dok\u0142adne po\u0142o\u017Cenie w \u015Bwiecie gry. To
-    po\u0142o\u017Cenie jest wyznaczane na podstawie dw\xF3ch rzeczy:\n\nAktualnej
-    pozycji ca\u0142ych schod\xF3w: Wyobra\u017A sobie, \u017Ce ca\u0142e schody
-    s\u0105 jak ruchoma baza. Pozycja ka\u017Cdego stopnia jest liczona wzgl\u0119dem
-    tej bazy.\n\nWarto\u015Bci 'krok\xF3w' w trzech kierunkach (X, Y, Z) i numeru
-    stopnia: Mamy trzy warto\u015Bci (platformx, platformy, platformz), kt\xF3re
-    m\xF3wi\u0105, o ile ka\u017Cdy kolejny stopie\u0144 ma by\u0107 przesuni\u0119ty
-    wzd\u0142u\u017C odpowiedniej osi. Dodatkowo, u\u017Cywamy numeru stopnia (pierwszy
-    ma numer 0, drugi 1, trzeci 2 i tak dalej).\n\nDla pierwszego stopnia (numer
-    0), te warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez 0, co oznacza,
-    \u017Ce pierwszy stopie\u0144 jest umieszczany bezpo\u015Brednio na pozycji bazowej
-    schod\xF3w (z ewentualnym przesuni\u0119ciem od transform.position).\nDla drugiego
-    stopnia (numer 1), warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez
-    1, wi\u0119c stopie\u0144 jest przesuni\u0119ty o dok\u0142adnie te warto\u015Bci
-    od pozycji bazowej schod\xF3w.\nDla trzeciego stopnia (numer 2), warto\u015Bci
-    przesuni\u0119cia s\u0105 mno\u017Cone przez 2, wi\u0119c stopie\u0144 jest przesuni\u0119ty
-    dwa razy dalej od pozycji bazowej schod\xF3w i tak dalej.\nW efekcie, mno\u017C\u0105c
-    te 'kroki' przez numer stopnia, tworzymy efekt schod\xF3w. Ka\u017Cdy kolejny
-    stopie\u0144 jest umieszczany dalej wzd\u0142u\u017C osi X, Y i Z, tworz\u0105c
-    wizualn\u0105 struktur\u0119 schod\xF3w. Po obliczeniu tej nowej pozycji, dany
-    punkt (waypoint) jest fizycznie umieszczany w tym miejscu w \u015Bwiecie gry."
-  waypoints: []
-  basicPosition: {x: 0, y: 0, z: 0}
-  czasZmianyLogiki: 3
 --- !u!1 &1203514158
 GameObject:
   m_ObjectHideFlags: 0
@@ -14468,6 +14413,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1212423670
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -16176,6 +16127,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1267585303
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -16622,6 +16579,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1277270906
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -16938,17 +16901,6 @@ MonoBehaviour:
   m_SelectedFaces: 
   m_SelectedEdges: []
   m_SelectedVertices: 
---- !u!114 &1289559270 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
-  m_PrefabInstance: {fileID: 1034252018}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df62234e674f445838a0c4729493e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1298592940
 GameObject:
   m_ObjectHideFlags: 0
@@ -17007,6 +16959,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1298592943
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -17453,6 +17411,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1301274027
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -18416,6 +18380,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1351873929
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -19634,6 +19604,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1446100626
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -19986,17 +19962,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7960105786080236497, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
   m_PrefabInstance: {fileID: 2030633734978919574}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1455683311 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
-  m_PrefabInstance: {fileID: 1023792866}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df62234e674f445838a0c4729493e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1486727821
 GameObject:
   m_ObjectHideFlags: 0
@@ -20026,37 +19991,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 45699614f9df4ce4da39a42f124077cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waypointParent: {fileID: 680585999}
-  platformx: {fileID: 1289559270}
-  platformy: {fileID: 2103985293}
-  platformz: {fileID: 631185967}
-  platformBaseHight: {fileID: 1455683311}
-  penis: {fileID: 7122535686620654060}
-  logika: "Dla ka\u017Cdego punktu, kt\xF3ry ma wyznacza\u0107 stopie\u0144 schod\xF3w,
-    obliczane jest jego dok\u0142adne po\u0142o\u017Cenie w \u015Bwiecie gry. To
-    po\u0142o\u017Cenie jest wyznaczane na podstawie dw\xF3ch rzeczy:\n\nAktualnej
-    pozycji ca\u0142ych schod\xF3w: Wyobra\u017A sobie, \u017Ce ca\u0142e schody
-    s\u0105 jak ruchoma baza. Pozycja ka\u017Cdego stopnia jest liczona wzgl\u0119dem
-    tej bazy.\n\nWarto\u015Bci 'krok\xF3w' w trzech kierunkach (X, Y, Z) i numeru
-    stopnia: Mamy trzy warto\u015Bci (platformx, platformy, platformz), kt\xF3re
-    m\xF3wi\u0105, o ile ka\u017Cdy kolejny stopie\u0144 ma by\u0107 przesuni\u0119ty
-    wzd\u0142u\u017C odpowiedniej osi. Dodatkowo, u\u017Cywamy numeru stopnia (pierwszy
-    ma numer 0, drugi 1, trzeci 2 i tak dalej).\n\nDla pierwszego stopnia (numer
-    0), te warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez 0, co oznacza,
-    \u017Ce pierwszy stopie\u0144 jest umieszczany bezpo\u015Brednio na pozycji bazowej
-    schod\xF3w (z ewentualnym przesuni\u0119ciem od transform.position).\nDla drugiego
-    stopnia (numer 1), warto\u015Bci przesuni\u0119cia s\u0105 mno\u017Cone przez
-    1, wi\u0119c stopie\u0144 jest przesuni\u0119ty o dok\u0142adnie te warto\u015Bci
-    od pozycji bazowej schod\xF3w.\nDla trzeciego stopnia (numer 2), warto\u015Bci
-    przesuni\u0119cia s\u0105 mno\u017Cone przez 2, wi\u0119c stopie\u0144 jest przesuni\u0119ty
-    dwa razy dalej od pozycji bazowej schod\xF3w i tak dalej.\nW efekcie, mno\u017C\u0105c
-    te 'kroki' przez numer stopnia, tworzymy efekt schod\xF3w. Ka\u017Cdy kolejny
-    stopie\u0144 jest umieszczany dalej wzd\u0142u\u017C osi X, Y i Z, tworz\u0105c
-    wizualn\u0105 struktur\u0119 schod\xF3w. Po obliczeniu tej nowej pozycji, dany
-    punkt (waypoint) jest fizycznie umieszczany w tym miejscu w \u015Bwiecie gry."
-  waypoints: []
-  basicPosition: {x: 0, y: 0, z: 0}
-  czasZmianyLogiki: 3
 --- !u!4 &1486727823
 Transform:
   m_ObjectHideFlags: 0
@@ -20649,6 +20583,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1501698421
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -24990,6 +24930,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1789240131
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -25868,6 +25814,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1898065335
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -26242,6 +26194,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1902096009
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -27430,6 +27388,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1945210533
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -27804,6 +27768,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &1963475577
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -28540,6 +28510,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!64 &2007551636
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -30097,17 +30073,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2103985293 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1175783332180117050, guid: 808f170780cd0d34a87e79dd4c8401cc, type: 3}
-  m_PrefabInstance: {fileID: 295657702}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e2df62234e674f445838a0c4729493e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &2119521561
 GameObject:
   m_ObjectHideFlags: 0
@@ -30750,36 +30715,6 @@ MonoBehaviour:
   ExitedTrigger:
     m_PersistentCalls:
       m_Calls: []
---- !u!114 &263693300639822685
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8405125313418738283}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0.4264151, g: 0.4264151, b: 0.4264151, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c36bb845f23e0404eb72f877d35c672e, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!114 &270422564913651500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30804,52 +30739,6 @@ MonoBehaviour:
     - rid: 193944290693218306
       type: {class: Cube, ns: UnityEngine.ProBuilder.Shapes, asm: Unity.ProBuilder}
       data: 
---- !u!224 &374220075373308894
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5803129569287485081}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3368374753189251161}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0.125}
-  m_SizeDelta: {x: -1.5, y: -1.75}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!224 &561272224372488693
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3371148359496035202}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.00000005960465}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3368374753189251161}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -1.5, y: -1.5}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &698225026014542958
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3371148359496035202}
-  m_CullTransparentMesh: 1
 --- !u!1 &918013001908586592
 GameObject:
   m_ObjectHideFlags: 0
@@ -30987,32 +30876,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 7528634406910017424, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
-      insertIndex: 0
-      addedObject: {fileID: 3368374753189251161}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
---- !u!1 &2238516866562766465
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3368374753189251161}
-  - component: {fileID: 7282723033033077321}
-  - component: {fileID: 3112211737269800317}
-  - component: {fileID: 3573551367013873182}
-  - component: {fileID: 7122535686620654060}
-  m_Layer: 0
-  m_Name: Canvas
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!64 &2446884200305207693
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -31035,204 +30901,6 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 2001678891}
---- !u!114 &3112211737269800317
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2238516866562766465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
-  m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
---- !u!224 &3368374753189251161
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2238516866562766465}
-  m_LocalRotation: {x: -0, y: 0.000001505017, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.5}
-  m_LocalScale: {x: 4, y: 4, z: 4}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 3490298924021948957}
-  - {fileID: 561272224372488693}
-  - {fileID: 374220075373308894}
-  m_Father: {fileID: 1195000173}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: -1, y: -0.5}
-  m_SizeDelta: {x: 1.81, y: 1.76}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!1 &3371148359496035202
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 561272224372488693}
-  - component: {fileID: 698225026014542958}
-  - component: {fileID: 5292653933349529576}
-  m_Layer: 0
-  m_Name: Background
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &3490298924021948957
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8405125313418738283}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.00000005960465}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3368374753189251161}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -1.44, y: -1.44}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3573551367013873182
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2238516866562766465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!222 &3777446876334402262
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5803129569287485081}
-  m_CullTransparentMesh: 1
---- !u!114 &4415969026477061909
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5803129569287485081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_text: 
-  m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: a217143c03c840441acee7f2df2c316f, type: 2}
-  m_sharedMaterial: {fileID: 5581428991867610962, guid: a217143c03c840441acee7f2df2c316f, type: 2}
-  m_fontSharedMaterials: []
-  m_fontMaterial: {fileID: 0}
-  m_fontMaterials: []
-  m_fontColor32:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
-  m_enableVertexGradient: 0
-  m_colorMode: 3
-  m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
-    topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
-  m_fontColorGradientPreset: {fileID: 0}
-  m_spriteAsset: {fileID: 0}
-  m_tintAllSprites: 0
-  m_StyleSheet: {fileID: 0}
-  m_TextStyleHashCode: -1183493901
-  m_overrideHtmlColors: 0
-  m_faceColor:
-    serializedVersion: 2
-    rgba: 4294967295
-  m_fontSize: 0.022
-  m_fontSizeBase: 0.03
-  m_fontWeight: 400
-  m_enableAutoSizing: 1
-  m_fontSizeMin: 0.01
-  m_fontSizeMax: 0.022
-  m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
-  m_textAlignment: 65535
-  m_characterSpacing: 0
-  m_wordSpacing: 0
-  m_lineSpacing: 0
-  m_lineSpacingMax: 0
-  m_paragraphSpacing: 0
-  m_charWidthMaxAdj: 0
-  m_TextWrappingMode: 1
-  m_wordWrappingRatios: 0.4
-  m_overflowMode: 0
-  m_linkedTextComponent: {fileID: 0}
-  parentLinkedComponent: {fileID: 0}
-  m_enableKerning: 0
-  m_ActiveFontFeatures: 6e72656b
-  m_enableExtraPadding: 0
-  checkPaddingRequired: 0
-  m_isRichText: 1
-  m_EmojiFallbackSupport: 1
-  m_parseCtrlCharacters: 1
-  m_isOrthographic: 1
-  m_isCullingEnabled: 0
-  m_horizontalMapping: 0
-  m_verticalMapping: 0
-  m_uvLineOffset: 0
-  m_geometrySortingOrder: 0
-  m_IsTextObjectScaleStatic: 0
-  m_VertexBufferAutoSizeReduction: 0
-  m_useMaxVisibleDescender: 1
-  m_pageToDisplay: 1
-  m_margin: {x: 0.01, y: 0, z: 0.01, w: -0.00262779}
-  m_isUsingLegacyAnimationComponent: 0
-  m_isVolumetricText: 0
-  m_hasFontAssetChanged: 0
-  m_baseMaterial: {fileID: 0}
-  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
 --- !u!65 &4428136329070637484
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -31275,33 +30943,6 @@ Transform:
   - {fileID: 1751156136}
   m_Father: {fileID: 1201152238}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5292653933349529576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3371148359496035202}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 0}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
 --- !u!1 &5661152375219723365
 GameObject:
   m_ObjectHideFlags: 0
@@ -31313,24 +30954,6 @@ GameObject:
   - component: {fileID: 4549847261921494257}
   m_Layer: 0
   m_Name: Waypoints
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!1 &5803129569287485081
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 374220075373308894}
-  - component: {fileID: 3777446876334402262}
-  - component: {fileID: 4415969026477061909}
-  m_Layer: 0
-  m_Name: Code
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31661,42 +31284,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &7122535686620654060
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2238516866562766465}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31aa2117c2e32bc4d8ae0e0553371dc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  codeText: {fileID: 4415969026477061909}
---- !u!223 &7282723033033077321
-Canvas:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2238516866562766465}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_RenderMode: 2
-  m_Camera: {fileID: 0}
-  m_PlaneDistance: 100
-  m_PixelPerfect: 0
-  m_ReceivesEvents: 1
-  m_OverrideSorting: 0
-  m_OverridePixelPerfect: 0
-  m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 1
-  m_AdditionalShaderChannelsFlag: 25
-  m_UpdateRectTransformForStandalone: 0
-  m_SortingLayerID: 0
-  m_SortingOrder: 0
-  m_TargetDisplay: 0
 --- !u!114 &7644299598777179840
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31716,6 +31303,12 @@ MonoBehaviour:
   moveInterval: 1
   stoppingDistance: 0.05
   startMoving: 1
+  zOscilation: 0
+  waypoints: []
+  ZOscilationDirection: 1
+  zStartingPosition: 0
+  zOscilationPosition: 0
+  zOscilationNegativePosition: 0
 --- !u!4 &8088815888364311871
 Transform:
   m_ObjectHideFlags: 0
@@ -31731,24 +31324,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1296293364738712289}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &8405125313418738283
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3490298924021948957}
-  - component: {fileID: 8999260358094338399}
-  - component: {fileID: 263693300639822685}
-  m_Layer: 0
-  m_Name: Border
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
 --- !u!114 &8787738338415007685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31767,14 +31342,6 @@ MonoBehaviour:
   ExitedTrigger:
     m_PersistentCalls:
       m_Calls: []
---- !u!222 &8999260358094338399
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8405125313418738283}
-  m_CullTransparentMesh: 1
 --- !u!65 &9101404974236902279
 BoxCollider:
   m_ObjectHideFlags: 0
