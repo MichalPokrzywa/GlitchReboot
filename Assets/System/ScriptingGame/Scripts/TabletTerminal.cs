@@ -52,7 +52,6 @@ public class TabletTerminal : Singleton<TabletTerminal>
             }
             assignedTerminal = terminal;
             assignedTerminal.onCodeUpdate.AddListener(Instance.UpdateTerminal);
-
         }
     }
 

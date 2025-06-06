@@ -17,9 +17,6 @@ public class VariablePlatform : VariablePlatformBase
     [Tooltip("Variable used for terminal")]
     public string variableName = "x_value";
 
-    [Tooltip("Choose the variable type here")]
-    public VariableType type;
-
     private INamedVariableHandler namedHandler;
 
     [Header("Initial Value")]
@@ -80,6 +77,9 @@ public class VariablePlatform : VariablePlatformBase
     {
         if (!namedHandler.Accepts(v))
             return;
+        if(assignedObject != null)
+            return;
+
         namedHandler.UpdateValue(v);
         variableAdded.Invoke(
             namedHandler.VariableName,
@@ -92,6 +92,7 @@ public class VariablePlatform : VariablePlatformBase
     {
         namedHandler.ResetToBase();
         variableRemoved.Invoke(namedHandler.VariableName);
+        assignedObject = null;
         namedHandler.UpdateHighlight(textList, false);
     }
 
@@ -102,6 +103,9 @@ public class VariablePlatform : VariablePlatformBase
 
     public override void MoveObjectToPosition(GameObject go)
     {
+        if (!ContainsObject())
+            return;
+
         var rb = go.GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.linearVelocity = Vector3.zero;
@@ -116,6 +120,18 @@ public class VariablePlatform : VariablePlatformBase
           });
     }
 
+    public override void AssignObjectToPlatform(GameObject go)
+    {
+        if (assignedObject == null)
+        {
+            assignedObject = go;
+        }
+    }
+
+    private bool ContainsObject()
+    {
+        return assignedObject != null;
+    }
     public override void UpdateEntityNameSuffix()
     {
         entityNameSuffix = variableName;
