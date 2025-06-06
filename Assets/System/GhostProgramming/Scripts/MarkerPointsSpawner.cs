@@ -29,6 +29,12 @@ public class MarkerPointsSpawner : MonoBehaviour
 
     void Awake()
     {
+        Color[] markerColors = {
+            Color.white, Color.red, Color.green,
+            Color.blue, Color.magenta, Color.yellow, Color.cyan,
+            Color.black, new Color(0.74f, 0.17f, 0f)
+        };
+
         for (int i = 0; i < markerCount; i++)
         {
             var marker = Instantiate(markerPrefab).GetComponent<MarkerScript>();
@@ -36,6 +42,9 @@ public class MarkerPointsSpawner : MonoBehaviour
             marker.SetTarget(target);
             int number = i + 1;
             marker.SetText(number.ToString());
+            float intensityValue = 18f;
+            Color color = markerColors[i % markerColors.Length] * intensityValue;
+            marker.SetColor(color);
             markerPoints.Add(marker);
         }
     }

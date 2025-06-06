@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 115552733709935594, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
-      value: Cube 1
+      value: 'Variable Dice 1: False'
       objectReference: {fileID: 0}
     - target: {fileID: 441839493596661945, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_AnchorMax.x
@@ -168,6 +168,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 2.5
       objectReference: {fileID: 0}
+    - target: {fileID: 2161638819717648815, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2758497714981443957, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_SizeDelta.x
       value: 0
@@ -194,19 +198,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7278219672860690993, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_text
-      value: 'Cube 1 value: False'
+      value: 'Variable dice 1: False'
       objectReference: {fileID: 0}
     - target: {fileID: 7278219672860690993, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_fontSize
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 7278219672860690993, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_fontSizeBase
-      value: 14
+      value: 13
       objectReference: {fileID: 0}
     - target: {fileID: 7963538955674282222, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_text
-      value: Cube 1
+      value: 'Variable Dice 1: False'
       objectReference: {fileID: 0}
     - target: {fileID: 7963538955674282222, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_fontSize
@@ -261,6 +265,7 @@ MonoBehaviour:
   nextNode: {fileID: 0}
   isInRunningSequence: 0
   isValid: 1
+  currentlyExecuting: 0
   dropdown: {fileID: 6278475941687999056}
 --- !u!114 &6278475941687999056 stripped
 MonoBehaviour:

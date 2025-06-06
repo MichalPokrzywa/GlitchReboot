@@ -62,6 +62,7 @@ public class TabletInteractor : MonoBehaviour
             .OnComplete(() =>
             {
                 firstPersonController.StartMovement();
+                firstPersonController.lockCursor = true;
                 markerSpawner.active = true;
                 interactor.canInteract = true;
                 tabletTerminal.SetActive(false);
@@ -77,6 +78,7 @@ public class TabletInteractor : MonoBehaviour
         showSequence
             .OnStart(() => {
                 firstPersonController.StopMovement();
+                firstPersonController.lockCursor = false;
                 markerSpawner.active = false;
                 interactor.canInteract = false;
                 tabletTerminal.SetActive(true);

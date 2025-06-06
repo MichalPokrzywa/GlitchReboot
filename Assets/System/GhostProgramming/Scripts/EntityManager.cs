@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EntityManager : MonoBehaviour
 {
@@ -30,9 +31,19 @@ public class EntityManager : MonoBehaviour
     {
         { typeof(GhostController), new List<GhostController>() },
         { typeof(VariableDice), new List<VariableDice>() },
-        { typeof(VariablePlatform), new List<VariablePlatform>() },
+        { typeof(VariablePlatformBase), new List<VariablePlatformBase>() },
         { typeof(MarkerScript), new List<MarkerScript>() }
     };
+
+    void Awake()
+    {
+        SceneManager.sceneUnloaded += ClearEntities;
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneUnloaded -= ClearEntities;
+    }
 
     public void Register<T>(T entity) where T : EntityBase
     {
@@ -65,5 +76,10 @@ public class EntityManager : MonoBehaviour
         if (entityLists.TryGetValue(typeof(T), out var list))
             return list as List<T>;
         return null;
+    }
+
+    void ClearEntities(UnityEngine.SceneManagement.Scene arg0)
+    {
+        entityLists.Clear();
     }
 }

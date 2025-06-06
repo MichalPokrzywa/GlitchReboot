@@ -23,7 +23,7 @@ public class SequenceRunner : MonoBehaviour
     const string noActionInfo = "There are no actions in the sequence";
     const string targetUnreachableInfo = "404: Target not found... or just somewhere the ghost can't reach";
     const string canceledInfo = "Sequence was canceled";
-    const string notPickableInfo = "Nope. Too heavy, too slippery, or just too stubborn to be picked up";
+    const string notPickableInfo = "The ghost can't pick this up";
     const string nothingToDropInfo = "The ghost is not holding anything to drop";
 
     const string successInfo = "Task done!";
@@ -105,8 +105,12 @@ public class SequenceRunner : MonoBehaviour
             return;
         }
 
+        // add already running sequences to check
+        var seqToCheck = new List<BlockSequence>(sequences);
+        seqToCheck.AddRange(runningSequences.Keys.Where(s => !sequences.Contains(s)));
+
         // don't allow running multiple sequences with the same ghost
-        bool ghostsRepeat = IsSameGhostInManySequences(sequences);
+        bool ghostsRepeat = IsSameGhostInManySequences(seqToCheck);
         if (ghostsRepeat)
         {
             executionResult.errorCode = ErrorCode.GhostRepeatInSequences;
@@ -166,6 +170,11 @@ public class SequenceRunner : MonoBehaviour
                 {
                     actionsCount++;
                     await actionNode.Execute(cancelToken, executionResult);
+                    if (executionResult.errorCode != ErrorCode.None)
+                    {
+                        Debug.LogWarning($"Execution error ({executionResult.errorCode}) — stopping further actions in this sequence.");
+                        break;
+                    }
                 }
             }
         }

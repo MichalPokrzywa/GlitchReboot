@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using static SequenceRunner;
+using static GhostController;
 
 namespace GhostProgramming
 {
@@ -20,8 +21,14 @@ namespace GhostProgramming
                 return false;
             }
 
+            InteractionDistance dist = InteractionDistance.Average;
+            if (nextNode is MarkerPointNode)
+                dist = InteractionDistance.Close;
+            else if (nextNode is CubeNode)
+                dist = InteractionDistance.Far;
+
             currentlyExecuting = prevNode.currentlyExecuting = nextNode.currentlyExecuting = true;
-            var taskResult = await ghost.MoveTo(entityNode.GetEntity().gameObject, cancelToken, result);
+            var taskResult = await ghost.MoveTo(entityNode.GetEntity().gameObject, dist, cancelToken, result);
             currentlyExecuting = prevNode.currentlyExecuting = nextNode.currentlyExecuting = false;
             return taskResult;
         }

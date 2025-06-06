@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 8895980495746801918}
   - component: {fileID: 5834865448470271596}
   - component: {fileID: 1326364301662729908}
+  - component: {fileID: 4452161655066067547}
   m_Layer: 0
   m_Name: MarkerPoint
   m_TagString: Untagged
@@ -68,7 +69,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9875a245ac49007498213638a307faa1, type: 2}
+  - {fileID: 2100000, guid: a17ffb464fd44f041bfab73a53ce55b9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -123,6 +124,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cd072463e3faaf41b9e1630b87b8ad1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityId: 0
+  entityNameSuffix: 
   markerText: {fileID: 4838294328912813327}
   target: {fileID: 0}
 --- !u!114 &1326364301662729908
@@ -145,6 +148,22 @@ MonoBehaviour:
   m_IgnoreFromBuild: 1
   m_ApplyToChildren: 1
   m_AffectedAgents: ffffffff
+--- !u!114 &4452161655066067547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6048650964956699326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a4a08ad921d4fe94b9addb98217c4c46, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  minGlitch: 0.1
+  maxGlitch: 0.25
+  glitchLength: 0.2
+  timeBetweenGlitches: 4
 --- !u!1 &7416519441769494087
 GameObject:
   m_ObjectHideFlags: 0
@@ -280,11 +299,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3662184279319753111}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0}
 --- !u!222 &4969873071398196491
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -322,8 +341,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4278190080
-  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -340,8 +359,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 0.3
-  m_fontSizeBase: 0.3
+  m_fontSize: 0.1
+  m_fontSizeBase: 0.1
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

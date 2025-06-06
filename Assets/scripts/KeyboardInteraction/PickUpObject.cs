@@ -8,9 +8,10 @@ public class PickUpObjectInteraction : InteractionBase
    private Transform holdPoint;
    private Transform handPoint;
    private Rigidbody rb;
-   public bool IsPickedUp { get; private set; }
+   public bool IsPickedUp => PickUpState == ePickUpState.Picked;
+   public bool IsDropped => PickUpState == ePickUpState.Dropped;
 
-   [Header("Rotation Snap")]
+    [Header("Rotation Snap")]
    [Tooltip("Speed (deg/sec) at which to rotate toward the snapped orientation.")]
    public float rotationSpeed = 20f;
    public float moveSpeed = 20f;
@@ -19,7 +20,17 @@ public class PickUpObjectInteraction : InteractionBase
    public bool isAnimationPlaying = false;
    public bool inhand = false;
    private Transform diceTransform;
-   protected override void Awake()
+   private ePickUpState PickUpState;
+
+   enum ePickUpState
+    {
+        Dropped,
+        PickingUp,
+        Picked,
+        Dropping
+    }
+
+    protected override void Awake()
    {
        base.Awake();
 
@@ -28,7 +39,7 @@ public class PickUpObjectInteraction : InteractionBase
    private void Start()
    {
       rb = GetComponent<Rigidbody>();
-      IsPickedUp = false;
+      PickUpState = ePickUpState.Dropped;
    }
 
    public override void Interact()
@@ -89,15 +100,16 @@ public class PickUpObjectInteraction : InteractionBase
 
    public void MoveToHand(Transform handTransform, Transform dropPoint, Interactor interactor)
    {
-       //transform.DOMove(handTransform.position, 0.2f);
-       rb.useGravity = false;
+       PickUpState = ePickUpState.PickingUp;
+        //transform.DOMove(handTransform.position, 0.2f);
+        rb.useGravity = false;
        isAnimationPlaying = true;
         transform.DOScale(0.3f, 0.2f).OnComplete(() =>
        {
            rb.linearDamping = 100;
            rb.angularDamping = 10;
            rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-           IsPickedUp = true;
+           PickUpState = ePickUpState.Picked;
            //transform.SetParent(handTransform);
        });
        ownerInteractor = interactor;
@@ -112,11 +124,11 @@ public class PickUpObjectInteraction : InteractionBase
    public void DropInFront()
    {
        StartCoroutine(DropDiceCoroutine());
-
    }
 
    private IEnumerator DropDiceCoroutine()
    {
+       PickUpState = ePickUpState.Dropping;
         isAnimationPlaying = true;
         ownerInteractor.animator.SetTrigger("DropDice");
 
@@ -132,7 +144,7 @@ public class PickUpObjectInteraction : InteractionBase
         rb.constraints = RigidbodyConstraints.None;
         handPoint = null;
         holdPoint = null;
-        IsPickedUp = false;
+        PickUpState = ePickUpState.Dropped;
         GetComponent<BoxCollider>().enabled = true;
         onTarget = false;
         inhand = false;
@@ -151,7 +163,8 @@ public class PickUpObjectInteraction : InteractionBase
    }
    public IEnumerator ThrowDiceCoroutine()
    {
-       ownerInteractor.animator.SetTrigger("ThrowDice");
+       PickUpState = ePickUpState.Dropping;
+        ownerInteractor.animator.SetTrigger("ThrowDice");
        yield return new WaitForSeconds(0.35f);
        transform.SetParent(null);
        transform.DOScale(1f, 0.1f);
@@ -167,7 +180,7 @@ public class PickUpObjectInteraction : InteractionBase
        rb.linearDamping = 1f;
        rb.angularDamping = 0.05f;
        rb.constraints = RigidbodyConstraints.None;
-       IsPickedUp = false;
+       PickUpState = ePickUpState.Dropped;
        GetComponent<BoxCollider>().enabled = true;
        onTarget = false;
        inhand = false;
@@ -180,32 +193,40 @@ public class PickUpObjectInteraction : InteractionBase
        isAnimationPlaying = false;
     }
 
-
-   public void PickMeUp(Transform point, Interactor interactor)
+    // Only ghosts use these methods - need refactor...
+    public void PickMeUp(Transform point, Interactor interactor)
    {
-       holdPoint = point;
-       ownerInteractor = interactor;
+        PickUpState = ePickUpState.PickingUp;
+        holdPoint = point;
+        ownerInteractor = interactor;
 
-       rb.useGravity = false;
-       rb.linearDamping = 10;
-       onTarget = false;
-       //rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ;
-       IsPickedUp = true;
+        rb.useGravity = false;
+        rb.linearDamping = 10;
+        onTarget = false;
+        rb.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionZ |
+                         RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY |RigidbodyConstraints.FreezeRotationZ;
+
+        transform.SetParent(holdPoint);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+        transform.DOScale(0.015f, 0.25f).OnComplete(() => PickUpState = ePickUpState.Picked);
    }
 
    public bool DropMe()
    {
-       //if(IsPickedUp)
-       //    return true;
-       // reset physics
-       rb.useGravity = true;
-       rb.linearDamping = 1;
-       rb.constraints = RigidbodyConstraints.None;
-       IsPickedUp = false;
-       onTarget = false;
+       PickUpState = ePickUpState.Dropping;
+        // reset physics
+        rb.useGravity = true;
+        rb.linearDamping = 1;
+        rb.constraints = RigidbodyConstraints.None;
+        onTarget = false;
         // let the interactor know to clear its heldObject
         ownerInteractor?.NotifyDropped(this);
-       ownerInteractor = null;
-       return false;
+        ownerInteractor = null;
+
+        transform.SetParent(null);
+        transform.DOScale(1f, 0.25f).OnComplete(() => PickUpState = ePickUpState.Dropped);
+
+        return true;
    }
 }

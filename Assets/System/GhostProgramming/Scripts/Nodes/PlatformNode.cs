@@ -1,11 +1,11 @@
 using GhostProgramming;
 using System.Collections.Generic;
 
-public class PlatformNode : EntityNode<VariablePlatform>
+public class PlatformNode : EntityNode<VariablePlatformBase>
 {
-    protected override List<VariablePlatform> GetEntityList()
+    protected override List<VariablePlatformBase> GetEntityList()
     {
-        return EntityManager.instance.GetEntities<VariablePlatform>();
+        return EntityManager.instance.GetEntities<VariablePlatformBase>();
     }
 
     protected override string GetEntityName()

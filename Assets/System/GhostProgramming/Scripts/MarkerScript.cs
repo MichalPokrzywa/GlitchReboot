@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class MarkerScript : EntityBase
 {
@@ -8,8 +9,11 @@ public class MarkerScript : EntityBase
 
     public bool isActive => gameObject.activeSelf;
 
+    Renderer renderer;
+
     void Awake()
     {
+        renderer = GetComponent<Renderer>();
         UpdateEntityNameSuffix();
         EntityManager.instance.Register<MarkerScript>(this);
         this.gameObject.SetActive(false);
@@ -44,5 +48,13 @@ public class MarkerScript : EntityBase
     public void SetText(string text)
     {
         markerText.text = text;
+    }
+
+    public void SetColor(Color color)
+    {
+        if (renderer == null)
+            return;
+
+        renderer.material.SetColor("_MainColor", color);
     }
 }

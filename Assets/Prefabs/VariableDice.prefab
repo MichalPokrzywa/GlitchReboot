@@ -1111,6 +1111,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a548b211ef0606645b95a32e43b14e3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  entityId: 0
+  entityNameSuffix: 
   type: 2
   textList:
   - {fileID: 2159704178540239493}
@@ -1286,6 +1288,10 @@ MonoBehaviour:
   floatDistanceY: 100
   mainCamera: {fileID: 0}
   rotationSpeed: 10
+  moveSpeed: 20
+  onTarget: 0
+  isAnimationPlaying: 0
+  inhand: 0
 --- !u!1001 &5759289616168662816
 PrefabInstance:
   m_ObjectHideFlags: 0
