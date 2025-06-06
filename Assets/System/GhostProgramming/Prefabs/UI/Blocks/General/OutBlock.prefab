@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 6178518541478117314}
   - component: {fileID: 7912269073816853703}
   - component: {fileID: 4748270887142720416}
+  - component: {fileID: 4269193269137245047}
   m_Layer: 5
   m_Name: OutBlock
   m_TagString: Untagged
@@ -113,11 +114,11 @@ RectTransform:
   - {fileID: 8004733292995762167}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.5}
-  m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 50, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 150, y: 150}
-  m_Pivot: {x: 0, y: 0.5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7912269073816853703
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -148,6 +149,23 @@ MonoBehaviour:
   inLabel: {fileID: 0}
   outLabel: {fileID: 5717557188470550899}
   blockUIData: {fileID: 11400000, guid: 7ca934e85da405b4d9fe49a2d278858a, type: 2}
+  uiColorEcho: {fileID: 4269193269137245047}
+--- !u!114 &4269193269137245047
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376644905236940984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1482f7f10d9500643b2c70930f12405b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetColor: {r: 0.3137255, g: 0.50980395, b: 0.42352942, a: 1}
+  image: {fileID: 5425128018446129671}
+  duration: 1
+  active: 0
 --- !u!1 &1986960601781001169
 GameObject:
   m_ObjectHideFlags: 0

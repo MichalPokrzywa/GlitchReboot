@@ -1,15 +1,22 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class VariableChangePlatform : MonoBehaviour
+public class VariableChangePlatform : VariablePlatformBase
 {
     public VariableType type;
-
     public List<GameObject> platformType;
 
-    private VariableDice dice = null;
     [SerializeField] private Transform dicePosition;
+
+    private VariableDice dice = null;
+
+    public override void Awake()
+    {
+        base.Awake();
+    }
+
     void Start()
     {
         foreach (GameObject o in platformType)
@@ -25,10 +32,15 @@ public class VariableChangePlatform : MonoBehaviour
                 platformType[(int)VariableType.Boolean].SetActive(true);
                 break;
         }
+
+        UpdateEntityNameSuffix();
     }
 
-    public void ReceiveValue(VariableDice dice)
+    public override void ReceiveValue(object obj)
     {
+        if (obj is not VariableDice dice)
+            return;
+
         // Handle the received value
         if (type == dice.type)
         {
@@ -65,14 +77,14 @@ public class VariableChangePlatform : MonoBehaviour
         }
     }
 
-    public void EndModification()
+    public override void ClearValue()
     {
         dice = null;
     }
 
-    public void MoveObjectToPosition(GameObject gameObject)
+    public override void MoveObjectToPosition(GameObject go)
     {
-        Rigidbody rb = gameObject.GetComponent<Rigidbody>();
+        Rigidbody rb = go.GetComponent<Rigidbody>();
         rb.useGravity = false;
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
@@ -83,5 +95,10 @@ public class VariableChangePlatform : MonoBehaviour
                 rb.angularVelocity = Vector3.zero;
                 rb.useGravity = true;
             });
+    }
+
+    public override void UpdateEntityNameSuffix()
+    {
+        entityNameSuffix = "Value change " +  type.ToString();
     }
 }

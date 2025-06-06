@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
-public class VariableDice : MonoBehaviour
+public class VariableDice : EntityBase
 {
     public VariableType type;
     public List<TMP_Text> textList;
@@ -14,10 +15,22 @@ public class VariableDice : MonoBehaviour
     [SerializeField] private GameObject baseGameObjectValue; // Initial value for Boolean
 
     private IVariableValueHandler handler;
+    bool onPlatform = false;
+
+    void Awake()
+    {
+        EntityManager.instance.Register<VariableDice>(this);
+    }
 
     void Start()
     {
         InitializeHandler();
+        UpdateEntityNameSuffix();
+    }
+
+    public override void UpdateEntityNameSuffix()
+    {
+        entityNameSuffix = ": " + GetCurrentValue().ToString();
     }
 
     void InitializeHandler()
@@ -64,61 +77,47 @@ public class VariableDice : MonoBehaviour
         {
             handler.UpdateTextValue(text,false);
         }
+        UpdateEntityNameSuffix();
     }
-    private void OnTriggerEnter(Collider other)
+
+    private void OnTriggerStay(Collider other)
     {
         //DependencyManager.audioManager.PlaySound(Sound.None);
         // Check if the other object is on the correct layer
-        if (other.gameObject.layer == LayerMask.NameToLayer("VariablePlatform"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("VariablePlatform")
+            || other.gameObject.layer == LayerMask.NameToLayer("VariableChangePlatform"))
         {
-            // Check if the other object has a VariablePlatform component
-            VariablePlatform platform = other.gameObject.GetComponent<VariablePlatform>();
-            if (platform != null)
+            var pickUpObject = GetComponent<PickUpObjectInteraction>();
+            VariablePlatformBase platform = other.gameObject.GetComponent<VariablePlatformBase>();
+
+            if (platform != null && !onPlatform && pickUpObject.IsDropped)
             {
-                GetComponent<PickUpObjectInteraction>().DropMe();
+                Debug.Log("ON PLATFORM!");
+                onPlatform = true;
                 platform.MoveObjectToPosition(this.gameObject);
-                // Get the dice's current value and send it to the platform
-                object currentValue = handler?.GetValue();
+
+                object currentValue = this;
+                if (platform is VariablePlatform)
+                    currentValue = handler?.GetValue();
+
                 platform.ReceiveValue(currentValue);
             }
         }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("VariableChangePlatform"))
-        {
-            VariableChangePlatform platform = other.gameObject.GetComponent<VariableChangePlatform>();
-            if (platform != null)
-            {
-                GetComponent<PickUpObjectInteraction>().DropMe();
-                platform.MoveObjectToPosition(this.gameObject);
-                // Get the dice and send it to the platform
-                platform.ReceiveValue(this);
-
-            }
-        }
-
     }
 
     private void OnTriggerExit(Collider other)
     {
         // Check if the other object is on the correct layer
-        if (other.gameObject.layer == LayerMask.NameToLayer("VariablePlatform"))
+        if (other.gameObject.layer == LayerMask.NameToLayer("VariablePlatform")
+            || other.gameObject.layer == LayerMask.NameToLayer("VariableChangePlatform"))
         {
-            // Check if the other object has a VariablePlatform component
-            VariablePlatform platform = other.gameObject.GetComponent<VariablePlatform>();
-            if (platform != null)
+            VariablePlatformBase platform = other.gameObject.GetComponent<VariablePlatformBase>();
+            if (platform != null && onPlatform)
             {
-                // Clear the value on the platform when the trigger is exited
+                Debug.Log("EXIT PLATFORM!");
+                onPlatform = false;
                 platform.ClearValue();
             }
         }
-        else if (other.gameObject.layer == LayerMask.NameToLayer("VariableChangePlatform"))
-        {
-            VariableChangePlatform platform = other.gameObject.GetComponent<VariableChangePlatform>();
-            if (platform != null)
-            {
-                // Get the dice and send it to the platform
-                platform.EndModification();
-            }
-        }
     }
-
 }
