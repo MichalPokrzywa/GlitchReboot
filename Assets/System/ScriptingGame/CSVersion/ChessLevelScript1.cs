@@ -17,6 +17,7 @@ public class ChessLevelScript1 : PuzzleBase
     
     public override void DoTerminalCode()
     {
+        Debug.Log("Szachowy Terminal1");
         if (!once) return;
         
         int platforms = GetVariableValue<int>("platform_num");
@@ -32,7 +33,7 @@ public class ChessLevelScript1 : PuzzleBase
             //nextPlatform.transform.position = platform.transform.position;
             nextPlatform.SetActive(true);
 
-            nextPlatform.GetComponentInChildren<MovingPlatform>().rotate = platforms / 10;
+            //nextPlatform.GetComponentInChildren<MovingPlatform>().zAxisReverie = platforms / 10;
 
             nextPlatform.GetComponentInChildren<MovingPlatform>().waypoints.First().transform.position = 
                 nextPlatform.GetComponentInChildren<MovingPlatform>().waypoints.First().transform.position + new Vector3 (i* delta, 0.0f, 0.0f);
