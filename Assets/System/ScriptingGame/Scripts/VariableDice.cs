@@ -13,7 +13,7 @@ public class VariableDice : EntityBase
     [SerializeField] private bool baseBooleanValue = false; // Initial value for Boolean
     [SerializeField] private string baseStringValue = ""; // Initial value for Boolean
     [SerializeField] private GameObject baseGameObjectValue; // Initial value for Boolean
-
+    [SerializeField] private TextColorLooper colorLooper;
     private IVariableValueHandler handler;
     bool onPlatform = false;
 
@@ -25,6 +25,8 @@ public class VariableDice : EntityBase
     void Start()
     {
         InitializeHandler();
+        colorLooper = GetComponent<TextColorLooper>();
+        colorLooper.textList = textList;
         UpdateEntityNameSuffix();
     }
 
@@ -90,17 +92,24 @@ public class VariableDice : EntityBase
             var pickUpObject = GetComponent<PickUpObjectInteraction>();
             VariablePlatformBase platform = other.gameObject.GetComponent<VariablePlatformBase>();
 
-            if (platform != null && !onPlatform && pickUpObject.IsDropped)
+            if (platform != null && !onPlatform && pickUpObject.IsDropped )
             {
                 Debug.Log("ON PLATFORM!");
                 onPlatform = true;
-                platform.MoveObjectToPosition(this.gameObject);
-
                 object currentValue = this;
                 if (platform is VariablePlatform)
                     currentValue = handler?.GetValue();
 
+                if (platform.type != type) 
+                    return;
+
+                if(platform.assignedObject != null)
+                    return;
+
                 platform.ReceiveValue(currentValue);
+                platform.AssignObjectToPlatform(this.gameObject);
+                platform.MoveObjectToPosition(this.gameObject);
+                colorLooper.StartLoop();
             }
         }
     }
@@ -116,7 +125,11 @@ public class VariableDice : EntityBase
             {
                 Debug.Log("EXIT PLATFORM!");
                 onPlatform = false;
-                platform.ClearValue();
+                if (platform.assignedObject == this.gameObject)
+                {
+                    platform.ClearValue();
+                    colorLooper.StopLoop();
+                }
             }
         }
     }

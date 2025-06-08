@@ -29,15 +29,28 @@ public class Destructable : MonoBehaviour
     }
 
 
-    private void Explode(Rigidbody objectThrown)
+    public void Explode(Rigidbody objectThrown)
     {
         //Destroy(Rigidbody);
-        GetComponent<Collider>().enabled = false;
-        wholePrefab.GetComponent<Renderer>().enabled = false;
+        if(GetComponent<Collider>() != null)
+            GetComponent<Collider>().enabled = false;
+
+        if (wholePrefab.GetComponent<Renderer>() != null)
+        {
+            wholePrefab.GetComponent<Renderer>().enabled = false;
+
+        }
+        else
+        {
+            foreach (var renderer in wholePrefab.GetComponentsInChildren<Renderer>())
+            {
+                renderer.enabled = false;
+            }
+        }
 
 
         //ameObject brokenInstance = Instantiate(BrokenPrefab, transform.position, transform.rotation);
-        wholePrefab.SetActive(true);
+        wholePrefab.SetActive(false);
         brokenPrefab.SetActive(true);
         Rigidbody[] rigidbodies = brokenPrefab.GetComponentsInChildren<Rigidbody>();
 
@@ -47,6 +60,10 @@ public class Destructable : MonoBehaviour
             {
                 // inherit velocities
                 body.linearVelocity = objectThrown.linearVelocity;
+            }
+            else
+            {
+                body.linearVelocity = Vector3.forward * 10;
             }
             body.AddExplosionForce(ExplosiveForce, transform.position, ExplosiveRadius);
         }
