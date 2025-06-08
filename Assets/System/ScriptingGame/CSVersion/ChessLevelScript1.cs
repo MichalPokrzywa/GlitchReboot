@@ -60,6 +60,8 @@ public class ChessLevelScript1 : PuzzleBase
         {
             GameObject nextPlatform = Instantiate(platform);
 
+            nextPlatform.transform.position = platform.transform.position;
+
             platformList.Add(nextPlatform);
 
             //nextPlatform.transform.position = platform.transform.position;
