@@ -9,13 +9,13 @@ public class StairsTerminalLevel2 : PuzzleBase
 {
     [Header("PuzzleItems")]
     [SerializeField] private List<GameObject> waypoints;
-    [SerializeField] private Transform Stairs;
+    [SerializeField] private Transform stairs;
     private Vector3 basicPosition;
     public GameObject waypointParent; // Obiekt zawieraj¹cy waypointy
 
     public void Awake()
     {
-        basicPosition = Stairs.transform.position;
+        basicPosition = stairs.transform.position;
     }
 
     protected override void Start()
@@ -24,7 +24,7 @@ public class StairsTerminalLevel2 : PuzzleBase
         waypoints = new List<GameObject>(); // Inicjalizujemy listê, na wszelki wypadek
         if (waypointParent == null)
         {
-            // Debug.LogError("Stairs: waypointParent nie zosta³ przypisany w Inspektorze!");
+            // Debug.LogError("stairs: waypointParent nie zosta³ przypisany w Inspektorze!");
             return; // Przerywamy dzia³anie, jeœli nie ma rodzica
         }
 
@@ -63,32 +63,32 @@ public class StairsTerminalLevel2 : PuzzleBase
         int iteration = 0;
         foreach (GameObject waypoint in waypoints)
         {
-            Vector3 newPosition = Stairs.position + new Vector3(
+            Vector3 newPosition = stairs.position + new Vector3(
                 platformx * iteration,
                 platformy * iteration,
                 platformz * iteration
             );
             waypoint.transform.position = newPosition;
-            // Debug.Log("Stairs: Ustawiono pozycjê waypointa " + waypoint.name + " na: " + newPosition);
+            // Debug.Log("stairs: Ustawiono pozycjê waypointa " + waypoint.name + " na: " + newPosition);
             iteration++;
         }
     }
-    // Coroutine, która „przesuwa” obiekt Stairs z pozycji startowej do targetPosition w czasie duration.
+    // Coroutine, która „przesuwa” obiekt stairs z pozycji startowej do targetPosition w czasie duration.
     private IEnumerator SmoothMoveStairs(Vector3 targetPosition, float duration)
     {
-        Vector3 startPosition = Stairs.position;
+        Vector3 startPosition = stairs.position;
         float timeElapsed = 0f;
 
         while (timeElapsed < duration)
         {
             // Vector3.Lerp interpoluje liniowo miêdzy start a target.
-            Stairs.position = Vector3.Lerp(startPosition, targetPosition, timeElapsed / duration);
+            stairs.position = Vector3.Lerp(startPosition, targetPosition, timeElapsed / duration);
             timeElapsed += Time.deltaTime;
             yield return null;  // Czekamy do nastêpnej klatki
         }
 
         // Upewniamy siê, ¿e obiekt trafia dok³adnie do docelowej pozycji.
-        Stairs.position = targetPosition;
+        stairs.position = targetPosition;
     }
 
 }
