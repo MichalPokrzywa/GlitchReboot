@@ -58,6 +58,7 @@ public class TabletTerminal : Singleton<TabletTerminal>
 
     public void OnSwitchButtonClicked()
     {
+        Debug.Log("TUUU");
         blocksPanelOn = !blocksPanelOn;
         blocksPanel.SetActive(blocksPanelOn);
     }
