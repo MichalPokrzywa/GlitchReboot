@@ -5,6 +5,8 @@ public class GlitchSwitcher : MonoBehaviour
 {
     public Material glitchMaterial; // The material used for the glitch effect
     public bool glitchOnStart;
+    public float strenght = -0.15f;
+    public bool checkerBoxes = true;
     private class RendererInfo
     {
         public Renderer renderer;
@@ -56,6 +58,12 @@ public class GlitchSwitcher : MonoBehaviour
                     // Optionally copy color to preserve tint
                     if (originalMat.HasProperty("_Color"))
                         glitchCopy.SetColor("_Color", originalMat.GetColor("_Color"));
+
+                    if(glitchCopy.HasProperty("_GlitchInvertedStrength"))
+                        glitchCopy.SetFloat("_GlitchInvertedStrength", strenght);
+
+                    if (glitchCopy.HasProperty("_CheckerBoardGlitchBool"))
+                        glitchCopy.SetInt("_CheckerBoardGlitchBool", checkerBoxes ? 1 : 0);
 
                     glitchMats[i] = glitchCopy;
                 }
