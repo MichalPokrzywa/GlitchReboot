@@ -24,14 +24,20 @@ public class TutorialLevel2 : PuzzleBase
         if (name == "Stairs")
         {
             //TODO: Change it to stopping glitching 
+            stairs.GetComponent<GlitchSwitcher>().ApplyGlitch(show);
             if (!show)
             {
                 stairs.transform.DOMoveY(1-position,1f);
             }
+            else
+            {
+                stairs.transform.DOMoveY(1, 1f);
+                
+            }
         }
         else
         {
-            stairs.SetActive(show);
+            stairs.GetComponent<GlitchSwitcher>().ApplyGlitch(true);
             stairs.transform.DOMoveY(1, 1f);
         }
     }
