@@ -45,6 +45,18 @@ public class SpiderProceduralAnimation : MonoBehaviour
         lastBodyPos = transform.position;
     }
 
+    void OnEnable()
+    {
+        for (int i = 0; i < nbLegs; ++i)
+        {
+            // initialize last positions to ground-sampled default
+            lastLegPositions[i] = SampleGround(transform.TransformPoint(defaultLegPositions[i]));
+            legMoving[i] = false;
+            legTargets[i].position = lastLegPositions[i];
+        }
+        lastBodyPos = transform.position;
+    }
+
     IEnumerator PerformStep(int index, Vector3 targetPoint)
     {
         Vector3 startPos = lastLegPositions[index];

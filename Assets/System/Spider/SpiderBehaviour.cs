@@ -13,7 +13,7 @@ public class SpiderBehaviour : MonoBehaviour
     }
 
     [Serializable]
-    class TargetData
+    public class TargetData
     {
         public Transform target;
         [Range(0, 1.5f)]
@@ -24,13 +24,19 @@ public class SpiderBehaviour : MonoBehaviour
         public float minBodyHeight;
         public float waitTime = 0f;
         public Emotion emotion;
+        [TextArea(5,10)]
         public string speech;
         public int voiceKey;
+        public bool teleportToNext = false;
+        [HideInInspector]
+        public bool isDone = false;
+        public bool overrideStep = false;
     }
 
     [Header("References")]
     [SerializeField] SpiderProceduralAnimation spiderAnim;
     [SerializeField] GameObject player;
+    [SerializeField] GlitchSwitcher glitchSwitcher;
     [SerializeField] List<GameObject> eyebrowsHappy;
     [SerializeField] List<GameObject> eyebrowsAngry;
     [SerializeField] RectTransform smile;
@@ -40,56 +46,156 @@ public class SpiderBehaviour : MonoBehaviour
     [SerializeField] bool loop = false;
     [SerializeField] List<TargetData> targetData = new List<TargetData>();
 
+    [Header("Glitch Settings")]
+    [SerializeField] float glitchDuration = 0.5f;  // seconds of glitch effect
+
     int currentTargetIndex = 0;
     bool playAtStart = false;
     bool isWaiting = false;
-    bool isMovementActive = true;
-    bool lookAtTarget = false;
+    bool isMovementActive = false;
+    bool isTalking = false;
 
     const float targetDistThreshold = 0.01f;
-
     void Start()
     {
-        if (targetData.Count > 0)
+        if (targetData.Count == 0)
         {
-            playAtStart = true;
-
-            SetAnimationData(targetData[0]);
-            SetEmotion(targetData[0].emotion);
-            if (!string.IsNullOrEmpty(targetData[0].speech))
-                NarrativeSystem.Instance.SetText(targetData[0].speech);
-            if (targetData[0].voiceKey != 0)
-                NarrativeSystem.Instance.Play(targetData[0].voiceKey);
+            Debug.LogWarning("No targets assigned to SpiderBehaviour. Staying in Place");
+            isWaiting = true;
+            return;
         }
-        else
+
+        // Teleport spider to first waypoint at start
+        currentTargetIndex = 0;
+        Transform first = targetData[0].target;
+        transform.position = first.position;
+        SetAnimationData(targetData[0]);
+        SetEmotion(targetData[0].emotion);
+
+        // Ensure glitch is off initially
+        glitchSwitcher.ApplyGlitch(false);
+
+        // Assign triggers to target colliders
+        foreach (var data in targetData)
         {
-            isMovementActive = false;
+            TargetTrigger trigger = data.target.GetComponent<TargetTrigger>();
+            if (trigger == null)
+            {
+                trigger = data.target.gameObject.AddComponent<TargetTrigger>();
+            }
+
+            trigger.Setup(this, data);
         }
     }
-
     void Update()
     {
-        if (isWaiting || !isMovementActive)
+        if ((isWaiting || isTalking) && !isMovementActive)
         {
             RotateTowards(player.transform.position);
             return;
         }
+    }
 
-        if (!isMovementActive || targetData.Count == 0)
-            return;
+    public void OnPlayerEnterTarget(TargetData data)
+    {
+        if (!isTalking)
+            StartCoroutine(HandleTargetReached(data));
+        else if (data.overrideStep)
+        {
+            data.overrideStep = false;
+            StopAllCoroutines();
+            StartCoroutine(SkipToSteps(data));
+        }
+    }
 
-        TargetData current = targetData[currentTargetIndex];
-        Vector3 targetPos = current.target.position;
+    IEnumerator SkipToSteps(TargetData data)
+    {
+        currentTargetIndex = targetData.FindIndex(td => td == data);
+        for (int i = currentTargetIndex-1; i > 0; i--)
+        {
+            targetData[i].isDone = true;
+        }
 
-        MoveTowards(targetPos, current.speed);
+        glitchSwitcher.ApplyGlitch(true);
+        spiderAnim.enabled = false;
+        transform.position = data.target.position;
+        SetAnimationData(data);
+        SetEmotion(data.emotion);
+        spiderAnim.enabled = true;
+        yield return new WaitForSeconds(glitchDuration);
+        glitchSwitcher.ApplyGlitch(false);
+        StartCoroutine(HandleTargetReached(data));
+    }
 
-        float dist = Vector3.Distance(transform.position, targetPos);
+    IEnumerator HandleTargetReached(TargetData data)
+    {
+        if(data.isDone)
+            yield break;
+        if(targetData[currentTargetIndex] != data)
+            yield break;
+        isWaiting = false;
+        data.overrideStep = false;
+        isTalking = true;
+        if (!string.IsNullOrEmpty(data.speech))
+            NarrativeSystem.Instance.SetText(data.speech);
+        if (data.voiceKey != 0)
+            NarrativeSystem.Instance.Play(data.voiceKey);
 
-        if (dist > targetDistThreshold * 50f)
-            RotateTowards(targetPos);
+        yield return new WaitForSeconds(data.waitTime);
+        data.isDone = true;
+        isMovementActive = true;
 
-        if (dist < targetDistThreshold)
-            StartCoroutine(WaitAtWaypoint(current));
+        int nextIndex = currentTargetIndex + 1;
+        if (nextIndex >= targetData.Count)
+        {
+            if (loop) nextIndex = 0;
+            else
+            {
+                isWaiting = true;
+                isTalking = false;
+                isMovementActive = false;
+                yield break;
+            }
+        }
+
+        TargetData nextData = targetData[nextIndex];
+
+        if (data.teleportToNext)
+        {
+            glitchSwitcher.ApplyGlitch(true);
+            yield return new WaitForSeconds(glitchDuration);
+            spiderAnim.enabled = false;
+            transform.position = nextData.target.position;
+            SetAnimationData(nextData);
+            SetEmotion(nextData.emotion);
+            spiderAnim.enabled = true;
+            yield return new WaitForSeconds(glitchDuration);
+            glitchSwitcher.ApplyGlitch(false);
+        }
+        else
+        {
+            // Walk towards the next target
+            while (Vector3.Distance(transform.position, nextData.target.position) > targetDistThreshold * 50f)
+            {
+                MoveTowards(nextData.target.position, nextData.speed);
+                RotateTowards(nextData.target.position);
+
+                yield return null;
+            }
+
+            SetAnimationData(nextData);
+            SetEmotion(nextData.emotion);
+        }
+
+        currentTargetIndex = nextIndex;
+        isWaiting = true;
+        isTalking = false;
+        isMovementActive = false;
+        if (targetData[nextIndex].target.TryGetComponent(out BoxCollider box) == false)
+        {
+            StartCoroutine(HandleTargetReached(targetData[nextIndex]));
+        }
+        
     }
 
     void MoveTowards(Vector3 targetPos, float speed)
@@ -143,41 +249,5 @@ public class SpiderBehaviour : MonoBehaviour
     {
         spiderAnim.smoothness = data.animSmoothness;
         spiderAnim.minBodyHeight = data.minBodyHeight;
-    }
-
-    IEnumerator WaitAtWaypoint(TargetData data)
-    {
-        isWaiting = true;
-
-        if (!playAtStart)
-        {
-            if (!string.IsNullOrEmpty(data.speech))
-                NarrativeSystem.Instance.SetText(data.speech);
-            if (data.voiceKey != 0)
-                NarrativeSystem.Instance.Play(data.voiceKey);
-        }
-
-        playAtStart = false;
-
-        yield return new WaitForSeconds(data.waitTime);
-
-        currentTargetIndex++;
-        if (currentTargetIndex >= targetData.Count)
-        {
-            currentTargetIndex = 0;
-            if (!loop)
-            {
-                isMovementActive = false;
-            }
-        }
-
-        isWaiting = false;
-
-        if (currentTargetIndex == 0 && !loop)
-            yield break;
-
-        SetAnimationData(targetData[currentTargetIndex]);
-        SetEmotion(targetData[currentTargetIndex].emotion);
-
     }
 }
