@@ -4,7 +4,6 @@ public class RepositionScript : MonoBehaviour
 {
     public GameObject rePosition;
     
-
     public void OnCollisionEnter(Collision collision)
     {
         if (rePosition != null && collision.gameObject.CompareTag("Player")) 
