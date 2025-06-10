@@ -13,7 +13,7 @@ public class TargetTrigger : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && !isEntered && !spider.isTalking)
+        if (other.CompareTag("Player") && !isEntered && (!spider.isTalking || data.overrideStep))
         {
             isEntered = true;
             spider.OnPlayerEnterTarget(data);
