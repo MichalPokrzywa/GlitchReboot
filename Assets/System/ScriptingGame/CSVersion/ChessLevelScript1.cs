@@ -32,8 +32,11 @@ public class ChessLevelScript1 : PuzzleBase
         Debug.Log("Szachowy Terminal1");
         int platforms = GetVariableValue<int>("platform_num");
         
-        if (platforms == savedPlatforms) return;   
-        
+        if (platforms == savedPlatforms) return;
+
+        if (platforms >= 26)
+            platforms = 26;
+
         if (savedPlatforms > 0) 
         { 
             for (int i = 0; i < platformList.Count; i++) 
@@ -60,7 +63,7 @@ public class ChessLevelScript1 : PuzzleBase
                 speed += 0.2f;
             }
             if (punish < 2)
-                punish = 1.0f;
+                punish = 1.8f;
         }
 
         for (int i = 1; i < platforms; i++)
