@@ -21,7 +21,7 @@ namespace GhostProgramming
                 return false;
             }
 
-            InteractionDistance dist = InteractionDistance.Average;
+            InteractionDistance dist = InteractionDistance.Mid;
             if (nextNode is MarkerPointNode)
                 dist = InteractionDistance.Close;
             else if (nextNode is CubeNode)
