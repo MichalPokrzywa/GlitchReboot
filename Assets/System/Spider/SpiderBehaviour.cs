@@ -84,6 +84,11 @@ public class SpiderBehaviour : MonoBehaviour
                 trigger = data.target.gameObject.AddComponent<TargetTrigger>();
             }
 
+            if (data.target.TryGetComponent(out BoxCollider box))
+            {
+                box.isTrigger = true;
+            }
+
             trigger.Setup(this, data);
         }
     }
@@ -115,7 +120,9 @@ public class SpiderBehaviour : MonoBehaviour
         {
             targetData[i].isDone = true;
         }
-
+        isWaiting = true;
+        isTalking = false;
+        isMovementActive = false;
         glitchSwitcher.ApplyGlitch(true);
         spiderAnim.enabled = false;
         transform.position = data.target.position;
