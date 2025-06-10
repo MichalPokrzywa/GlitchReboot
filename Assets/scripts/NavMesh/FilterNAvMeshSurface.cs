@@ -13,4 +13,11 @@ public class FilterNavMeshSurface : MonoBehaviour
         surface.layerMask = layerMask;
         surface.BuildNavMesh();
     }
+
+    public void ReBuildNavMesh()
+    {
+        var surface = GetComponent<NavMeshSurface>();
+        surface.layerMask = layerMask;
+        surface.BuildNavMesh();
+    }
 }
