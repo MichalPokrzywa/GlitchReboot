@@ -5,9 +5,15 @@ public class WagonController : MonoBehaviour
     [Header("Settings")]
     public Transform leader;
     public float followDistance = 5f;
-    public RailPath railPath;
+    private RailPath railPath;
 
     private float currentProgress;
+
+    private void Start()
+    {
+        Transform parent = transform.parent.parent;
+        railPath = parent.Find("locomotive").GetComponent<TrainController>().GetRailPath();
+    }
 
 
     void Update()
@@ -53,5 +59,10 @@ public class WagonController : MonoBehaviour
         Vector3 direction = railPath.GetPosition(lookAhead) - transform.position;
         if (direction != Vector3.zero)
             transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    public RailPath GetRailPath()
+    {
+        return railPath;
     }
 }

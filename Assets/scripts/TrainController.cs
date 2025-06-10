@@ -70,4 +70,9 @@ public class TrainController : MonoBehaviour
     {
         drive = newState;
     }
+
+    public RailPath GetRailPath()
+    {
+        return railPath;
+    }
 }
