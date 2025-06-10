@@ -5,6 +5,7 @@ using DG.Tweening;
 using System.Linq;
 using Unity.VisualScripting;
 using System.Collections.Generic;
+using System.Collections;
 
 public class ChessLevelScript1 : PuzzleBase
 {
@@ -12,6 +13,12 @@ public class ChessLevelScript1 : PuzzleBase
     public GameObject platform; 
     [Header("DestinationObject")]
     public GameObject destination;
+
+    [Header("PieceToMove")]
+    public GameObject pieceToMove;
+    [Header("PieceToRemove")]
+    public GameObject pieceToRemove;
+    private bool once = true;
 
     private Vector3 destPos;
     private int optimalVal = 13;
@@ -78,7 +85,18 @@ public class ChessLevelScript1 : PuzzleBase
             nextPlatform.GetComponentInChildren<MovingPlatform>().startMoving = true;
             
         }
-        //Destroy(platform.gameObject);
+        if (once)
+        {
+            once = false;
+            Vector3 newPosition = pieceToMove.transform.position + new Vector3(20, 0, 20);
+            pieceToMove.transform.DOMove(newPosition, 5, false);
+            StartCoroutine(DelayedDeactivate(pieceToRemove, 3.5f));
+        }
+    }
+    private IEnumerator DelayedDeactivate(GameObject obj, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        obj.SetActive(false);
     }
 }
 
