@@ -9,17 +9,15 @@ public class MovingPlatform : ParentOnTrigger, IActivatable
     public float moveInterval = 1f; // Czas pomiędzy ruchem do następnego waypointa
     public float stoppingDistance = 0.1f; // Dystans, przy którym uznajemy, że dotarliśmy do celu
     public bool startMoving = false; // Flaga do rozpoczęcia ruchu
-    public float zOscilation = 0.0f;
+    public float zOscillationSpeed = 0.0f;
+    public float maxZOscilation = 0.0f;
 
     public List<Transform> waypoints; // Lista waypointów
     private int index = 0; // Indeks aktualnego waypointa
     private float timer;
     private bool objectInMotion = false;
-    public bool ZOscilationDirection = true;
-    public float zStartingPosition;
-    public float zOscilationPosition;
-    public float zOscilationNegativePosition;
-    private float maxZOscilation = 10.0f;
+    private Vector3 basePosition;
+    
 
     public void Activate()
     {
@@ -41,12 +39,8 @@ public class MovingPlatform : ParentOnTrigger, IActivatable
         }
 
         timer = moveInterval; // Ustawienie początkowego timera
-        if (zOscilation > 0.1f)
-        {
-            zStartingPosition = gameObject.transform.position.z;
-            zOscilationPosition = zStartingPosition + zOscilation;
-            zOscilationNegativePosition = zStartingPosition - zOscilation;
-        }
+
+        basePosition = transform.position;
     }
 
     void FixedUpdate()
@@ -60,19 +54,26 @@ public class MovingPlatform : ParentOnTrigger, IActivatable
 
         if (objectInMotion && waypoints.Count > 0)
         {
-            Move(); // Wywołanie metody poruszania się
+            MoveWithZOscilation(); // Wywołanie metody poruszania się
         }
-        
-        if (zOscilation > 0.1f)
+        else
+        {
             ZOscilate();
-        
+        }        
     }
 
-    private void Move()
+    private void MoveWithZOscilation()
     {
         // Obliczenie kierunku i przesunięcie obiektu w stronę waypointa
         Vector3 targetPosition = waypoints[index].position;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, moveSpeed * Time.deltaTime);
+
+        basePosition = Vector3.MoveTowards(basePosition, targetPosition, moveSpeed * Time.deltaTime);
+
+        float zOffset = (float)Math.Sin(Time.time * zOscillationSpeed) * maxZOscilation;
+        
+        transform.position = new Vector3 (basePosition.x, basePosition.y, basePosition.z + zOffset);
+        
+        
         // Sprawdzenie, czy dotarliśmy do waypointa
         if (Vector3.Distance(transform.position, targetPosition) <= stoppingDistance)
         {
@@ -86,23 +87,7 @@ public class MovingPlatform : ParentOnTrigger, IActivatable
 
     private void ZOscilate()
     {
-        
-        if (ZOscilationDirection)
-            transform.position = Vector3.MoveTowards(transform.position, 
-                new Vector3(transform.position.x, transform.position.y, transform.position.z + maxZOscilation), 
-                moveSpeed * Time.deltaTime);
-        else
-            transform.position = Vector3.MoveTowards(transform.position,
-                new Vector3(transform.position.x, transform.position.y, transform.position.z - maxZOscilation),
-                moveSpeed * Time.deltaTime);
-        if (transform.position.z >= zOscilationPosition)
-            ZOscilationDirection = false;
-        if (transform.position.z <= zOscilationNegativePosition)
-            ZOscilationDirection = true;
-        Debug.Log("Wywoluje sie");
-        Debug.Log(transform.position.z + maxZOscilation);
-        Debug.Log(transform.position.z);
-        Debug.Log(moveSpeed);
-
+        float zOffset = Mathf.Sin(Time.time * zOscillationSpeed) * maxZOscilation;
+        transform.position = new Vector3(basePosition.x, basePosition.y, basePosition.z + zOffset);
     }
 }
