@@ -10,11 +10,15 @@ public class GhostLevel1 : PuzzleBase
     [SerializeField] private Transform stairs;
     [SerializeField] private Transform bridge;
     [SerializeField] private GameObject floor;
+    [SerializeField] private GameObject platform;
+    private Transform platformTransform;
     private Vector3 stairsBasicPosition;
     private Vector3 stairsCoverBasicPosition;
     private Vector3 bridgeBasicPosition;
+    private Vector3 platformBasicPosition;
     private bool stairsState = false;
     private bool bridgeState = false;
+    private bool platformState = false;
     private float duration = 6f;
 
     public void Awake()
@@ -22,6 +26,8 @@ public class GhostLevel1 : PuzzleBase
         stairsBasicPosition = stairs.position;
         stairsCoverBasicPosition = stairsCover.position;
         bridgeBasicPosition = bridge.position;
+        platformBasicPosition = platform.transform.Find("Waypoints").Find("Waypoint").position;
+        platformTransform = platform.transform.Find("Waypoints").Find("Waypoint").transform;
     }
 
     public override void DoTerminalCode()
@@ -32,25 +38,32 @@ public class GhostLevel1 : PuzzleBase
             StartCoroutine(SmoothMoveStairs(stairsCover, new Vector3(stairsCoverBasicPosition.x, stairsCoverBasicPosition.y, stairsCoverBasicPosition.z + 12f), duration));
             StartCoroutine(FloorGlitch(duration+0.2f));
             StartCoroutine(SmoothMoveStairs(stairs, new Vector3(stairsBasicPosition.x, stairsBasicPosition.y + 12f, stairsBasicPosition.z), duration));
-        }
-        else if (GetVariableValue<bool>("BridgePlatform"))
+        }else if (GetVariableValue<bool>("BridgePlatform"))
         {
             bridgeState = true;
             StartCoroutine(SmoothMoveStairs(bridge, new Vector3(bridgeBasicPosition.x, bridgeBasicPosition.y, bridgeBasicPosition.z + 18f), duration));
             StartCoroutine(BridgeGlitch(duration + 0.2f));
-        }
-        else if (!GetVariableValue<bool>("StairsPlatform") && stairsState)
+        }else if (!GetVariableValue<bool>("StairsPlatform") && stairsState)
         {
             stairsState = false;
             StartCoroutine(SmoothMoveStairs(stairsCover, new Vector3(stairsCoverBasicPosition.x, stairsCoverBasicPosition.y, stairsCoverBasicPosition.z ), duration));
             StartCoroutine(FloorGlitch(duration + 0.2f));
             StartCoroutine(SmoothMoveStairs(stairs, new Vector3(stairsBasicPosition.x, stairsBasicPosition.y , stairsBasicPosition.z), duration));
-        }
-        else if (!GetVariableValue<bool>("BridgePlatform") && bridgeState)
+        }else if (!GetVariableValue<bool>("BridgePlatform") && bridgeState)
         {
             bridgeState = false;
             StartCoroutine(SmoothMoveStairs(bridge, new Vector3(bridgeBasicPosition.x, bridgeBasicPosition.y, bridgeBasicPosition.z ), duration));
             StartCoroutine(BridgeGlitch(duration + 0.2f));
+        }else if (GetVariableValue<bool>("MovingPlatform"))
+        {
+            platformState = true;
+            platformTransform.position += new Vector3(0f, 0f, 16f);
+            Debug.Log(platform.transform.position);
+            Debug.Log(platformTransform.position);
+        }else if(!GetVariableValue<bool>("MovingPlatform") && platformState)
+        {
+            platformState = false;
+            platformTransform.position = platformBasicPosition;
         }
     }
 
