@@ -44,7 +44,7 @@ public class MarkerPointsSpawner : MonoBehaviour
             marker.SetTarget(target);
             int number = i + 1;
             marker.SetText(number.ToString());
-            float intensityValue = 18f;
+            float intensityValue = 3f;
             Color color = markerColors[i % markerColors.Length] * intensityValue;
             marker.SetColor(color);
             markerPoints.Add(marker);

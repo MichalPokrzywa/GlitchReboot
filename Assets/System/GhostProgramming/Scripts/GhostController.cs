@@ -350,7 +350,7 @@ public class GhostController : EntityBase
     void SetColor()
     {
         Color color;
-        float intensity = 5f;
+        float intensity = 1f;
 
         switch (entityId)
         {
