@@ -53,7 +53,7 @@ public class SpiderBehaviour : MonoBehaviour
     bool playAtStart = false;
     bool isWaiting = false;
     bool isMovementActive = false;
-    bool isTalking = false;
+    public bool isTalking = false;
 
     const float targetDistThreshold = 0.01f;
     void Start()
