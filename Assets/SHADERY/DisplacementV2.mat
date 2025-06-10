@@ -38,7 +38,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _Texture:
-        m_Texture: {fileID: 2800000, guid: 075255e77cce1954b9646b2809210ab9, type: 3}
+        m_Texture: {fileID: 2800000, guid: 701ba2df516391c4ab98012d036efe00, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Texture2DAsset_ba78ee4dfe0c435682b0a584ccd0f013_Out_0_Texture2D:
@@ -59,9 +59,9 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CheckerBoardGlitchBool: 0
+    - _CheckerBoardGlitchBool: 1
     - _GlitchActivationBool: 1
-    - _GlitchInvertedStrength: -0.0004
+    - _GlitchInvertedStrength: 0.01
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors: []

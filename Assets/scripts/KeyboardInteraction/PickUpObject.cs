@@ -148,6 +148,7 @@ public class PickUpObjectInteraction : InteractionBase
         GetComponent<BoxCollider>().enabled = true;
         onTarget = false;
         inhand = false;
+        ownerInteractor.gameObject.layer = LayerMask.NameToLayer("Player");
         ownerInteractor.animator.SetBool("InHand", onTarget);
         ownerInteractor?.NotifyDropped(this);
         ownerInteractor = null;
@@ -184,7 +185,8 @@ public class PickUpObjectInteraction : InteractionBase
        onTarget = false;
        inhand = false;
        ownerInteractor.animator.SetBool("InHand", onTarget);
-       Vector3 dir = mainCamera.transform.forward;
+       ownerInteractor.gameObject.layer = LayerMask.NameToLayer("Player");
+        Vector3 dir = mainCamera.transform.forward;
        rb.AddForce(dir * 30f, ForceMode.Impulse);
        ownerInteractor?.NotifyDropped(this);
        ownerInteractor = null;

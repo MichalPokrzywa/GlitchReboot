@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class VariableChangePlatform : VariablePlatformBase
 {
-    public VariableType type;
     public List<GameObject> platformType;
 
     [SerializeField] private Transform dicePosition;
@@ -95,6 +94,11 @@ public class VariableChangePlatform : VariablePlatformBase
                 rb.angularVelocity = Vector3.zero;
                 rb.useGravity = true;
             });
+    }
+
+    public override void AssignObjectToPlatform(GameObject go)
+    {
+        throw new NotImplementedException();
     }
 
     public override void UpdateEntityNameSuffix()

@@ -2,101 +2,117 @@
 
 Shader "Custom/GlitchHexSkyboxNew"
 {
-Properties
+    Properties
     {
-        _Tint("Tint Color", Color) = (1,1,1,1)
+        _MainTex ("Texture", 2D) = "white" {}
+        _GlitchAmplitude ("Glitch Amplitude", Float) = 0.2
+        _GlitchNarrowness ("Glitch Narrowness", Float) = 4.0
+        _GlitchBlockiness ("Blockiness", Float) = 2.0
+        _GlitchMinimizer ("Minimizer", Float) = 5.0
+        _Resolution ("Resolution", Vector) = (1920,1080,0,0)
     }
     SubShader
     {
-        Tags { "Queue"="Transparent" "RenderType"="Opaque" }
-        Cull Off ZWrite Off
+        Tags { "RenderType"="Opaque" "RenderPipeline"="UniversalRenderPipeline" }
+        LOD 100
+
         Pass
         {
-            CGPROGRAM
+            HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-            #include "UnityCG.cginc"
+            #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
-            #define PI 3.141592
-            static const float2 helper = float2(1.0, 1.7320508);
+            sampler2D _MainTex;
+            float4 _MainTex_ST;
 
-            float4 _Tint;
+            float4 _Resolution;
+            float _GlitchAmplitude;
+            float _GlitchNarrowness;
+            float _GlitchBlockiness;
+            float _GlitchMinimizer;
+
+            float rand(float2 p, float time)
+            {
+                return frac(sin(dot(p, float2(12.9898, 78.233)) + time) * 43758.5453);
+            }
+
+            float noise(float2 uv, float blockiness, float time)
+            {
+                float2 lv = frac(uv);
+                float2 id = floor(uv);
+
+                float n1 = rand(id, time);
+                float n2 = rand(id + float2(1,0), time);
+                float n3 = rand(id + float2(0,1), time);
+                float n4 = rand(id + float2(1,1), time);
+
+                float2 u = smoothstep(0.0, 1.0 + blockiness, lv);
+                return lerp(lerp(n1, n2, u.x), lerp(n3, n4, u.x), u.y);
+            }
+
+            float fbm(float2 uv, int count, float blockiness, float complexity, float time)
+            {
+                float val = 0.0;
+                float amp = 0.5;
+
+                for (int i = 0; i < count; ++i)
+                {
+                    val += amp * noise(uv, blockiness, time);
+                    amp *= 0.5;
+                    uv *= complexity;
+                }
+
+                return val;
+            }
 
             struct appdata
             {
                 float4 vertex : POSITION;
+                float2 uv : TEXCOORD0;
             };
 
             struct v2f
             {
-                float4 pos : SV_POSITION;
-                float3 dir : TEXCOORD0;
+                float2 uv : TEXCOORD0;
+                float4 vertex : SV_POSITION;
             };
 
             v2f vert(appdata v)
             {
                 v2f o;
-                o.pos = UnityObjectToClipPos(v.vertex);
-                o.dir = normalize(mul(unity_ObjectToWorld, v.vertex).xyz);
+                o.vertex = TransformObjectToHClip(v.vertex.xyz);
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 return o;
             }
 
-            float4 getHex(float2 uv)
+            float4 frag(v2f i) : SV_Target
             {
-                float4 hexID = floor(float4(uv, uv - float2(0.5, 1.0)) / helper.xyxy) + 0.5;
-                float4 hexUV = float4(uv - hexID.xy * helper, uv - (hexID.zw + 0.5) * helper);
-                return dot(hexUV.xy, hexUV.xy) < dot(hexUV.zw, hexUV.zw)
-                    ? float4(hexUV.xy, hexID.xy)
-                    : float4(hexUV.zw, hexID.zw + 0.5);
-            }
-
-            float getHexDF(float2 uv)
-            {
-                uv = abs(uv);
-                return max(dot(uv, helper * 0.5), uv.x);
-            }
-
-            float getHexSegment(float2 uv)
-            {
-                float segIndex = atan2(uv.x, uv.y) / (PI * 2.0) + 0.5;
-                return floor(segIndex * 6.0);
-            }
-
-            fixed4 frag(v2f i) : SV_Target
-            {
-                float3 dir = normalize(i.dir);
-                float2 uv = float2(
-                    atan2(dir.x, dir.z) / (2.0 * PI) + 0.5,
-                    dir.y * 0.5 + 0.5
-                );
-                float2 localUV = uv * 2.0 - 1.0; // match original -1 to 1 range
-
-
                 float time = _Time.y;
+                float2 uv = i.uv;
+               
+                float2 uv2 = float2((uv.x * 1.5) / 2000, exp(uv.y));
+                uv2.y += time *0.4; // add vertical motion for animation
 
-                float zoom = sin(time * 0.5) * 2.0 + 8.0;
-                float4 hexGrid = getHex(localUV * zoom + float2(0.55, 0.2) * time);
-                float hexDF = getHexDF(hexGrid.xy);
-                float hexSegment = getHexSegment(hexGrid.xy);
+                float2 id = floor(uv * 8.0);
+                float shift = _GlitchAmplitude * pow(
+                    fbm(uv2, (int)(rand(id, time) * 6.0 + 1.0), _GlitchBlockiness, _GlitchNarrowness, time),
+                    _GlitchMinimizer
+                );
 
-                float feather = 0.01;
-                float3 col = 0;
+                float scanline = abs(cos(uv.y * 600.0));
+                scanline = smoothstep(0.0, 2.0, scanline);
+                shift = smoothstep(0.00001, 0.2, shift);
 
-                float direction = dot(hexGrid.zw, float2(1.0, 2.0)) * 0.1;
-                float modVal = fmod(hexSegment, 5.0);
+                float colR = tex2D(_MainTex, uv + float2(shift, 0)).r * (1.0 - shift);
+                float colG = tex2D(_MainTex, uv - float2(shift, 0)).g * (1.0 - shift) + rand(id, time) * shift;
+                float colB = tex2D(_MainTex, uv - float2(shift, 0)).b * (1.0 - shift);
 
-                float progressX = sin(time + PI * modVal + direction) * 0.5 + 0.4;
-                float progressY = sin(time + PI * modVal + direction + 0.15) * 0.5 + 0.4;
-                float progressZ = sin(time + PI * modVal + direction + 0.3) * 0.5 + 0.4;
+                float3 f = float3(colR, colG, colB) - (0.01 * scanline);
 
-                col.r = 1.0 - smoothstep(progressX, progressX + feather, hexDF);
-                col.g = 1.0 - smoothstep(progressY, progressY + feather, hexDF);
-                col.b = 1.0 - smoothstep(progressZ, progressZ + feather, hexDF);
-
-                return float4(col * _Tint.rgb, 1.0);
+                return float4(f, 1.0);
             }
-            ENDCG
+            ENDHLSL
         }
     }
-    FallBack Off
 }

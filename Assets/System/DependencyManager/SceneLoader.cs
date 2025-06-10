@@ -64,6 +64,7 @@ public enum Scene
     Initialization = 0,
     TestLevel = 1,
     MainMenu = 2,
+    Tutorial = 3
 
     //Add another scene like this ^
 }
