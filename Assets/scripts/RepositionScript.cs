@@ -9,6 +9,7 @@ public class RepositionScript : MonoBehaviour
         if (rePosition != null && collision.gameObject.CompareTag("Player")) 
         { 
             collision.gameObject.transform.position = rePosition.transform.position;
+            collision.gameObject.transform.SetParent(null);
         }
     }
 }

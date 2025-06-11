@@ -1,4 +1,6 @@
+using DG.Tweening;
 using UnityEngine;
+using System.Collections;
 
 public class ChessLevelScript2 : PuzzleBase
 {
@@ -9,7 +11,12 @@ public class ChessLevelScript2 : PuzzleBase
     public GameObject bridgeR;
 
     public GameObject navMeshSurface;
-    
+
+    public GameObject pieceToMove;
+    [Header("PieceToRemove")]
+    public GameObject pieceToRemove;
+    private bool once = true;
+
     public override void DoTerminalCode()
     {
         if (bridge1 == null || bridge2 == null || bridge3 == null || bridgeL == null || bridgeR == null)
@@ -37,6 +44,19 @@ public class ChessLevelScript2 : PuzzleBase
         bridgeL.SetActive(a && e);
 
         navMeshSurface.GetComponent<FilterNavMeshSurface>().ReBuildNavMesh();
+        if (once && a && d)
+        {
+            once = false;
+            Vector3 newPosition = pieceToMove.transform.position + new Vector3(5, 0, -5);
+            pieceToMove.transform.DOMove(newPosition, 1, false);
+            StartCoroutine(DelayedDeactivate(pieceToRemove, 0.3f));
+        }
+    }
+
+    private IEnumerator DelayedDeactivate(GameObject obj, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        obj.SetActive(false);
     }
 }
 

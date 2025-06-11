@@ -5,6 +5,7 @@ using DG.Tweening;
 using System.Linq;
 using Unity.VisualScripting;
 using System.Collections.Generic;
+using System.Collections;
 
 public class ChessLevelScript1 : PuzzleBase
 {
@@ -12,6 +13,12 @@ public class ChessLevelScript1 : PuzzleBase
     public GameObject platform; 
     [Header("DestinationObject")]
     public GameObject destination;
+
+    [Header("PieceToMove")]
+    public GameObject pieceToMove;
+    [Header("PieceToRemove")]
+    public GameObject pieceToRemove;
+    private bool once = true;
 
     private Vector3 destPos;
     private int optimalVal = 13;
@@ -25,8 +32,11 @@ public class ChessLevelScript1 : PuzzleBase
         Debug.Log("Szachowy Terminal1");
         int platforms = GetVariableValue<int>("platform_num");
         
-        if (platforms == savedPlatforms) return;   
-        
+        if (platforms == savedPlatforms) return;
+
+        if (platforms >= 26)
+            platforms = 26;
+
         if (savedPlatforms > 0) 
         { 
             for (int i = 0; i < platformList.Count; i++) 
@@ -53,7 +63,7 @@ public class ChessLevelScript1 : PuzzleBase
                 speed += 0.2f;
             }
             if (punish < 2)
-                punish = 1.0f;
+                punish = 1.8f;
         }
 
         for (int i = 1; i < platforms; i++)
@@ -78,7 +88,18 @@ public class ChessLevelScript1 : PuzzleBase
             nextPlatform.GetComponentInChildren<MovingPlatform>().startMoving = true;
             
         }
-        //Destroy(platform.gameObject);
+        if (once)
+        {
+            once = false;
+            Vector3 newPosition = pieceToMove.transform.position + new Vector3(20, 0, 20);
+            pieceToMove.transform.DOMove(newPosition, 5, false);
+            StartCoroutine(DelayedDeactivate(pieceToRemove, 3.5f));
+        }
+    }
+    private IEnumerator DelayedDeactivate(GameObject obj, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        obj.SetActive(false);
     }
 }
 
