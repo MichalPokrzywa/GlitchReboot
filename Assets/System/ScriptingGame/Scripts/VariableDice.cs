@@ -95,18 +95,18 @@ public class VariableDice : EntityBase
             // if dice is ON the platform (within the platform and not picked up by someone), assign the value
             if (platform != null && !onPlatform && pickUpObject.IsDropped)
             {
-                Debug.Log("ON PLATFORM!");
-                onPlatform = true;
-                object currentValue = this;
-                if (platform is VariablePlatform)
-                    currentValue = handler?.GetValue();
-
                 if (platform.type != type)
                     return;
 
                 if(platform.assignedObject != null)
                     return;
 
+                object currentValue = this;
+                if (platform is VariablePlatform)
+                    currentValue = handler?.GetValue();
+
+                Debug.Log("ON PLATFORM!");
+                onPlatform = true;
                 platform.ReceiveValue(currentValue);
                 platform.AssignObjectToPlatform(this.gameObject);
                 platform.MoveObjectToPosition(this.gameObject);
