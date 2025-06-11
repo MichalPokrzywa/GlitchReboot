@@ -31,7 +31,9 @@ public class VariableChangePlatform : VariablePlatformBase
                 platformType[(int)VariableType.Boolean].SetActive(true);
                 break;
         }
-
+        var rend = GetComponentInChildren<Renderer>();
+        if (rend != null)
+            rend.material.color = VariableTypeColor.GetColor(type);
         UpdateEntityNameSuffix();
     }
 
