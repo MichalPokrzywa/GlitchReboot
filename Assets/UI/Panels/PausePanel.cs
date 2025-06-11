@@ -1,20 +1,12 @@
-using DG.Tweening;
+using System;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class PausePanel : MonoBehaviour
+public class PausePanel : Panel
 {
-    [SerializeField] RectTransform contentRect;
     [SerializeField] Camera mainCamera;
     [SerializeField] Volume depthOfField;
     [SerializeField] FirstPersonController firstPersonController;
-
-    bool panelToggle = false;
-    bool animationInProgress = false;
-
-    const float scaleDuration = 0.25f;
-
-    Tween tween;
 
     void Start()
     {
@@ -41,61 +33,56 @@ public class PausePanel : MonoBehaviour
         ResetState();
     }
 
+    void OnDisable()
+    {
+        ResetState();
+    }
+
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && !animationInProgress)
+        if (Input.GetKeyDown(KeyCode.Escape))
         {
-            panelToggle = !panelToggle;
-
-            if (panelToggle)
-                OpenPanel();
-            else
-                ClosePanel();
+            TogglePanel();
         }
     }
 
-    public void ClosePanel()
+    public override void Close(Action onComplete = null)
     {
-        animationInProgress = true;
-        panelToggle = false;
+        base.Close();
         // stop the game time
         Time.timeScale = 1f;
         AudioListener.pause = false;
         firstPersonController.lockCursor = true;
         firstPersonController.StartMovement();
-        tween = contentRect.DOScale(Vector3.zero, scaleDuration).SetUpdate(true).OnComplete(() => animationInProgress = false);
         depthOfField.enabled = false;
     }
 
-    void OpenPanel()
+    public override void Open(Action onComplete = null)
     {
-        animationInProgress = true;
-        panelToggle = true;
+        base.Open(() => Time.timeScale = 0f);
         firstPersonController.lockCursor = false;
         firstPersonController.StopMovement();
         AudioListener.pause = true;
-        tween = contentRect.DOScale(new Vector3(1,1,1), scaleDuration).SetUpdate(true).OnComplete(() =>
-        {
-            Time.timeScale = 0f;
-            animationInProgress = false;
-        });
-
         depthOfField.enabled = true;
     }
 
-    void ResetState()
+    public override void ResetState()
     {
-        panelToggle = false;
-        animationInProgress = false;
-        firstPersonController.lockCursor = true;
-        firstPersonController.StartMovement();
-        AudioListener.pause = false;
-        depthOfField.enabled = false;
+        base.ResetState();
         Time.timeScale = 1f;
+        if (firstPersonController != null)
+        {
+            firstPersonController.lockCursor = true;
+            firstPersonController.StartMovement();
+        }
+        AudioListener.pause = false;
+        if (depthOfField != null)
+            depthOfField.enabled = false;
     }
 
     public void ReturnToMenu()
     {
+        // fix? scene loader?
         UnityEngine.SceneManagement.SceneManager.LoadScene(Common.MainMenuSceneName);
     }
 

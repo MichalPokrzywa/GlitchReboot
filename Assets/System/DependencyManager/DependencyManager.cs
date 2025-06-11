@@ -5,7 +5,7 @@ public class DependencyManager : MonoBehaviour
     public static AudioManager audioManager;
     public static DataManager dataManager = new DataManager();
     //public static SaveManager saveManager;
-    public static SceneLoader sceneLoader; 
+    public static SceneLoader sceneLoader;
 
     [SerializeField] Scene initiallyLoadedScene;
 
@@ -18,6 +18,11 @@ public class DependencyManager : MonoBehaviour
 
         SetResolution();
 
+        LoadInitialScene();
+    }
+
+    public void LoadInitialScene()
+    {
         sceneLoader.LoadScene(initiallyLoadedScene);
     }
 
