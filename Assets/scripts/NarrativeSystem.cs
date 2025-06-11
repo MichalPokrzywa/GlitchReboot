@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NarrativeSystem : Singleton<NarrativeSystem>
 {
@@ -11,30 +12,9 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
     [SerializeField] TextMeshProUGUI textDisplay;
     [SerializeField] float fadeDuration = 1f;
     [SerializeField] private float typeSpeed = 0.05f;
-    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
-
-    //static NarrativeSystem _instance;
 
     Coroutine runningCoroutine;
     Color startColor;
-
-    //public static NarrativeSystem instance
-    //{
-    //    get
-    //    {
-    //        if (_instance == null)
-    //        {
-    //            _instance = FindFirstObjectByType<NarrativeSystem>();
-    //            if (_instance == null)
-    //            {
-    //                GameObject singletonGO = new GameObject("NarrativeSystem (Singleton)");
-    //                _instance = singletonGO.AddComponent<NarrativeSystem>();
-    //            }
-    //        }
-
-    //        return _instance;
-    //    }
-    //}
 
     void Awake()
     {
@@ -57,12 +37,12 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
 
     public void Play(int key)
     {
-        AudioClip voice = audioClips[key - 1];
+        var audio = DependencyManager.audioManager.audioStorage.GetTutorialLevelSounds(key - 1);
 
         if (audioSource.isPlaying)
             audioSource.Stop();
 
-        audioSource.clip = voice;
+        audioSource.clip = audio;
         audioSource.Play();
     }
 
@@ -131,5 +111,17 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
         SetAlpha(0f);
         textDisplay.text = "";
         runningCoroutine = null;
+    }
+
+    public void ResetNarrative()
+    {
+        StopAllCoroutines();
+        SetAlpha(1f);
+        textDisplay.text = string.Empty;
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+            audioSource.time = 0f;
+        }
     }
 }

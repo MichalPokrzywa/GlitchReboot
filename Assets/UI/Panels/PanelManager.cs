@@ -18,9 +18,14 @@ public class PanelManager : Singleton<PanelManager>
 
     void Awake()
     {
+        if (tipsPanel == null)
+            tipsPanel = FindObjectOfType<TipsPanel>();
+
+        if (pausePanel == null)
+            pausePanel = FindObjectOfType<PausePanel>();
+
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
-        ResetFields();
     }
 
     void OnSceneUnloaded(UnityEngine.SceneManagement.Scene arg0)
@@ -31,8 +36,8 @@ public class PanelManager : Singleton<PanelManager>
 
     void OnSceneLoaded(UnityEngine.SceneManagement.Scene arg0, LoadSceneMode arg1)
     {
-        ResetFields();
         ResetPanels();
+        pausePanel.gameObject.SetActive(DependencyManager.sceneLoader.currentScene != Scene.MainMenu);
     }
 
     public void ShowTipOnce(eTipType tipType)
@@ -52,19 +57,17 @@ public class PanelManager : Singleton<PanelManager>
         closeTipCoroutine = StartCoroutine(CloseTip());
     }
 
-    void ResetPanels()
+    public void ReturnToMenu()
     {
-        shownTips?.Clear();
-        pausePanel?.ResetState();
+        DependencyManager.sceneLoader.LoadScene(Scene.MainMenu);
+        NarrativeSystem.Instance.ResetNarrative();
     }
 
-    void ResetFields()
+    void ResetPanels()
     {
-        if (tipsPanel == null)
-            tipsPanel = FindObjectOfType<TipsPanel>();
-
-        if (pausePanel == null)
-            pausePanel = FindObjectOfType<PausePanel>();
+        tipsPanel?.Close();
+        pausePanel?.Close();
+        pausePanel?.ResetState();
     }
 
     IEnumerator CloseTip()

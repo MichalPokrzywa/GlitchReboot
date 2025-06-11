@@ -8,29 +8,26 @@ public class PausePanel : Panel
     [SerializeField] Volume depthOfField;
     [SerializeField] FirstPersonController firstPersonController;
 
-    void Start()
+    bool EnsurePlayerRef()
+    {
+        if (firstPersonController == null)
+            firstPersonController = FindObjectOfType<FirstPersonController>();
+
+        return firstPersonController != null;
+    }
+
+    bool EnsureCameraRef()
     {
         if (mainCamera == null)
             mainCamera = Camera.main;
 
+        if (mainCamera == null)
+            return false;
+
         if (depthOfField == null)
-        {
-            if (!mainCamera.TryGetComponent<Volume>(out depthOfField))
-            {
-                Debug.LogError("Depth of Field Volume component not found on the main camera.");
-            }
-        }
+            mainCamera.TryGetComponent(out depthOfField);
 
-        if (firstPersonController == null)
-        {
-            firstPersonController = FindObjectOfType<FirstPersonController>();
-            if (firstPersonController == null)
-            {
-                Debug.LogError("FirstPersonController not found in the scene.");
-            }
-        }
-
-        ResetState();
+        return depthOfField != null;
     }
 
     void OnDisable()
@@ -49,21 +46,33 @@ public class PausePanel : Panel
     public override void Close(Action onComplete = null)
     {
         base.Close();
+
         // stop the game time
         Time.timeScale = 1f;
         AudioListener.pause = false;
-        firstPersonController.lockCursor = true;
-        firstPersonController.StartMovement();
-        depthOfField.enabled = false;
+
+        if (EnsurePlayerRef())
+        {
+            firstPersonController.lockCursor = true;
+            firstPersonController.StartMovement();
+        }
+        if (EnsureCameraRef())
+            depthOfField.enabled = false;
     }
 
     public override void Open(Action onComplete = null)
     {
         base.Open(() => Time.timeScale = 0f);
-        firstPersonController.lockCursor = false;
-        firstPersonController.StopMovement();
+
         AudioListener.pause = true;
-        depthOfField.enabled = true;
+
+        if (EnsurePlayerRef())
+        {
+            firstPersonController.lockCursor = false;
+            firstPersonController.StopMovement();
+        }
+        if (EnsureCameraRef())
+            depthOfField.enabled = true;
     }
 
     public override void ResetState()
@@ -82,12 +91,6 @@ public class PausePanel : Panel
 
     public void ReturnToMenu()
     {
-        // fix? scene loader?
-        UnityEngine.SceneManagement.SceneManager.LoadScene(Common.MainMenuSceneName);
-    }
-
-    public void OpenSettings()
-    {
-
+        PanelManager.Instance.ReturnToMenu();
     }
 }

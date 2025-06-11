@@ -61,5 +61,4 @@ public class Panel : MonoBehaviour
         panelToggle = false;
         animationInProgress = false;
     }
-
 }
