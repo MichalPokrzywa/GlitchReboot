@@ -50,7 +50,7 @@ public class SceneLoader : MonoBehaviour
             yield return null;
         }
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.1f);
         sceneLoaded.Invoke();
 
         loadingCanvas.HideLoadingCanvas();
@@ -64,7 +64,10 @@ public enum Scene
     Initialization = 0,
     TestLevel = 1,
     MainMenu = 2,
-    Tutorial = 3
+    Tutorial = 3,
+    Level2 = 4,
+    Level3Ghost = 5,
+    level4Chess = 6,
 
     //Add another scene like this ^
 }
