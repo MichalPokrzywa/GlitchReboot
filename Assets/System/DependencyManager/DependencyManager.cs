@@ -8,6 +8,7 @@ public class DependencyManager : MonoBehaviour
     public static SceneLoader sceneLoader;
 
     [SerializeField] Scene initiallyLoadedScene;
+    [SerializeField] bool initSceneOnStart = false;
 
     private void Awake()
     {
@@ -18,12 +19,8 @@ public class DependencyManager : MonoBehaviour
 
         SetResolution();
 
-        LoadInitialScene();
-    }
-
-    public void LoadInitialScene()
-    {
-        sceneLoader.LoadScene(initiallyLoadedScene);
+        if (initSceneOnStart)
+            sceneLoader.LoadScene(initiallyLoadedScene);
     }
 
     void SetResolution()

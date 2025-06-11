@@ -5,7 +5,7 @@ using UnityEngine;
 public class TipsPanel : Panel
 {
     [SerializeField] TextMeshProUGUI text;
-    [SerializeField] string diceThrowTip = "Press [E] to throw the dice";
+    [SerializeField] string diceTip = "Press [E] to drop the dice, or click LMB to throw it.";
     [SerializeField] string terminalTip = "Press [Q] to open the terminal";
     [SerializeField] string terminalLanguageChangeTip = "Press [E] to change language in the terminal";
 
@@ -22,7 +22,7 @@ public class TipsPanel : Panel
         switch (tipType)
         {
             case eTipType.DiceThrow:
-                text.text = diceThrowTip;
+                text.text = diceTip;
                 break;
             case eTipType.Terminal:
                 text.text = terminalTip;

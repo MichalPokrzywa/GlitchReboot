@@ -43,6 +43,7 @@ public class SpiderBehaviour : MonoBehaviour
 
     [Header("Movement Settings")]
     [SerializeField] float rotationSpeed = 5f;
+    [SerializeField] float startWaitTime = 3f;
     [SerializeField] bool loop = false;
     [SerializeField] List<TargetData> targetData = new List<TargetData>();
 
@@ -52,6 +53,7 @@ public class SpiderBehaviour : MonoBehaviour
     int currentTargetIndex = 0;
     bool playAtStart = false;
     bool isWaiting = false;
+    bool initialized = false;
     bool isMovementActive = false;
     public bool isTalking = false;
 
@@ -113,6 +115,11 @@ public class SpiderBehaviour : MonoBehaviour
         }
     }
 
+    IEnumerator WaitOnStart()
+    {
+        yield return new WaitForSeconds(startWaitTime);
+    }
+
     IEnumerator SkipToSteps(TargetData data)
     {
         currentTargetIndex = targetData.FindIndex(td => td == data);
@@ -136,6 +143,12 @@ public class SpiderBehaviour : MonoBehaviour
 
     IEnumerator HandleTargetReached(TargetData data)
     {
+        if (!initialized)
+        {
+            initialized = true;
+            yield return new WaitForSeconds(startWaitTime);
+        }
+
         if(data.isDone)
             yield break;
         if(targetData[currentTargetIndex] != data)
@@ -202,7 +215,7 @@ public class SpiderBehaviour : MonoBehaviour
         {
             StartCoroutine(HandleTargetReached(targetData[nextIndex]));
         }
-        
+
     }
 
     void MoveTowards(Vector3 targetPos, float speed)

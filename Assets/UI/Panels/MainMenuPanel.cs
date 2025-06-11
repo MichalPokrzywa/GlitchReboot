@@ -10,8 +10,7 @@ public class MainMenuPanel : MonoBehaviour
 
     public void Play()
     {
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(Common.TutorialSceneName);
-        DependencyManager.sceneLoader.LoadScene(Scene.Tutorial);
+        UnityEngine.SceneManagement.SceneManager.LoadScene(Common.TutorialSceneName);
     }
 
     public void ShowSettingsPanel()
