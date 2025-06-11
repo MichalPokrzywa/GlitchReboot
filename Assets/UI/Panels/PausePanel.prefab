@@ -49,9 +49,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42d3d32709934274092130a015f2430f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  contentRect: {fileID: 7023576007721497162}
   mainCamera: {fileID: 0}
   depthOfField: {fileID: 0}
-  contentRect: {fileID: 7023576007721497162}
+  firstPersonController: {fileID: 0}
 --- !u!1 &1726465622492006782
 GameObject:
   m_ObjectHideFlags: 0
@@ -435,11 +436,11 @@ PrefabInstance:
       objectReference: {fileID: 750214231896864170}
     - target: {fileID: 2963719363693222555, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: ClosePanel
+      value: TogglePanel
       objectReference: {fileID: 0}
     - target: {fileID: 2963719363693222555, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: PausePanel, Assembly-CSharp
+      value: Panel, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2963719363693222555, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

@@ -68,6 +68,7 @@ public class Interactor : MonoBehaviour
                         // pass yourself into the pickup
                         gameObject.layer = LayerMask.NameToLayer("PlayerWithObject");
                         pickup.MoveToHand(handPoint, holdPoint, this);
+                        PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.DiceThrow);
                         heldObject = pickup;
                         interactObj.HideUI(); // Hide UI when picked up
                     }

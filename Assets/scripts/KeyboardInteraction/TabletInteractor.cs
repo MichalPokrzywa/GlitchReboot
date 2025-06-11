@@ -38,7 +38,10 @@ public class TabletInteractor : MonoBehaviour
             if (!isOn)
             {
                 if(showSequence != null && !showSequence.IsActive())
+                {
+                    PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.TerminalLanguageChange);
                     ShowTablet();
+                }
             }
             else
             {
