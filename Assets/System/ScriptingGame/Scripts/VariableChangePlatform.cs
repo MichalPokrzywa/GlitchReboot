@@ -79,6 +79,7 @@ public class VariableChangePlatform : VariablePlatformBase
     public override void ClearValue()
     {
         dice = null;
+        assignedObject = null;
     }
 
     public override void MoveObjectToPosition(GameObject go)
@@ -98,7 +99,10 @@ public class VariableChangePlatform : VariablePlatformBase
 
     public override void AssignObjectToPlatform(GameObject go)
     {
-        throw new NotImplementedException();
+        if (assignedObject == null)
+        {
+            assignedObject = go;
+        }
     }
 
     public override void UpdateEntityNameSuffix()
