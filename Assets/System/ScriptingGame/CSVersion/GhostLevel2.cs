@@ -10,7 +10,7 @@ public class GhostLevel2 : PuzzleBase
     public override void DoTerminalCode()
     {
         GameObject elevator = GameObject.Find("ExitElevator");
-        if(GetVariableValue<String>("ExitElevator")=="ExitElevator" && !GetVariableValue<bool>("isClosed") && isActive)
+        if(GetVariableValue<String>("objectName") =="ExitElevator" && !GetVariableValue<bool>("isClosed") && isActive)
         {
             Debug.Log("jestem tuu w mroku");
             elevator.GetComponent<LevelExitElevator>().OpenDoors();
