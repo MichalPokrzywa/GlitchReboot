@@ -5,7 +5,7 @@ public class PlatformNode : EntityNode<VariablePlatformBase>
 {
     protected override List<VariablePlatformBase> GetEntityList()
     {
-        return EntityManager.instance.GetEntities<VariablePlatformBase>();
+        return EntityManager.Instance.GetEntities<VariablePlatformBase>();
     }
 
     protected override string GetEntityName()

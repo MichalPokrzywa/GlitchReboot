@@ -5,9 +5,10 @@ public abstract class VariablePlatformBase : EntityBase
     [Tooltip("Choose the variable type here")]
     public VariableType type;
     public GameObject assignedObject;
-    public virtual void Awake()
+
+    public virtual void Start()
     {
-        EntityManager.instance.Register<VariablePlatformBase>(this);
+        EntityManager.Instance.Register<VariablePlatformBase>(this);
     }
     public abstract void ReceiveValue(object obj);
     public abstract void ClearValue();

@@ -13,7 +13,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
     public Camera mainCamera;
     public bool HasShownUI { get; set; }
 
-    protected virtual void Awake()
+    protected virtual void Start()
     {
         Init();
     }
@@ -49,6 +49,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
             UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
             if (UIHoverText == null)
                 Debug.LogError("UI Hover Text object has no TextMeshProUGUI!");
+            UIHoverObject.SetActive(false);
         }
 
         // 3) Cache main camera

@@ -5,29 +5,9 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class EntityManager : MonoBehaviour
+public class EntityManager : Singleton<EntityManager>
 {
-    static EntityManager _instance;
-
-    public static EntityManager instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                _instance = FindFirstObjectByType<EntityManager>();
-                if (_instance == null)
-                {
-                    GameObject singletonGO = new GameObject("EntityManager (Singleton)");
-                    _instance = singletonGO.AddComponent<EntityManager>();
-                }
-            }
-
-            return _instance;
-        }
-    }
-
-    readonly Dictionary<Type, IList> entityLists = new()
+    Dictionary<Type, IList> entityLists = new()
     {
         { typeof(GhostController), new List<GhostController>() },
         { typeof(VariableDice), new List<VariableDice>() },
@@ -38,11 +18,6 @@ public class EntityManager : MonoBehaviour
     void Awake()
     {
         SceneManager.sceneUnloaded += ClearEntities;
-    }
-
-    void OnDestroy()
-    {
-        SceneManager.sceneUnloaded -= ClearEntities;
     }
 
     public void Register<T>(T entity) where T : EntityBase
@@ -80,6 +55,12 @@ public class EntityManager : MonoBehaviour
 
     void ClearEntities(UnityEngine.SceneManagement.Scene arg0)
     {
-        entityLists.Clear();
+        entityLists = new()
+        {
+            { typeof(GhostController), new List<GhostController>() },
+            { typeof(VariableDice), new List<VariableDice>() },
+            { typeof(VariablePlatformBase), new List<VariablePlatformBase>() },
+            { typeof(MarkerScript), new List<MarkerScript>() }
+        };
     }
 }

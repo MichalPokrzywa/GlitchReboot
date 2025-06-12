@@ -38,9 +38,8 @@ public class VariablePlatform : VariablePlatformBase
     [HideInInspector] public VariableAddedEvent variableAdded = new();
     [HideInInspector] public VariableRemovedEvent variableRemoved = new();
 
-    public override void Awake()
+    private void Awake()
     {
-        base.Awake();
         // 1) create the core value-handler
         IVariableValueHandler core = type switch
         {
@@ -58,8 +57,9 @@ public class VariablePlatform : VariablePlatformBase
         );
     }
 
-    private void Start()
+    public override void Start()
     {
+        base.Start();
         // update UI to show displayName
         foreach (var t in textList)
         {

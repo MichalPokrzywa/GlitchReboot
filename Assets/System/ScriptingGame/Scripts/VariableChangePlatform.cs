@@ -11,13 +11,9 @@ public class VariableChangePlatform : VariablePlatformBase
 
     private VariableDice dice = null;
 
-    public override void Awake()
+    public override void Start()
     {
-        base.Awake();
-    }
-
-    void Start()
-    {
+        base.Start();
         foreach (GameObject o in platformType)
         {
             o.SetActive(false);

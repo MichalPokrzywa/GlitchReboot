@@ -11,12 +11,13 @@ public class MarkerScript : EntityBase
 
     Renderer renderer;
 
-    void Awake()
+    void Start()
     {
         renderer = GetComponent<Renderer>();
         UpdateEntityNameSuffix();
-        EntityManager.instance.Register<MarkerScript>(this);
-        this.gameObject.SetActive(false);
+        EntityManager.Instance.Register<MarkerScript>(this);
+
+        Deactivate();
     }
 
     void Update()

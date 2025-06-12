@@ -44,12 +44,12 @@ public class GhostController : EntityBase
         Close,
     }
 
-    void Awake()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         UpdateEntityNameSuffix();
-        EntityManager.instance.Register<GhostController>(this);
         SetColor();
+        EntityManager.Instance.Register<GhostController>(this);
     }
 
     void Update()

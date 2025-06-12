@@ -46,8 +46,9 @@ GameObject:
   - component: {fileID: 8871579497776577327}
   - component: {fileID: 327263191782207801}
   - component: {fileID: 2079826558516347531}
-  - component: {fileID: 2301362249689418491}
   - component: {fileID: 1453348930898727731}
+  - component: {fileID: 2301362249689418491}
+  - component: {fileID: 8056010588108584588}
   m_Layer: 0
   m_Name: AntiFallObjects
   m_TagString: Untagged
@@ -408,19 +409,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 117.25, y: 1, z: 106.25}
   m_Center: {x: -0.375, y: 0.5, z: 38.375}
---- !u!114 &2301362249689418491
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8049845255916140806}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b56f40937655004e80dfa20e56993bd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rePosition: {fileID: 1702634262218802250}
 --- !u!54 &1453348930898727731
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -448,3 +436,36 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2301362249689418491
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8049845255916140806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b56f40937655004e80dfa20e56993bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rePosition: {fileID: 1702634262218802250}
+--- !u!114 &8056010588108584588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8049845255916140806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_OverrideArea: 0
+  m_Area: 0
+  m_OverrideGenerateLinks: 0
+  m_GenerateLinks: 0
+  m_IgnoreFromBuild: 1
+  m_ApplyToChildren: 1
+  m_AffectedAgents: ffffffff

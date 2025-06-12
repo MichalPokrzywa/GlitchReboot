@@ -27,6 +27,8 @@ public abstract class Singleton<T> : MonoBehaviour where T : MonoBehaviour
                     DontDestroyOnLoad(go);
                     instance = go.AddComponent<T>();
                 }
+
+                return instance;
             }
 
             return instance;

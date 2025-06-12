@@ -17,17 +17,13 @@ public class VariableDice : EntityBase
     private IVariableValueHandler handler;
     bool onPlatform = false;
 
-    void Awake()
-    {
-        EntityManager.instance.Register<VariableDice>(this);
-    }
-
     void Start()
     {
         InitializeHandler();
         colorLooper = GetComponent<TextColorLooper>();
         colorLooper.textList = textList;
         UpdateEntityNameSuffix();
+        EntityManager.Instance.Register<VariableDice>(this);
     }
 
     public override void UpdateEntityNameSuffix()

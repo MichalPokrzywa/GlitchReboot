@@ -40,7 +40,6 @@ public class MarkerPointsSpawner : MonoBehaviour
         for (int i = 0; i < markerCount; i++)
         {
             var marker = Instantiate(markerPrefab).GetComponent<MarkerScript>();
-            marker.Deactivate();
             marker.SetTarget(target);
             int number = i + 1;
             marker.SetText(number.ToString());

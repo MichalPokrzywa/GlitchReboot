@@ -5,7 +5,7 @@ public class MarkerPointNode : EntityNode<MarkerScript>
 {
     protected override List<MarkerScript> GetEntityList()
     {
-        return EntityManager.instance.GetEntities<MarkerScript>();
+        return EntityManager.Instance.GetEntities<MarkerScript>();
     }
 
     protected override string GetEntityName()
