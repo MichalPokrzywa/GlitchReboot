@@ -149,6 +149,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initiallyLoadedScene: 2
+  initSceneOnStart: 1
 --- !u!4 &468737653
 Transform:
   m_ObjectHideFlags: 0
@@ -199,11 +200,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3616277904347561086, guid: 354c1cdfe791ce2479fb5a4f4479667c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 3616277904347561086, guid: 354c1cdfe791ce2479fb5a4f4479667c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 3616277904347561086, guid: 354c1cdfe791ce2479fb5a4f4479667c, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -319,11 +320,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6289263942143898588, guid: 354c1cdfe791ce2479fb5a4f4479667c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 6289263942143898588, guid: 354c1cdfe791ce2479fb5a4f4479667c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 6289263942143898588, guid: 354c1cdfe791ce2479fb5a4f4479667c, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -335,7 +336,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8764499960387289620, guid: 354c1cdfe791ce2479fb5a4f4479667c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -540
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
