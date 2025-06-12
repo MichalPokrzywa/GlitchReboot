@@ -81,6 +81,7 @@ public class TabletInteractor : MonoBehaviour
         showSequence
             .OnStart(() => {
                 firstPersonController.StopMovement();
+                firstPersonController.Zoom(false);
                 firstPersonController.lockCursor = false;
                 markerSpawner.active = false;
                 interactor.canInteract = false;
