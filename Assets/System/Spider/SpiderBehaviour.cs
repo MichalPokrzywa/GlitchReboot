@@ -22,10 +22,14 @@ public class SpiderBehaviour : MonoBehaviour
         public int animSmoothness;
         [Range(0, 1f)]
         public float minBodyHeight;
-        public float waitTime = 0f;
+
+        public float textDisplayAdditionalTime = 0f;
+        public float waitTimeAtWaypoint = 0f;
         public Emotion emotion;
         [TextArea(5,10)]
         public string speech;
+
+        public Scene scene;
         public int voiceKey;
         public bool teleportToNext = false;
         [HideInInspector]
@@ -75,7 +79,7 @@ public class SpiderBehaviour : MonoBehaviour
         SetEmotion(targetData[0].emotion);
 
         // Ensure glitch is off initially
-        glitchSwitcher.ApplyGlitch(false);
+        glitchSwitcher?.ApplyGlitch(false);
 
         // Assign triggers to target colliders
         foreach (var data in targetData)
@@ -115,11 +119,6 @@ public class SpiderBehaviour : MonoBehaviour
         }
     }
 
-    IEnumerator WaitOnStart()
-    {
-        yield return new WaitForSeconds(startWaitTime);
-    }
-
     IEnumerator SkipToSteps(TargetData data)
     {
         currentTargetIndex = targetData.FindIndex(td => td == data);
@@ -157,11 +156,12 @@ public class SpiderBehaviour : MonoBehaviour
         data.overrideStep = false;
         isTalking = true;
         if (!string.IsNullOrEmpty(data.speech))
-            NarrativeSystem.Instance.SetText(data.speech);
+            NarrativeSystem.Instance.SetText(data.speech, data.textDisplayAdditionalTime);
         if (data.voiceKey != 0)
-            NarrativeSystem.Instance.Play(data.voiceKey);
+            NarrativeSystem.Instance.Play(data.scene, data.voiceKey);
 
-        yield return new WaitForSeconds(data.waitTime);
+        yield return new WaitForSeconds(data.waitTimeAtWaypoint);
+
         data.isDone = true;
         isMovementActive = true;
 

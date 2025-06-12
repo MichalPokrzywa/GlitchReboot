@@ -16,12 +16,16 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
     Coroutine runningCoroutine;
     Color startColor;
 
+    const float constDisplayTime = 3f;
+
+    public bool IsPlaying => audioSource.isPlaying;
+
     void Awake()
     {
         startColor = textDisplay.color;
     }
 
-    public void SetText(string text, float displayTime = 3f, Color? color = null)
+    public void SetText(string text, float additionalDisplayTime = 0f, Color? color = null)
     {
         // Stop any in-progress type/fade
         if (runningCoroutine != null)
@@ -32,12 +36,12 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
         SetAlpha(1f);
 
         // Start the new typewriter+fade coroutine
-        runningCoroutine = StartCoroutine(TypeAndFade(text, typeSpeed, displayTime));
+        runningCoroutine = StartCoroutine(TypeAndFade(text, typeSpeed, constDisplayTime + additionalDisplayTime));
     }
 
-    public void Play(int key)
+    public void Play(Scene scene, int id)
     {
-        var audio = DependencyManager.audioManager.audioStorage.GetTutorialLevelSounds(key - 1);
+        var audio = DependencyManager.audioManager.audioStorage.GetSpiderVoiceOver(scene, id - 1);
 
         if (audioSource.isPlaying)
             audioSource.Stop();
