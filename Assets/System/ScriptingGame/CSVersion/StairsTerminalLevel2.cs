@@ -43,9 +43,9 @@ public class StairsTerminalLevel2 : PuzzleBase
 
     public override void DoTerminalCode()
     {
-        int platformx = GetVariableValue<int>("x");
-        int platformy = GetVariableValue<int>("y");
-        int platformz = GetVariableValue<int>("z");
+        int platformx = GetVariableValue<int>("forward");
+        int platformy = GetVariableValue<int>("up");
+        int platformz = GetVariableValue<int>("left");
         int platformBaseHight = GetVariableValue<int>("Base_Height");
 
         if (waypoints == null || waypoints.Count == 0)
