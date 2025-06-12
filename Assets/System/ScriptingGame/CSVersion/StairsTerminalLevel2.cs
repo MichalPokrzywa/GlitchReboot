@@ -73,6 +73,7 @@ public class StairsTerminalLevel2 : PuzzleBase
             iteration++;
         }
     }
+
     // Coroutine, która „przesuwa” obiekt stairs z pozycji startowej do targetPosition w czasie duration.
     private IEnumerator SmoothMoveStairs(Vector3 targetPosition, float duration)
     {

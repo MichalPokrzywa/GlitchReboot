@@ -1,38 +1,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NarrativeSystem : Singleton<NarrativeSystem>
 {
     [SerializeField] AudioSource audioSource;
     [SerializeField] TextMeshProUGUI textDisplay;
     [SerializeField] float fadeDuration = 1f;
-    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
+    [SerializeField] private float typeSpeed = 0.05f;
 
-    //static NarrativeSystem _instance;
-
-    Coroutine fadeCoroutine;
+    Coroutine runningCoroutine;
     Color startColor;
-
-    //public static NarrativeSystem instance
-    //{
-    //    get
-    //    {
-    //        if (_instance == null)
-    //        {
-    //            _instance = FindFirstObjectByType<NarrativeSystem>();
-    //            if (_instance == null)
-    //            {
-    //                GameObject singletonGO = new GameObject("NarrativeSystem (Singleton)");
-    //                _instance = singletonGO.AddComponent<NarrativeSystem>();
-    //            }
-    //        }
-
-    //        return _instance;
-    //    }
-    //}
 
     void Awake()
     {
@@ -41,25 +23,26 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
 
     public void SetText(string text, float displayTime = 3f, Color? color = null)
     {
-        if (fadeCoroutine != null)
-        {
-            StopCoroutine(fadeCoroutine);
-        }
+        // Stop any in-progress type/fade
+        if (runningCoroutine != null)
+            StopCoroutine(runningCoroutine);
 
-        textDisplay.color = color != null ? color.Value : startColor;
-        textDisplay.text = text;
+        // Reset color & alpha
+        textDisplay.color = color ?? startColor;
         SetAlpha(1f);
-        fadeCoroutine = StartCoroutine(FadeOutAfterDelay(displayTime));
+
+        // Start the new typewriter+fade coroutine
+        runningCoroutine = StartCoroutine(TypeAndFade(text, typeSpeed, displayTime));
     }
 
     public void Play(int key)
     {
-        AudioClip voice = audioClips[key - 1];
+        var audio = DependencyManager.audioManager.audioStorage.GetTutorialLevelSounds(key - 1);
 
         if (audioSource.isPlaying)
             audioSource.Stop();
 
-        audioSource.clip = voice;
+        audioSource.clip = audio;
         audioSource.Play();
     }
 
@@ -70,22 +53,75 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
         textDisplay.color = color;
     }
 
-    IEnumerator FadeOutAfterDelay(float displayTime = 3f)
+    private IEnumerator TypeAndFade(string fullText, float charInterval, float displayTime)
     {
+        // Typewriter effect
+        textDisplay.text = "";
+        StringBuilder displayed = new StringBuilder();
+        int i = 0;
+        while (i < fullText.Length)
+        {
+            if (fullText[i] == '<')
+            {
+                // Detected start of a rich-text tag. Find the closing '>'.
+                int closeIndex = fullText.IndexOf('>', i);
+                if (closeIndex == -1)
+                {
+                    // Malformed tag: no closing '>'. Just append the rest and break.
+                    displayed.Append(fullText.Substring(i));
+                    i = fullText.Length;
+                }
+                else
+                {
+                    // Append the entire tag at once
+                    string tag = fullText.Substring(i, closeIndex - i + 1);
+                    displayed.Append(tag);
+                    i = closeIndex + 1;
+                }
+                // No delay for tags
+            }
+            else
+            {
+                // Append a single visible character
+                displayed.Append(fullText[i]);
+                i++;
+                // Update text and wait
+                textDisplay.text = displayed.ToString();
+                yield return new WaitForSeconds(charInterval);
+            }
+
+            // After appending tag or character, always update the displayed text
+            textDisplay.text = displayed.ToString();
+        }
+        // Wait before fading
         yield return new WaitForSeconds(displayTime);
 
+        // Fade out
         float elapsed = 0f;
-
+        Color original = textDisplay.color;
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
-            SetAlpha(alpha);
+            float t = Mathf.Clamp01(elapsed / fadeDuration);
+            SetAlpha(Mathf.Lerp(1f, 0f, t));
             yield return null;
         }
 
+        // Ensure fully hidden
         SetAlpha(0f);
+        textDisplay.text = "";
+        runningCoroutine = null;
+    }
+
+    public void ResetNarrative()
+    {
+        StopAllCoroutines();
+        SetAlpha(1f);
         textDisplay.text = string.Empty;
-        fadeCoroutine = null;
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+            audioSource.time = 0f;
+        }
     }
 }

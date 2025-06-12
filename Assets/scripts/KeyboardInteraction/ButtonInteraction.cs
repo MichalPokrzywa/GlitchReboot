@@ -7,14 +7,9 @@ public class ButtonInteraction : InteractionBase
     public OnButtonPressed onButtonPressed;
     public string buttonActionName;
 
-    protected override void Awake()
+    protected override void Start()
     {
-        base.Awake();
-    }
-
-    void Start()
-    {
-        base.Awake();
+        base.Start();
         TooltipText = "[E] " + buttonActionName;
     }
     public override void Interact()

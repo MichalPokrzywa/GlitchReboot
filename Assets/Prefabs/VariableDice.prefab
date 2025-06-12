@@ -1071,6 +1071,7 @@ GameObject:
   - component: {fileID: 8803764186136295686}
   - component: {fileID: 3746043349995198986}
   - component: {fileID: 672106174375996061}
+  - component: {fileID: 1636587628283719643}
   m_Layer: 7
   m_Name: VariableDice
   m_TagString: Untagged
@@ -1311,6 +1312,29 @@ MonoBehaviour:
   - {r: 0.6893989, g: 1, b: 0, a: 1}
   - {r: 1, g: 0, b: 0.8365736, a: 1}
   durationPerColor: 2
+--- !u!114 &1636587628283719643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7662297200887842987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 36c581c7871612840ba00d0e083b7163, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemsToReset:
+  - actionType: 0
+    initialPosition: {x: 3.5, y: 18.002, z: -37.5}
+    initialRotation: {x: -0, y: -0, z: -0, w: 1}
+    activeOnReset: 1
+    originalMaterial: {fileID: 0}
+    targetComponent: {fileID: 0}
+    methodName: 
+    onResetEvent:
+      m_PersistentCalls:
+        m_Calls: []
 --- !u!1001 &5759289616168662816
 PrefabInstance:
   m_ObjectHideFlags: 0

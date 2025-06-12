@@ -29,40 +29,27 @@ public class GhostController : EntityBase
     Vector3? lastMyUnreachablePosition = null;
 
     float distance;
-
+    float stillTime = 0f;
     bool targetUnreachable = false;
-    bool hasWaitedBeforeAction = false;
 
-    const float pathCalculationInterval = 1f;
-    const float hysteresisBuffer = 0.2f;
+    const float maxStillTime = 2f;
+    const float pathCalculationInterval = 0.5f;
     const float actionDelay = 0.25f;
 
     public enum InteractionDistance
     {
+        Default,
+        Far,
+        Mid,
         Close,
-        Average,
-        Far
     }
 
-    void Awake()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
         UpdateEntityNameSuffix();
-        EntityManager.instance.Register<GhostController>(this);
-
-        float intensity = 5f;
-        switch (entityId)
-        {
-            case 1:
-                SetColor(Color.blue * intensity);
-                break;
-            case 2:
-                SetColor(Color.green * intensity);
-                break;
-            default:
-                SetColor(Color.red * intensity);
-                break;
-        }
+        SetColor();
+        EntityManager.Instance.Register<GhostController>(this);
     }
 
     void Update()
@@ -71,12 +58,7 @@ public class GhostController : EntityBase
         if (target == null)
             return;
 
-        // Check if we should consider path recalculation
-        // It is needed when the target is unreachable, but it might be reachable after some time (e.g. target moved behind a wall)
-        //if (targetUnreachable && !IsPathRecalculationNeeded())
-        //    return;
-
-        // If target is unreachable - stop recalculating path
+        // If target is unreachable - stop path finding
         if (targetUnreachable)
         {
             ResetState();
@@ -87,17 +69,36 @@ public class GhostController : EntityBase
         // Calculate distance to the target
         distance = Vector3.Distance(agent.transform.position, target.transform.position);
 
-        // If target is reached - stop recalculating path
-        if (distance < agent.stoppingDistance)
+        // If target is reached - stop path finding
+        if (distance <= agent.stoppingDistance)
         {
             ResetState();
             onTargetReached?.Invoke();
             return;
         }
+
         // Start path finding
-        if (distance > agent.stoppingDistance + hysteresisBuffer && pathCoroutine == null && !targetUnreachable)
+        if (distance > agent.stoppingDistance && pathCoroutine == null)
         {
             pathCoroutine ??= StartCoroutine(MoveToTargetCoroutine());
+            return;
+        }
+
+        // Check if the ghost is still - if it is, interrupt the action after some time
+        if (agent.velocity == Vector3.zero)
+        {
+            stillTime += Time.deltaTime;
+            if (stillTime >= maxStillTime)
+            {
+                Debug.LogWarning("Ghost stood still too long — interrupting");
+                ResetState();
+                onTargetReached?.Invoke();
+                return;
+            }
+        }
+        else
+        {
+            stillTime = 0f;
         }
     }
 
@@ -123,7 +124,6 @@ public class GhostController : EntityBase
         {
             Stop();
             onTargetReached = null;
-            hasWaitedBeforeAction = false;
             result.errorCode = ErrorCode.Canceled;
             taskCS.TrySetResult(false);
         });
@@ -257,7 +257,7 @@ public class GhostController : EntityBase
         lastMyUnreachablePosition ??= agent.transform.position;
 
         // Check if the target has moved significantly
-        if (Vector3.Distance(lastTargetUnreachablePosition.Value, target.transform.position) > hysteresisBuffer)
+        if (Vector3.Distance(lastTargetUnreachablePosition.Value, target.transform.position) > agent.stoppingDistance)
         {
             lastTargetUnreachablePosition = target.transform.position;
             // log only once
@@ -268,7 +268,7 @@ public class GhostController : EntityBase
         }
 
         // Check if the agent has moved significantly
-        if (Vector3.Distance(lastMyUnreachablePosition.Value, agent.transform.position) > hysteresisBuffer)
+        if (Vector3.Distance(lastMyUnreachablePosition.Value, agent.transform.position) > agent.stoppingDistance)
         {
             lastMyUnreachablePosition = agent.transform.position;
             // log only once
@@ -291,11 +291,13 @@ public class GhostController : EntityBase
         agent.isStopped = true;
         agent.ResetPath();
         target = null;
+        stillTime = 0f;
     }
 
     IEnumerator MoveToTargetCoroutine()
     {
         NavMeshPath path = new NavMeshPath();
+        Vector3 targetPos = Vector3.negativeInfinity;
 
         while (true)
         {
@@ -317,23 +319,27 @@ public class GhostController : EntityBase
                 yield break;
             }
 
-            // thanks to this function, path should be ALWAYS calculated immediately
-            // it means that agent should not try to reach an object that is unreachable (like following object moving behind a wall)
-            agent.CalculatePath(target.transform.position, path);
-
-            if (path.status == NavMeshPathStatus.PathComplete)
+            // recalculate path only when target changed its position
+            if (targetPos != target.transform.position)
             {
-                targetUnreachable = false;
-                agent.isStopped = false;
-                if (!agent.hasPath || Vector3.Distance(agent.destination, target.transform.position) > 2*hysteresisBuffer)
+                targetPos = target.transform.position;
+
+                // thanks to this function, path should be ALWAYS calculated immediately
+                // it means that agent should not try to reach an object that is unreachable (like following object moving behind a wall)
+                agent.CalculatePath(target.transform.position, path);
+
+                if (path.status == NavMeshPathStatus.PathComplete)
                 {
+                    targetUnreachable = false;
+                    agent.isStopped = false;
+                    agent.ResetPath();
                     agent.SetPath(path);
                 }
-            }
-            else
-            {
-                targetUnreachable = true;
-                yield break;
+                else
+                {
+                    targetUnreachable = true;
+                    yield break;
+                }
             }
 
             // Wait for a short time before trying to recalculate path in case the target is moving
@@ -341,8 +347,24 @@ public class GhostController : EntityBase
         }
     }
 
-    void SetColor(Color color)
+    void SetColor()
     {
+        Color color;
+        float intensity = 1f;
+
+        switch (entityId)
+        {
+            case 1:
+                color = Color.blue * intensity;
+                break;
+            case 2:
+                color = Color.green * intensity;
+                break;
+            default:
+                color = Color.red * intensity;
+                break;
+        }
+
         var renderers = GetComponentsInChildren<Renderer>();
         foreach (var rend in renderers)
         {
@@ -355,9 +377,10 @@ public class GhostController : EntityBase
         return type switch
         {
             InteractionDistance.Far => 2.5f,
-            InteractionDistance.Average => 2f,
-            InteractionDistance.Close => 0.3f,
-            _ => 0.5f
+            InteractionDistance.Mid => 2f,
+            InteractionDistance.Close => 0.75f,
+            InteractionDistance.Default => 1f,
+            _ => 1f
         };
     }
 }

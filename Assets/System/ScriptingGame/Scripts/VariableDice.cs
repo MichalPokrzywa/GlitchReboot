@@ -17,17 +17,13 @@ public class VariableDice : EntityBase
     private IVariableValueHandler handler;
     bool onPlatform = false;
 
-    void Awake()
-    {
-        EntityManager.instance.Register<VariableDice>(this);
-    }
-
     void Start()
     {
         InitializeHandler();
         colorLooper = GetComponent<TextColorLooper>();
         colorLooper.textList = textList;
         UpdateEntityNameSuffix();
+        EntityManager.Instance.Register<VariableDice>(this);
     }
 
     public override void UpdateEntityNameSuffix()
@@ -92,24 +88,30 @@ public class VariableDice : EntityBase
             var pickUpObject = GetComponent<PickUpObjectInteraction>();
             VariablePlatformBase platform = other.gameObject.GetComponent<VariablePlatformBase>();
 
-            if (platform != null && !onPlatform && pickUpObject.IsDropped )
+            // if dice is ON the platform (within the platform and not picked up by someone), assign the value
+            if (platform != null && !onPlatform && pickUpObject.IsDropped)
             {
-                Debug.Log("ON PLATFORM!");
-                onPlatform = true;
-                object currentValue = this;
-                if (platform is VariablePlatform)
-                    currentValue = handler?.GetValue();
-
-                if (platform.type != type) 
+                if (platform.type != type)
                     return;
 
                 if(platform.assignedObject != null)
                     return;
 
+                object currentValue = this;
+                if (platform is VariablePlatform)
+                    currentValue = handler?.GetValue();
+
+                Debug.Log("ON PLATFORM!");
+                onPlatform = true;
                 platform.ReceiveValue(currentValue);
                 platform.AssignObjectToPlatform(this.gameObject);
                 platform.MoveObjectToPosition(this.gameObject);
                 colorLooper.StartLoop();
+            }
+            // if dice is still within the platform but not ON the platform (e.g. picked up by someone), clear the value
+            else if (platform != null && onPlatform && !pickUpObject.IsDropped)
+            {
+                DetachFromPlatform(platform);
             }
         }
     }
@@ -123,14 +125,20 @@ public class VariableDice : EntityBase
             VariablePlatformBase platform = other.gameObject.GetComponent<VariablePlatformBase>();
             if (platform != null && onPlatform)
             {
-                Debug.Log("EXIT PLATFORM!");
-                onPlatform = false;
-                if (platform.assignedObject == this.gameObject)
-                {
-                    platform.ClearValue();
-                    colorLooper.StopLoop();
-                }
+                DetachFromPlatform(platform);
             }
         }
     }
+
+    void DetachFromPlatform(VariablePlatformBase platform)
+    {
+        if (platform.assignedObject == this.gameObject)
+        {
+            Debug.Log("EXIT PLATFORM!");
+            onPlatform = false;
+            platform.ClearValue();
+            colorLooper.StopLoop();
+        }
+    }
+
 }

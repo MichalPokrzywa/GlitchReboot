@@ -6,6 +6,8 @@ public class MarkerPointsSpawner : MonoBehaviour
 {
     [SerializeField] GameObject markerPrefab;
     [SerializeField] Transform target;
+    [SerializeField] bool cursorRaycast = true;
+    [SerializeField] float cursorOffsetDistance = 0.5f;
 
     public List<MarkerScript> markers => markerPoints;
     public bool active = true;
@@ -38,11 +40,10 @@ public class MarkerPointsSpawner : MonoBehaviour
         for (int i = 0; i < markerCount; i++)
         {
             var marker = Instantiate(markerPrefab).GetComponent<MarkerScript>();
-            marker.Deactivate();
             marker.SetTarget(target);
             int number = i + 1;
             marker.SetText(number.ToString());
-            float intensityValue = 18f;
+            float intensityValue = 3f;
             Color color = markerColors[i % markerColors.Length] * intensityValue;
             marker.SetColor(color);
             markerPoints.Add(marker);
@@ -76,8 +77,34 @@ public class MarkerPointsSpawner : MonoBehaviour
         var marker = markerPoints[buttonNumber];
 
         if (marker.isActive)
+        {
             marker.Deactivate();
-        else
+            return;
+        }
+
+        if (!cursorRaycast)
+        {
             marker.Activate(target.position);
+            return;
+        }
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            if (hit.collider != null)
+            {
+                Vector3 offset = hit.normal * cursorOffsetDistance;
+                marker.Activate(hit.point + offset);
+            }
+            else
+            {
+                marker.Activate(target.position);
+            }
+        }
+        else
+        {
+            marker.Activate(target.position);
+        }
     }
 }

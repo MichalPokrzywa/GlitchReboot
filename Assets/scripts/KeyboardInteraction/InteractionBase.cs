@@ -6,14 +6,14 @@ public class InteractionBase : MonoBehaviour, IInteractable
 {
     public GameObject UIHoverObject;
     public TextMeshProUGUI UIHoverText;
-    protected string TooltipText = "[E] Użyj";
+    protected string TooltipText = "[E] Use";
     public float floatDistanceX = 100f; // Maksymalna wysokość pływania
     public float floatDistanceY = 100f;
     private Vector3 originalPosition;
     public Camera mainCamera;
     public bool HasShownUI { get; set; }
 
-    protected virtual void Awake()
+    protected virtual void Start()
     {
         Init();
     }
@@ -49,6 +49,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
             UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
             if (UIHoverText == null)
                 Debug.LogError("UI Hover Text object has no TextMeshProUGUI!");
+            UIHoverObject.SetActive(false);
         }
 
         // 3) Cache main camera

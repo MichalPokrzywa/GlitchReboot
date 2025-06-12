@@ -30,17 +30,12 @@ public class PickUpObjectInteraction : InteractionBase
         Dropping
     }
 
-    protected override void Awake()
-   {
-       base.Awake();
-
-   }
-
-   private void Start()
-   {
-      rb = GetComponent<Rigidbody>();
-      PickUpState = ePickUpState.Dropped;
-   }
+    protected override void Start()
+    {
+       base.Start();
+       rb = GetComponent<Rigidbody>();
+       PickUpState = ePickUpState.Dropped;
+    }
 
    public override void Interact()
    {

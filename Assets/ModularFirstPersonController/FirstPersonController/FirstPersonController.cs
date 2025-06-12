@@ -193,8 +193,9 @@ public class FirstPersonController : MonoBehaviour
     {
         HandleCursor();
 
-        if (cameraCanMove)
+        if (enableZoom)
             HandleZoom();
+
         if (cameraCanMove)
             HandleCameraMovement();
 
@@ -259,6 +260,14 @@ public class FirstPersonController : MonoBehaviour
         transform.localEulerAngles = new Vector3(0, yaw, 0);
         if (playerCamera != null)
             playerCamera.transform.localEulerAngles = new Vector3(pitch, 0, 0);
+    }
+
+    public void Zoom(bool shouldZoom)
+    {
+        isZoomed = shouldZoom;
+        // Lerps camera.fieldOfView to allow for a smooth transistion
+        float targetFOV = isZoomed ? zoomFOV : fov;
+        playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, zoomStepTime * Time.deltaTime);
     }
 
     void HandleCameraMovement()
@@ -486,28 +495,25 @@ public class FirstPersonController : MonoBehaviour
 
     void HandleZoom()
     {
-        if (playerCamera != null && enableZoom)
+        if (playerCamera != null)
         {
             // Changes isZoomed when key is pressed
             // Behavior for toogle zoom
-            if (Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
+            if (cameraCanMove && Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
             {
                 isZoomed = !isZoomed;
             }
 
             // Changes isZoomed when key is pressed
             // Behavior for hold to zoom
-            if (holdToZoom && !isSprinting)
+            if (cameraCanMove && holdToZoom && !isSprinting)
             {
                 isZoomed = Input.GetKey(zoomKey);
             }
 
-            // Lerps camera.fieldOfView to allow for a smooth transistion
-            float targetFOV = isZoomed ? zoomFOV : fov;
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, zoomStepTime * Time.deltaTime);
+            Zoom(isZoomed);
         }
     }
-
             //playerCamera.DOFieldOfView(targetFOV, zoomStepTime);
     void HandleCrouch()
     {

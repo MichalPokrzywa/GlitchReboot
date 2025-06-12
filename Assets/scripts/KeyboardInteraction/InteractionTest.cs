@@ -5,7 +5,7 @@ public class InteractionTest : MonoBehaviour, IInteractable
 {
     public GameObject UIHoverObject;
     public TextMeshProUGUI UIHoverText;
-    private string TooltipText = "[E] Użyj";
+    private string TooltipText = "[E] Use";
     public bool HasShownUI { get; set; }
     public float floatSpeed = 1f;  // Szybkość pływania
     public float floatDistanceX = 100f; // Maksymalna wysokość pływania

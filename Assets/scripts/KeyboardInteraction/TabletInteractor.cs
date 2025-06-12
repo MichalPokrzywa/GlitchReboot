@@ -38,7 +38,10 @@ public class TabletInteractor : MonoBehaviour
             if (!isOn)
             {
                 if(showSequence != null && !showSequence.IsActive())
+                {
+                    PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.TerminalLanguageChange);
                     ShowTablet();
+                }
             }
             else
             {
@@ -78,6 +81,7 @@ public class TabletInteractor : MonoBehaviour
         showSequence
             .OnStart(() => {
                 firstPersonController.StopMovement();
+                firstPersonController.Zoom(false);
                 firstPersonController.lockCursor = false;
                 markerSpawner.active = false;
                 interactor.canInteract = false;

@@ -1,11 +1,15 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.InputSystem;
 
 [CreateAssetMenu(menuName = "Audio/Audio Storage")]
 public class AudioStorage : ScriptableObject
 {
     [Header("Sounds")]
     [SerializeField] private List<SoundClip> sounds;
+
+    [SerializeField] private List<AudioClip> tutorialLevelClips;
 
     [Header("Menu music")]
     [SerializeField] private List<AudioClip> menuMusicClips;
@@ -72,11 +76,19 @@ public class AudioStorage : ScriptableObject
         do
         {
             newClip = gameplayMusicClips[Random.Range(0, gameplayMusicClips.Count)];
-        } 
+        }
         while (newClip == lastGameplayMusicClip);
 
         lastGameplayMusicClip = newClip;
         return newClip;
+    }
+
+    public AudioClip GetTutorialLevelSounds(int id)
+    {
+        if (tutorialLevelClips == null || tutorialLevelClips.Count == 0 || id >= tutorialLevelClips.Count)
+            return null;
+
+        return tutorialLevelClips[id];
     }
 }
 

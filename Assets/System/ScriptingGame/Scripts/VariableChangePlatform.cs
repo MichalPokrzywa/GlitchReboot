@@ -11,13 +11,9 @@ public class VariableChangePlatform : VariablePlatformBase
 
     private VariableDice dice = null;
 
-    public override void Awake()
+    public override void Start()
     {
-        base.Awake();
-    }
-
-    void Start()
-    {
+        base.Start();
         foreach (GameObject o in platformType)
         {
             o.SetActive(false);
@@ -31,7 +27,9 @@ public class VariableChangePlatform : VariablePlatformBase
                 platformType[(int)VariableType.Boolean].SetActive(true);
                 break;
         }
-
+        var rend = GetComponentInChildren<Renderer>();
+        if (rend != null)
+            rend.material.color = VariableTypeColor.GetColor(type);
         UpdateEntityNameSuffix();
     }
 
@@ -79,6 +77,7 @@ public class VariableChangePlatform : VariablePlatformBase
     public override void ClearValue()
     {
         dice = null;
+        assignedObject = null;
     }
 
     public override void MoveObjectToPosition(GameObject go)
@@ -98,7 +97,10 @@ public class VariableChangePlatform : VariablePlatformBase
 
     public override void AssignObjectToPlatform(GameObject go)
     {
-        throw new NotImplementedException();
+        if (assignedObject == null)
+        {
+            assignedObject = go;
+        }
     }
 
     public override void UpdateEntityNameSuffix()

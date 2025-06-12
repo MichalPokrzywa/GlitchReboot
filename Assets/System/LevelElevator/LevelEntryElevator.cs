@@ -27,6 +27,10 @@ public class LevelEntryElevator : MonoBehaviour
     void Awake()
     {
         DependencyManager.sceneLoader?.sceneLoaded.AddListener(SetupPlayer);
+        if (DependencyManager.sceneLoader == null)
+        {
+            SetupPlayer();
+        }
     }
     void SetupPlayer()
     {
