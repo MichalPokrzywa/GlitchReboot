@@ -137,6 +137,14 @@ PrefabInstance:
       value: Marker 1
       objectReference: {fileID: 0}
     - target: {fileID: 7963538955674282222, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_fontSize
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963538955674282222, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 22
+      objectReference: {fileID: 0}
+    - target: {fileID: 7963538955674282222, guid: 1b32a1d033dbbdd4c8d089d26650a158, type: 3}
       propertyPath: m_fontSizeBase
       value: 15
       objectReference: {fileID: 0}
@@ -178,4 +186,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prevNode: {fileID: 0}
   nextNode: {fileID: 0}
+  isInRunningSequence: 0
+  isValid: 1
+  currentlyExecuting: 0
   dropdown: {fileID: 3773474184619884399}

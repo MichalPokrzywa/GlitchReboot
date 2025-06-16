@@ -139,7 +139,7 @@ namespace GhostProgramming
 
         string BuildEntityLabel(T entity)
         {
-            return $"{GetEntityName()} {entity.entityId} {entity.entityNameSuffix}";
+            return $"{GetEntityName()}{entity.entityId} {entity.entityNameSuffix}";
         }
     }
 }
