@@ -36,7 +36,6 @@ namespace GhostProgramming
         }
 
         protected abstract List<T> GetEntityList();
-        protected abstract string GetEntityName();
 
         public override T GetValue()
         {
@@ -54,7 +53,7 @@ namespace GhostProgramming
             var list = GetEntityList();
             for (int i = 0; i < list.Count; i++)
             {
-                var label = BuildEntityLabel(list[i]);
+                var label = list[i].GetEntityName();
                 dropdown.options.Add(new TMP_Dropdown.OptionData(label));
             }
             dropdown.RefreshShownValue();
@@ -146,18 +145,13 @@ namespace GhostProgramming
             // if labels changed, reinitialize the dropdown
             for (int i = 0; i < list.Count; i++)
             {
-                var currentLabel = BuildEntityLabel(list[i]);
+                var currentLabel = list[i].GetEntityName();
                 if (dropdown.options[i].text != currentLabel)
                 {
                     InitDropdown();
                     return;
                 }
             }
-        }
-
-        string BuildEntityLabel(T entity)
-        {
-            return $"{GetEntityName()}{entity.entityId} {entity.entityNameSuffix}";
         }
     }
 }

@@ -1,20 +1,20 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MarkerScript : EntityBase
 {
-    [SerializeField] TextMeshProUGUI markerText;
     [SerializeField] Transform target;
     [SerializeField] Renderer renderer;
 
     public bool isActive => gameObject.activeSelf;
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         if (renderer == null)
             renderer = GetComponent<Renderer>();
-        UpdateEntityNameSuffix();
+
+        UpdateEntityDisplayName();
         EntityManager.Instance.Register<MarkerScript>(this);
 
         Deactivate();
@@ -28,6 +28,11 @@ public class MarkerScript : EntityBase
             transform.LookAt(target.transform);
             transform.Rotate(0, 180, 0);
         }
+    }
+
+    public override void UpdateEntityDisplayName()
+    {
+        entityName = "Marker";
     }
 
     public void SetTarget(Transform target)
@@ -44,11 +49,6 @@ public class MarkerScript : EntityBase
     public void Deactivate()
     {
         gameObject.SetActive(false);
-    }
-
-    public void SetText(string text)
-    {
-        markerText.text = text;
     }
 
     public void SetColor(Color color)

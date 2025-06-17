@@ -11,7 +11,7 @@ public class TabletTerminal : Singleton<TabletTerminal>
     [SerializeField] TMP_Text terminalNameText;
 
     [Header("Currently assigned terminal")]
-    public PuzzleBase assignedTerminal;
+    [ReadOnly] public PuzzleBase assignedTerminal;
     string humanCode;
     string robotCode;
 
@@ -76,7 +76,7 @@ public class TabletTerminal : Singleton<TabletTerminal>
         if (terminal == null)
             return;
 
-        // if the terminal hasn't already been assigned, add it to the HashSet
+        // if the terminal hasn't already been assigned, add it to the list
         if (!copiedTerminals.Contains(terminal))
             copiedTerminals.Add(terminal);
 

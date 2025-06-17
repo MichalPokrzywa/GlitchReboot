@@ -66,7 +66,7 @@ public class VariablePlatform : VariablePlatformBase
             t.text = namedHandler.VariableName;
         }
 
-        UpdateEntityNameSuffix();
+        UpdateEntityDisplayName();
 
         var rend = GetComponentInChildren<Renderer>();
         if (rend != null)
@@ -132,8 +132,9 @@ public class VariablePlatform : VariablePlatformBase
     {
         return assignedObject != null;
     }
-    public override void UpdateEntityNameSuffix()
+    public override void UpdateEntityDisplayName()
     {
+        entityName = "Platform";
         entityNameSuffix = $"<b>{variableName}</b>";
     }
 }

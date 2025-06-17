@@ -47,12 +47,14 @@ public class GhostController : EntityBase
         Close,
     }
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         agent = GetComponent<NavMeshAgent>();
         EntityManager.Instance.Register<GhostController>(this);
         SetColor();
-        UpdateEntityNameSuffix();
+        UpdateEntityDisplayName();
     }
 
     void Update()
@@ -237,8 +239,9 @@ public class GhostController : EntityBase
         return true;
     }
 
-    public override void UpdateEntityNameSuffix()
+    public override void UpdateEntityDisplayName()
     {
+        entityName = "Ghost";
         entityNameSuffix = ghostColor.ToString();
     }
 

@@ -17,9 +17,4 @@ public class PlatformNode : EntityNode<VariablePlatformBase>
             .ToList();
         return puzzleEntities;
     }
-
-    protected override string GetEntityName()
-    {
-        return "Platform";
-    }
 }

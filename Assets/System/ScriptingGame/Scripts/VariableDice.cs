@@ -17,17 +17,20 @@ public class VariableDice : EntityBase
     private IVariableValueHandler handler;
     bool onPlatform = false;
 
-    void Start()
+    public override void Start()
     {
+        base.Start();
+
         InitializeHandler();
         colorLooper = GetComponent<TextColorLooper>();
         colorLooper.textList = textList;
-        UpdateEntityNameSuffix();
+        UpdateEntityDisplayName();
         EntityManager.Instance.Register<VariableDice>(this);
     }
 
-    public override void UpdateEntityNameSuffix()
+    public override void UpdateEntityDisplayName()
     {
+        entityName = "Variable Dice";
         string color = VariableTypeColor.GetHex(type);
         entityNameSuffix = $"<b><color={color}>{GetCurrentValue().ToString()}</color></b>";
     }
@@ -76,7 +79,7 @@ public class VariableDice : EntityBase
         {
             handler.UpdateTextValue(text,false);
         }
-        UpdateEntityNameSuffix();
+        UpdateEntityDisplayName();
     }
 
     private void OnTriggerStay(Collider other)
