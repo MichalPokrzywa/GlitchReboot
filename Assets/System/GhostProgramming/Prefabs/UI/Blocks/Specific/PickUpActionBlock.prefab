@@ -10,15 +10,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 305972218523469280, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 305972218523469280, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
+      value: 107.36
       objectReference: {fileID: 0}
     - target: {fileID: 305972218523469280, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 305972218523469280, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 2.683403
       objectReference: {fileID: 0}
     - target: {fileID: 1665629517560123634, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_fontColor.b
@@ -35,6 +35,14 @@ PrefabInstance:
     - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_text
       value: PickUp()
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: m_fontSize
+      value: 22.35
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_fontSizeBase
@@ -169,10 +177,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9046228021611183107, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9046228021611183107, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_LocalRotation.w
       value: 1
       objectReference: {fileID: 0}
@@ -187,14 +191,6 @@ PrefabInstance:
     - target: {fileID: 9046228021611183107, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9046228021611183107, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9046228021611183107, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9046228021611183107, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -235,3 +231,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prevNode: {fileID: 0}
   nextNode: {fileID: 0}
+  isInRunningSequence: 0
+  isValid: 1
+  currentlyExecuting: 0

@@ -234,6 +234,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3567236913243324544}
     m_Modifications:
+    - target: {fileID: 2625353480351152912, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 18
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625353480351152912, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
+      propertyPath: m_fontSizeMin
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625353480351152912, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
+      propertyPath: m_enableAutoSizing
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3452681274610031055, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
       propertyPath: m_text
       value: Ghost 1
@@ -400,11 +412,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6670358959976767630, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
       propertyPath: m_SizeDelta.x
-      value: -35
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 6670358959976767630, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: -40
       objectReference: {fileID: 0}
     - target: {fileID: 6670358959976767630, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
       propertyPath: m_LocalPosition.x
@@ -416,7 +428,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6670358959976767630, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 2.5
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6670358959976767630, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -5
       objectReference: {fileID: 0}
     - target: {fileID: 7845482795643354328, guid: b31077c35b5e044459e5dffe3046df88, type: 3}
       propertyPath: m_Name
@@ -442,7 +458,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2141651110973932002}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name: 

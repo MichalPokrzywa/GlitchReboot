@@ -27,6 +27,7 @@ public class GhostController : EntityBase
     Coroutine pathCoroutine;
     Vector3? lastTargetUnreachablePosition = null;
     Vector3? lastMyUnreachablePosition = null;
+    string ghostColor;
 
     float distance;
     float stillTime = 0f;
@@ -47,9 +48,9 @@ public class GhostController : EntityBase
     void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        UpdateEntityNameSuffix();
-        SetColor();
         EntityManager.Instance.Register<GhostController>(this);
+        SetColor();
+        UpdateEntityNameSuffix();
     }
 
     void Update()
@@ -229,6 +230,11 @@ public class GhostController : EntityBase
         return true;
     }
 
+    public override void UpdateEntityNameSuffix()
+    {
+        entityNameSuffix = ghostColor.ToString();
+    }
+
     async Task<bool> DoPickUp(PickUpObjectInteraction objectToPickUp, ExecutionResult result)
     {
         // check if object is pickable
@@ -350,18 +356,33 @@ public class GhostController : EntityBase
     void SetColor()
     {
         Color color;
-        float intensity = 1f;
+        float intensity = 2f;
 
         switch (entityId)
         {
             case 1:
-                color = Color.blue * intensity;
+                color = Color.cyan * intensity;
+                ghostColor = "Blue";
                 break;
             case 2:
                 color = Color.green * intensity;
+                ghostColor = "Green";
+                break;
+            case 3:
+                color = Color.red * intensity;
+                ghostColor = "Red";
+                break;
+            case 4:
+                color = Color.yellow * intensity;
+                ghostColor = "Yellow";
+                break;
+            case 5:
+                color = Color.magenta * intensity;
+                ghostColor = "Magenta";
                 break;
             default:
-                color = Color.red * intensity;
+                color = Color.white * intensity;
+                ghostColor = "White";
                 break;
         }
 
