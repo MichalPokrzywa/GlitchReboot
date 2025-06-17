@@ -102,9 +102,9 @@ public class LevelExitElevator : MonoBehaviour
     }
 
 
-        void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        if (doorsOpen) return;
+        if (!doorsOpen) return;
         if (other.CompareTag("Player"))
         {
             CloseDoorsPlayerEnter();

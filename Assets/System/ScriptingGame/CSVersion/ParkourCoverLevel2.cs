@@ -8,8 +8,8 @@ public class ParkourCoverLevel2 : PuzzleBase
 
     public override void DoTerminalCode()
     {
-        float scale = GetVariableValue<int>("boxNegativeScale") == 0 ? 1f : 1f/GetVariableValue<int>("boxNegativeScale");
-        Debug.Log(GetVariableValue<int>("boxNegativeScale"));
+        float scale = GetVariableValue<int>("Reducing_Scale") == 0 ? 1f : 1f/GetVariableValue<int>("Reducing_Scale");
+        Debug.Log(GetVariableValue<int>("Reducing_Scale"));
         StartCoroutine(ScaleOverTime(Box.transform, new Vector3(scale, scale, scale), 1.5f));
     }
 
