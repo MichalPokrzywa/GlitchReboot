@@ -1,27 +1,37 @@
 using UnityEngine;
 
-public class CannonController : MonoBehaviour
+public class CannonController : InteractionBase
 {
-    public GameObject projectilePrefab; // Prefab pocisku (wczytywany z Resources)
-    public Transform firePoint; // Punkt wystrza�u
-    public float launchForce = 10f; // Si�a wystrza�u
+    public GameObject attachedObject;
+    public GameObject player;
+    public Transform firePoint; 
+    public float launchForce = 10f; 
 
-    void Update()
+    protected override void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) // Strza� po naci�ni�ciu spacji
+        base.Start();
+        TooltipText = "[E] " + "LOAD GUN";
+    }
+
+    public override void Interact()
+    {
+        Debug.Log("Interakcja: E naciśnięte. Wpisz tutaj swoją logikę interakcji.");
+        if(!player.GetComponent<Interactor>().IsHoldingObject())
         {
-            FireProjectile();
+            player.GetComponent<Rigidbody>().useGravity = false;
+            player.transform.position = firePoint.position;
+            player.transform.rotation = firePoint.rotation;
+            
         }
     }
+
 
     void FireProjectile()
     {
         // Instancjonowanie pocisku
-        GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
-        Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        rb.linearVelocity = firePoint.forward * launchForce; // Nadajemy pr�dko��
+        //Rigidbody rb = projectile.GetComponent<Rigidbody>();
+        player.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * launchForce; // Nadajemy pr�dko��
 
         // Zniszczenie pocisku po 5 sekundach
-        Destroy(projectile, 5f);
     }
 }

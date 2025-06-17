@@ -20,7 +20,7 @@ public class TrainController : MonoBehaviour
         lastPosition = transform.position;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!railPath) return;
 
