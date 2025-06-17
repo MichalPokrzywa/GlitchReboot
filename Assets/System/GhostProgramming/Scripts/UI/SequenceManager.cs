@@ -24,19 +24,19 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     void Awake()
     {
         InitBlocksFromSelectionBox();
-        var noDropZones = mainParent.GetComponentsInChildren<NoDropZone>(true);
+        var noDropZones = mainParent.GetComponentsInChildren<DropTriggerZone>(true);
         foreach (var child in noDropZones)
         {
-            child.OnDropped += OnNoDropZoneDropped;
+            child.OnDropped += DiscardSelectedBlock;
         }
     }
 
     void OnDestroy()
     {
-        var noDropZones = mainParent.GetComponentsInChildren<NoDropZone>(true);
+        var noDropZones = mainParent.GetComponentsInChildren<DropTriggerZone>(true);
         foreach (var child in noDropZones)
         {
-            child.OnDropped -= OnNoDropZoneDropped;
+            child.OnDropped -= DiscardSelectedBlock;
         }
     }
 
@@ -75,6 +75,13 @@ public class SequenceManager : MonoBehaviour, IDropHandler
     {
         if (selectedBlock == null)
             return;
+
+        // If the sequence is running, discard the selected block
+        if (sequence.IsRunning)
+        {
+            DiscardSelectedBlock();
+            return;
+        }
 
         SelectionBoxRaycastActivate();
 
@@ -120,7 +127,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         if (sequence.ContainsBlock(selectedBlock))
             sequence.RemoveBlock(selectedBlock);
 
-        sequence.AddBlock(insertIndex,selectedBlock);
+        sequence.AddBlock(insertIndex, selectedBlock);
 
         // Make currently dragged block a child of the sequence container in correct position
         PlaceSelectedBlockInSequence(sequence, insertIndex);
@@ -128,7 +135,7 @@ public class SequenceManager : MonoBehaviour, IDropHandler
         DestroyEmptySequence(previousSequence);
     }
 
-    public void OnNoDropZoneDropped()
+    public void DiscardSelectedBlock()
     {
         if (selectedBlock == null)
             return;

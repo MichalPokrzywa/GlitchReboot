@@ -362,27 +362,27 @@ public class GhostController : EntityBase
         {
             case 1:
                 color = Color.cyan * intensity;
-                ghostColor = "Blue";
+                ghostColor = "<b>Blue</b>";
                 break;
             case 2:
                 color = Color.green * intensity;
-                ghostColor = "Green";
+                ghostColor = "<b>Green</b>";
                 break;
             case 3:
                 color = Color.red * intensity;
-                ghostColor = "Red";
+                ghostColor = "<b>Red</b>";
                 break;
             case 4:
                 color = Color.yellow * intensity;
-                ghostColor = "Yellow";
+                ghostColor = "<b>Yellow</b>";
                 break;
             case 5:
                 color = Color.magenta * intensity;
-                ghostColor = "Magenta";
+                ghostColor = "<b>Magenta</b>";
                 break;
             default:
                 color = Color.white * intensity;
-                ghostColor = "White";
+                ghostColor = "<b>White</b>";
                 break;
         }
 

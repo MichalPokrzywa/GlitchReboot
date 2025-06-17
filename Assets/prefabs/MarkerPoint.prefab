@@ -126,8 +126,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityId: 0
   entityNameSuffix: 
+  puzzle: {fileID: 0}
   markerText: {fileID: 4838294328912813327}
   target: {fileID: 0}
+  renderer: {fileID: 2203787499232037458}
 --- !u!114 &1326364301662729908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,10 +162,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a4a08ad921d4fe94b9addb98217c4c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minGlitch: 0.1
-  maxGlitch: 0.25
-  glitchLength: 0.2
-  timeBetweenGlitches: 4
+  minGlitchStrength: 0.1
+  maxGlitchStrength: 0.25
+  minGlitchLength: 0.1
+  maxGlitchLength: 0.5
+  minTimeBetweenGlitches: 4
+  maxTimeBetweenGlitches: 8
 --- !u!1 &7416519441769494087
 GameObject:
   m_ObjectHideFlags: 0

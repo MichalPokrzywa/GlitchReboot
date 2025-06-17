@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class NoDropZone : MonoBehaviour, IDropHandler
+public class DropTriggerZone : MonoBehaviour, IDropHandler
 {
     public Action OnDropped;
 

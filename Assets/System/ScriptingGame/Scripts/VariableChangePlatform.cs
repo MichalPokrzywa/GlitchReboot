@@ -105,6 +105,7 @@ public class VariableChangePlatform : VariablePlatformBase
 
     public override void UpdateEntityNameSuffix()
     {
-        entityNameSuffix = "Value change " +  type.ToString();
+        string color = VariableTypeColor.GetHex(type);
+        entityNameSuffix = $"Value change <b><color={color}>{type.ToString()}</color></b>";
     }
 }

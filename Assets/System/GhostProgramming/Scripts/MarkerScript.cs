@@ -6,14 +6,14 @@ public class MarkerScript : EntityBase
 {
     [SerializeField] TextMeshProUGUI markerText;
     [SerializeField] Transform target;
+    [SerializeField] Renderer renderer;
 
     public bool isActive => gameObject.activeSelf;
 
-    Renderer renderer;
-
     void Start()
     {
-        renderer = GetComponent<Renderer>();
+        if (renderer == null)
+            renderer = GetComponent<Renderer>();
         UpdateEntityNameSuffix();
         EntityManager.Instance.Register<MarkerScript>(this);
 
@@ -54,7 +54,10 @@ public class MarkerScript : EntityBase
     public void SetColor(Color color)
     {
         if (renderer == null)
+        {
+            Debug.LogError($"{gameObject.name} - renderer not found");
             return;
+        }
 
         renderer.material.SetColor("_MainColor", color);
     }

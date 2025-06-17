@@ -44,6 +44,7 @@ public class SpiderBehaviour : MonoBehaviour
     [SerializeField] List<GameObject> eyebrowsHappy;
     [SerializeField] List<GameObject> eyebrowsAngry;
     [SerializeField] RectTransform smile;
+    [SerializeField] Eyes2DMovement eyes;
 
     [Header("Movement Settings")]
     [SerializeField] float rotationSpeed = 5f;
@@ -64,6 +65,12 @@ public class SpiderBehaviour : MonoBehaviour
     const float targetDistThreshold = 0.01f;
     void Start()
     {
+        if (player == null)
+            player = FindObjectOfType<FirstPersonController>().gameObject;
+
+        if (eyes.target == null)
+            eyes.target = player.transform;
+
         if (targetData.Count == 0)
         {
             Debug.LogWarning("No targets assigned to SpiderBehaviour. Staying in Place");

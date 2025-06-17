@@ -31,6 +31,8 @@ public class PuzzleBase : MonoBehaviour
     {
         foreach (VariablePlatform plat in allLevelPlatforms)
         {
+            plat.puzzleBase = this;
+
             INamedVariableHandler h = plat.GetHandler();
 
             namedHandlers.Add(h);

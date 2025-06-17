@@ -28,7 +28,8 @@ public class VariableDice : EntityBase
 
     public override void UpdateEntityNameSuffix()
     {
-        entityNameSuffix = "- " + GetCurrentValue().ToString();
+        string color = VariableTypeColor.GetHex(type);
+        entityNameSuffix = $"<b><color={color}>{GetCurrentValue().ToString()}</color></b>";
     }
 
     void InitializeHandler()

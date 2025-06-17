@@ -134,6 +134,6 @@ public class VariablePlatform : VariablePlatformBase
     }
     public override void UpdateEntityNameSuffix()
     {
-        entityNameSuffix = variableName;
+        entityNameSuffix = $"<b>{variableName}</b>";
     }
 }
