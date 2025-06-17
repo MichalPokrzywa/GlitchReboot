@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class BoxTrigger : MonoBehaviour
 {
-    private void Reset()
+    //To jest klasa dzięki której zrobicie piękny box collider bez rzeźbienia od początku HuRAAAA
+    public virtual void Reset()
     {
         // Ustaw collider jako trigger
         Collider col = GetComponent<Collider>();
