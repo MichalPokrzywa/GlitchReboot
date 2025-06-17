@@ -27,6 +27,7 @@ public class GhostController : EntityBase
     Coroutine pathCoroutine;
     Vector3? lastTargetUnreachablePosition = null;
     Vector3? lastMyUnreachablePosition = null;
+    Vector3 targetPos;
     string ghostColor;
 
     float distance;
@@ -36,6 +37,7 @@ public class GhostController : EntityBase
     const float maxStillTime = 2f;
     const float pathCalculationInterval = 0.5f;
     const float actionDelay = 0.25f;
+    [SerializeField] float rotationSpeed = 0.5f;
 
     public enum InteractionDistance
     {
@@ -55,6 +57,11 @@ public class GhostController : EntityBase
 
     void Update()
     {
+        if (target != null)
+            targetPos = target.transform.position;
+
+        RotateTowards(targetPos);
+
         // If there is no target - do nothing
         if (target == null)
             return;
@@ -351,6 +358,18 @@ public class GhostController : EntityBase
             // Wait for a short time before trying to recalculate path in case the target is moving
             yield return new WaitForSeconds(pathCalculationInterval);
         }
+    }
+
+    void RotateTowards(Vector3 targetPos)
+    {
+        Vector3 direction = (targetPos - transform.position).normalized;
+        direction.y = 0f;
+
+        if (direction == Vector3.zero)
+            return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
     }
 
     void SetColor()

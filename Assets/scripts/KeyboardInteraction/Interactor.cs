@@ -90,8 +90,11 @@ public class Interactor : MonoBehaviour
             lastInteractor.HideUI();
             lastInteractor = null;
         }
+    }
 
-
+    public void HideLastUI()
+    {
+        lastInteractor?.HideUI();
     }
 
     // called by the pickup when it actually drops
