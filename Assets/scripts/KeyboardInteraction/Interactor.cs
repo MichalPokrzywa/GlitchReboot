@@ -11,6 +11,7 @@ public class Interactor : MonoBehaviour
     public Transform handPoint;
     public bool canInteract = true;
     public Animator animator;
+    public FirstPersonController player;
     private IInteractable lastInteractor;
     private PickUpObjectInteraction heldObject;
 
@@ -35,61 +36,120 @@ public class Interactor : MonoBehaviour
         if(!canInteract)
             return;
 
+        HandleInteraction();
+    }
+
+    void HandleInteraction()
+    {
         Ray r = new Ray(InteractionSource.position, InteractionSource.forward);
 
-
-        if (heldObject != null)
+        if (heldObject is PickUpObjectInteraction pickupHeld)
         {
-            if (heldObject is PickUpObjectInteraction pickup)
-            {
-                if (Input.GetKeyDown(KeyCode.E) && pickup.IsPickedUp && pickup.inhand && animator.GetBool("CanPickup"))
-                {
-                    pickup.DropInFront();
-                    //swap animation for dropDice
-                    heldObject = null;
+            HandleHeldObject(pickupHeld);
+            return;
+        }
 
-                }
-                else if (Input.GetKeyDown(KeyCode.Mouse0) && pickup.IsPickedUp && pickup.inhand && animator.GetBool("CanPickup"))
-                {
-                    pickup.Throw();
-                    heldObject = null;
-                }
+        if (!Physics.Raycast(r, out RaycastHit hit))
+        {
+            ClearLastInteractor();
+            return;
+        }
+
+        if (!hit.collider.TryGetComponent(out IInteractable interactObj))
+        {
+            ClearLastInteractor();
+            return;
+        }
+
+        HandleInteractKey(interactObj, hit);
+        HandleHoverUI(interactObj, hit);
+    }
+
+    void HandleHeldObject(PickUpObjectInteraction pickup)
+    {
+        bool canPickup = pickup.IsPickedUp && pickup.inhand && animator.GetBool("CanPickup");
+
+        if (Input.GetKeyDown(KeyCode.E) && canPickup)
+        {
+            pickup.DropInFront();
+            heldObject = null;
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse0) && canPickup)
+        {
+            pickup.Throw();
+            heldObject = null;
+        }
+    }
+
+    void HandleInteractKey(IInteractable interactObj, RaycastHit hit)
+    {
+        if (!Input.GetKeyDown(KeyCode.E) || hit.distance > InteractionRange)
+            return;
+
+        // logic for pickup object
+        if (interactObj is PickUpObjectInteraction pickup
+            && pickup.IsDropped && heldObject == null && animator.GetBool("CanPickup"))
+        {
+            gameObject.layer = LayerMask.NameToLayer("PlayerWithObject");
+            pickup.MoveToHand(handPoint, holdPoint, this);
+            PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.DiceThrow);
+            heldObject = pickup;
+            interactObj.HideUI();
+        }
+        // logic for the rest of the interactables
+        else
+        {
+            interactObj.Interact();
+        }
+    }
+
+    // ugly garbage, please fix me some day
+    void HandleHoverUI(IInteractable interactObj, RaycastHit hit)
+    {
+        bool canPickup = animator.GetBool("CanPickup");
+
+        // logic for entity tooltip
+        if (interactObj is EntityTooltipInteraction entity)
+        {
+            // if is zoomed, show entity tooltip
+            if (player.isZoomed)
+            {
+                entity.ShowUI();
+                lastInteractor = entity;
+            }
+            // if not zoomed, make sure that tooltip is hidden
+            else if (entity.HasShownUI)
+            {
+                ClearLastInteractor();
             }
         }
-        else if (Physics.Raycast(r, out RaycastHit hit, InteractionRange) &&
-            hit.collider.gameObject.TryGetComponent(out IInteractable interactObj))
+        // logic for the rest of the interactables
+        else if (heldObject == null && canPickup)
         {
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                if (interactObj is PickUpObjectInteraction pickup)
-                {
-                    if (pickup.IsDropped && heldObject == null && heldObject != pickup && animator.GetBool("CanPickup"))
-                    {
-                        // pass yourself into the pickup
-                        gameObject.layer = LayerMask.NameToLayer("PlayerWithObject");
-                        pickup.MoveToHand(handPoint, holdPoint, this);
-                        PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.DiceThrow);
-                        heldObject = pickup;
-                        interactObj.HideUI(); // Hide UI when picked up
-                    }
-                }
-                else
-                {
-                    interactObj.Interact();
-                }
-            }
-
-            if (!interactObj.HasShownUI && heldObject == null && animator.GetBool("CanPickup"))
+            // default interactable
+            if (hit.distance <= InteractionRange)
             {
                 interactObj.ShowUI();
                 lastInteractor = interactObj;
             }
+            // pickup interactable covering entity tooltip
+            else if (interactObj is PickUpObjectInteraction pickup && player.isZoomed)
+            {
+                pickup.EntityTooltipInteraction.ShowUI();
+                lastInteractor = pickup.EntityTooltipInteraction;
+            }
+            // if not zoomed, make sure that tooltip is hidden
+            else
+            {
+                ClearLastInteractor();
+            }
         }
-        else if (lastInteractor != null)
-        {
-            lastInteractor.HideUI();
-            lastInteractor = null;
-        }
+    }
+
+    void ClearLastInteractor()
+    {
+        lastInteractor?.HideUI();
+        lastInteractor = null;
     }
 
     public void HideLastUI()

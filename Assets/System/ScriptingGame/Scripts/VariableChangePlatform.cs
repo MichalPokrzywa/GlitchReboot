@@ -108,5 +108,6 @@ public class VariableChangePlatform : VariablePlatformBase
         entityName = "Platform";
         string color = VariableTypeColor.GetHex(type);
         entityNameSuffix = $"Value change <b><color={color}>{type.ToString()}</color></b>";
+        base.UpdateEntityDisplayName();
     }
 }

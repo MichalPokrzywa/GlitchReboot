@@ -8,31 +8,15 @@ public abstract class EntityBase : MonoBehaviour
     public int entityId;
     [HideInInspector] public string entityName = string.Empty;
     [HideInInspector] public string entityNameSuffix = string.Empty;
-    [SerializeField] Tooltip tooltip;
+    [SerializeField] EntityTooltipInteraction entityTooltipInteraction;
 
-    public virtual void Start()
+    public virtual void UpdateEntityDisplayName()
     {
-        Canvas canvas = tooltip.GetComponentInParent<Canvas>();
-        if (canvas.renderMode == RenderMode.WorldSpace)
-            canvas.worldCamera = Camera.main;
+        entityTooltipInteraction?.UpdateTooltip(GetEntityName());
     }
-
-    public abstract void UpdateEntityDisplayName();
 
     public string GetEntityName()
     {
         return $"{entityName}{entityId} {entityNameSuffix}";
-    }
-
-    public void OnMouseEnter()
-    {
-        if (tooltip != null )
-            tooltip.Activate(GetEntityName());
-    }
-
-    public void OnMouseExit()
-    {
-        if (tooltip != null)
-            tooltip.Deactivate();
     }
 }

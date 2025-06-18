@@ -47,10 +47,8 @@ public class GhostController : EntityBase
         Close,
     }
 
-    public override void Start()
+    void Start()
     {
-        base.Start();
-
         agent = GetComponent<NavMeshAgent>();
         EntityManager.Instance.Register<GhostController>(this);
         SetColor();
@@ -243,6 +241,7 @@ public class GhostController : EntityBase
     {
         entityName = "Ghost";
         entityNameSuffix = ghostColor.ToString();
+        base.UpdateEntityDisplayName();
     }
 
     async Task<bool> DoPickUp(PickUpObjectInteraction objectToPickUp, ExecutionResult result)

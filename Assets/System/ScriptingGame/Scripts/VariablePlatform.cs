@@ -136,5 +136,6 @@ public class VariablePlatform : VariablePlatformBase
     {
         entityName = "Platform";
         entityNameSuffix = $"<b>{variableName}</b>";
+        base.UpdateEntityDisplayName();
     }
 }

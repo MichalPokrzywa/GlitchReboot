@@ -19,6 +19,7 @@ public class PickUpObjectInteraction : InteractionBase
    public bool onTarget = false;
    public bool isAnimationPlaying = false;
    public bool inhand = false;
+   public EntityTooltipInteraction EntityTooltipInteraction;
    private Transform diceTransform;
    private ePickUpState PickUpState;
 

@@ -7,15 +7,13 @@ public class MarkerScript : EntityBase
 
     public bool isActive => gameObject.activeSelf;
 
-    public override void Start()
+    void Start()
     {
-        base.Start();
-
         if (renderer == null)
             renderer = GetComponent<Renderer>();
 
-        UpdateEntityDisplayName();
         EntityManager.Instance.Register<MarkerScript>(this);
+        UpdateEntityDisplayName();
 
         Deactivate();
     }
@@ -33,6 +31,7 @@ public class MarkerScript : EntityBase
     public override void UpdateEntityDisplayName()
     {
         entityName = "Marker";
+        base.UpdateEntityDisplayName();
     }
 
     public void SetTarget(Transform target)

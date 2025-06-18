@@ -17,15 +17,13 @@ public class VariableDice : EntityBase
     private IVariableValueHandler handler;
     bool onPlatform = false;
 
-    public override void Start()
+    void Start()
     {
-        base.Start();
-
         InitializeHandler();
         colorLooper = GetComponent<TextColorLooper>();
         colorLooper.textList = textList;
-        UpdateEntityDisplayName();
         EntityManager.Instance.Register<VariableDice>(this);
+        UpdateEntityDisplayName();
     }
 
     public override void UpdateEntityDisplayName()
@@ -33,6 +31,7 @@ public class VariableDice : EntityBase
         entityName = "Variable Dice";
         string color = VariableTypeColor.GetHex(type);
         entityNameSuffix = $"<b><color={color}>{GetCurrentValue().ToString()}</color></b>";
+        base.UpdateEntityDisplayName();
     }
 
     void InitializeHandler()

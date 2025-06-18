@@ -11,10 +11,9 @@ public abstract class VariablePlatformBase : EntityBase
 
     public virtual void Start()
     {
-        base.Start();
-
         EntityManager.Instance.Register<VariablePlatformBase>(this);
     }
+
     public abstract void ReceiveValue(object obj);
     public abstract void ClearValue();
     public abstract void MoveObjectToPosition(GameObject go);

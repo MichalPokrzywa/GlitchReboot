@@ -443,13 +443,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractionSource: {fileID: 7528634406910017424}
-  InteractionRange: 3
   holdDistance: 2
   holdSmoothSpeed: 10
   holdPoint: {fileID: 7960105786080236497}
   handPoint: {fileID: 7837387986080566808}
   canInteract: 1
+  InteractionRange: 3
   animator: {fileID: 6274080956667428276}
+  player: {fileID: 7528634406053254409}
 --- !u!114 &3331515570137778250
 MonoBehaviour:
   m_ObjectHideFlags: 0
