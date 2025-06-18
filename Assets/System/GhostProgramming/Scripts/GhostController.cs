@@ -27,6 +27,7 @@ public class GhostController : EntityBase
     Coroutine pathCoroutine;
     Vector3? lastTargetUnreachablePosition = null;
     Vector3? lastMyUnreachablePosition = null;
+    Vector3 targetPos;
     string ghostColor;
 
     float distance;
@@ -36,6 +37,7 @@ public class GhostController : EntityBase
     const float maxStillTime = 2f;
     const float pathCalculationInterval = 0.5f;
     const float actionDelay = 0.25f;
+    [SerializeField] float rotationSpeed = 0.5f;
 
     public enum InteractionDistance
     {
@@ -50,11 +52,16 @@ public class GhostController : EntityBase
         agent = GetComponent<NavMeshAgent>();
         EntityManager.Instance.Register<GhostController>(this);
         SetColor();
-        UpdateEntityNameSuffix();
+        UpdateEntityDisplayName();
     }
 
     void Update()
     {
+        if (target != null)
+            targetPos = target.transform.position;
+
+        RotateTowards(targetPos);
+
         // If there is no target - do nothing
         if (target == null)
             return;
@@ -230,9 +237,11 @@ public class GhostController : EntityBase
         return true;
     }
 
-    public override void UpdateEntityNameSuffix()
+    public override void UpdateEntityDisplayName()
     {
+        entityName = "Ghost";
         entityNameSuffix = ghostColor.ToString();
+        base.UpdateEntityDisplayName();
     }
 
     async Task<bool> DoPickUp(PickUpObjectInteraction objectToPickUp, ExecutionResult result)
@@ -353,6 +362,18 @@ public class GhostController : EntityBase
         }
     }
 
+    void RotateTowards(Vector3 targetPos)
+    {
+        Vector3 direction = (targetPos - transform.position).normalized;
+        direction.y = 0f;
+
+        if (direction == Vector3.zero)
+            return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
     void SetColor()
     {
         Color color;
@@ -362,27 +383,27 @@ public class GhostController : EntityBase
         {
             case 1:
                 color = Color.cyan * intensity;
-                ghostColor = "Blue";
+                ghostColor = "<b>Blue</b>";
                 break;
             case 2:
                 color = Color.green * intensity;
-                ghostColor = "Green";
+                ghostColor = "<b>Green</b>";
                 break;
             case 3:
                 color = Color.red * intensity;
-                ghostColor = "Red";
+                ghostColor = "<b>Red</b>";
                 break;
             case 4:
                 color = Color.yellow * intensity;
-                ghostColor = "Yellow";
+                ghostColor = "<b>Yellow</b>";
                 break;
             case 5:
                 color = Color.magenta * intensity;
-                ghostColor = "Magenta";
+                ghostColor = "<b>Magenta</b>";
                 break;
             default:
                 color = Color.white * intensity;
-                ghostColor = "White";
+                ghostColor = "<b>White</b>";
                 break;
         }
 

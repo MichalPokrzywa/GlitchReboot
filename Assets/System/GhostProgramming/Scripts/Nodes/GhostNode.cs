@@ -7,9 +7,4 @@ public class GhostNode : EntityNode<GhostController>
     {
         return EntityManager.Instance.GetEntities<GhostController>();
     }
-
-    protected override string GetEntityName()
-    {
-        return "Ghost";
-    }
 }

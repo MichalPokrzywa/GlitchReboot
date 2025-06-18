@@ -1070,6 +1070,7 @@ GameObject:
   - component: {fileID: 604787650891974096}
   - component: {fileID: 8803764186136295686}
   - component: {fileID: 3746043349995198986}
+  - component: {fileID: 8439472646073033645}
   - component: {fileID: 672106174375996061}
   - component: {fileID: 1636587628283719643}
   m_Layer: 7
@@ -1114,7 +1115,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityId: 0
+  entityName: 
   entityNameSuffix: 
+  entityTooltipInteraction: {fileID: 8439472646073033645}
   type: 2
   textList:
   - {fileID: 2159704178540239493}
@@ -1295,6 +1298,24 @@ MonoBehaviour:
   onTarget: 0
   isAnimationPlaying: 0
   inhand: 0
+  EntityTooltipInteraction: {fileID: 8439472646073033645}
+--- !u!114 &8439472646073033645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7662297200887842987}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09e40d77c9615be49a6a1c6cd05b68ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UIHoverObject: {fileID: 0}
+  UIHoverText: {fileID: 0}
+  floatDistanceX: 100
+  floatDistanceY: 100
+  mainCamera: {fileID: 0}
 --- !u!114 &672106174375996061
 MonoBehaviour:
   m_ObjectHideFlags: 0

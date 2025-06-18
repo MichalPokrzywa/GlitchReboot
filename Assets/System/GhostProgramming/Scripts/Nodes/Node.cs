@@ -12,9 +12,8 @@ namespace GhostProgramming
     {
         public Node prevNode;
         public Node nextNode;
-        public bool isInRunningSequence = false;
-        // false if dropdown is empty
         public bool isValid = true;
+        public bool isInRunningSequence = false;
         public bool currentlyExecuting = false;
     }
 }

@@ -36,7 +36,6 @@ namespace GhostProgramming
         }
 
         protected abstract List<T> GetEntityList();
-        protected abstract string GetEntityName();
 
         public override T GetValue()
         {
@@ -54,7 +53,7 @@ namespace GhostProgramming
             var list = GetEntityList();
             for (int i = 0; i < list.Count; i++)
             {
-                var label = BuildEntityLabel(list[i]);
+                var label = list[i].GetEntityName();
                 dropdown.options.Add(new TMP_Dropdown.OptionData(label));
             }
             dropdown.RefreshShownValue();
@@ -83,17 +82,22 @@ namespace GhostProgramming
         {
             var list = GetEntityList();
 
+            if (list == null)
+            {
+                UpdateDropdownState(false);
+                return;
+            }
+
             RefreshDropdownIfChanged();
 
             // check if selected object is active in hierarchy and set interactability accordingly
             if (list[dropdown.value].gameObject.activeSelf)
             {
-                dropdown.interactable = true;
-                this.isValid = true;
+                UpdateDropdownState(true);
                 return;
             }
 
-            // if it is deactivated, find the first active object or hide the dropdown
+            // if it is deactivated, find and assign the first active object or mark dropdown invalid if none are active
             int firstActiveIndex = -1;
             for (int i = 0; i < list.Count; i++)
             {
@@ -105,41 +109,49 @@ namespace GhostProgramming
             }
             if (firstActiveIndex == -1)
             {
-                dropdown.Hide();
-                dropdown.interactable = false;
-                this.isValid = false;
+                UpdateDropdownState(false);
             }
             else
             {
-                dropdown.interactable = true;
-                this.isValid = true;
+                UpdateDropdownState(true);
                 dropdown.value = firstActiveIndex;
                 dropdown.RefreshShownValue();
             }
         }
 
+        void UpdateDropdownState(bool isActive)
+        {
+            if (!isActive)
+                dropdown.Hide();
+
+            dropdown.interactable = isActive;
+            this.isValid = isActive;
+        }
+
         void RefreshDropdownIfChanged()
         {
             var list = GetEntityList();
+
+            if (list == null)
+                return;
+
+            // if list changed, reinitialize the dropdown
             if (list.Count != dropdown.options.Count)
             {
                 InitDropdown();
                 return;
             }
+
+            // if labels changed, reinitialize the dropdown
             for (int i = 0; i < list.Count; i++)
             {
-                var currentLabel = BuildEntityLabel(list[i]);
+                var currentLabel = list[i].GetEntityName();
                 if (dropdown.options[i].text != currentLabel)
                 {
                     InitDropdown();
                     return;
                 }
             }
-        }
-
-        string BuildEntityLabel(T entity)
-        {
-            return $"{GetEntityName()}{entity.entityId} {entity.entityNameSuffix}";
         }
     }
 }

@@ -30,7 +30,7 @@ public class VariableChangePlatform : VariablePlatformBase
         var rend = GetComponentInChildren<Renderer>();
         if (rend != null)
             rend.material.color = VariableTypeColor.GetColor(type);
-        UpdateEntityNameSuffix();
+        UpdateEntityDisplayName();
     }
 
     public override void ReceiveValue(object obj)
@@ -103,8 +103,11 @@ public class VariableChangePlatform : VariablePlatformBase
         }
     }
 
-    public override void UpdateEntityNameSuffix()
+    public override void UpdateEntityDisplayName()
     {
-        entityNameSuffix = "Value change " +  type.ToString();
+        entityName = "Platform";
+        string color = VariableTypeColor.GetHex(type);
+        entityNameSuffix = $"Value change <b><color={color}>{type.ToString()}</color></b>";
+        base.UpdateEntityDisplayName();
     }
 }

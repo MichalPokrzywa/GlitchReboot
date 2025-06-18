@@ -41,6 +41,7 @@ public class TabletInteractor : MonoBehaviour
                 {
                     PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.TerminalLanguageChange);
                     ShowTablet();
+                    interactor.HideLastUI();
                 }
             }
             else

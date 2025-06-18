@@ -2197,6 +2197,7 @@ GameObject:
   - component: {fileID: 4041729196863455784}
   - component: {fileID: 4797653511023796671}
   - component: {fileID: 9202886219243994077}
+  - component: {fileID: 6163873940432924853}
   m_Layer: 9
   m_Name: Ghost
   m_TagString: Player
@@ -2395,8 +2396,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityId: 0
+  entityName: 
   entityNameSuffix: 
+  entityTooltipInteraction: {fileID: 6163873940432924853}
   holdPoint: {fileID: 3878772361652324436}
+  rotationSpeed: 0.5
 --- !u!114 &9202886219243994077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2419,6 +2423,23 @@ MonoBehaviour:
   StopAnimTime: 0.25
   StartCarryAnimTime: 0.4
   StopCarryAnimTime: 0.25
+--- !u!114 &6163873940432924853
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3668095099017681405}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09e40d77c9615be49a6a1c6cd05b68ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UIHoverObject: {fileID: 0}
+  UIHoverText: {fileID: 0}
+  floatDistanceX: 100
+  floatDistanceY: 100
+  mainCamera: {fileID: 0}
 --- !u!1 &3748396559580559326
 GameObject:
   m_ObjectHideFlags: 0

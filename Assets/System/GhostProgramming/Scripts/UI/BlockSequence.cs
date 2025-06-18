@@ -15,6 +15,7 @@ public class BlockSequence : MonoBehaviour, IDropHandler, IPointerEnterHandler, 
     public Action<BlockSequence, PointerEventData> OnDropped;
     public int BlockCount => blocks.Count;
     public bool IsSelected => selected;
+    public bool IsRunning = false;
     public List<Block> Blocks => blocks;
 
     List<Block> blocks = new List<Block>();
