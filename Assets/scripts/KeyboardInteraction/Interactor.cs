@@ -4,7 +4,7 @@ using UnityEngine;
 public class Interactor : MonoBehaviour
 {
     public Transform InteractionSource;
-    public float InteractionRange = 10;
+    public float InteractionRange = 10;    // EntityTooltipInteraction is always shown, regardless of this
     public float holdDistance = 2f;        // default distance to hold objects
     public float holdSmoothSpeed = 10f;    // how quickly the holdPoint moves
     public Transform holdPoint;
@@ -61,8 +61,8 @@ public class Interactor : MonoBehaviour
             return;
         }
 
-        HandleInteractKey(interactObj, hit);
         HandleHoverUI(interactObj, hit);
+        HandleInteractKey(interactObj, hit);
     }
 
     void HandleHeldObject(PickUpObjectInteraction pickup)
@@ -107,42 +107,36 @@ public class Interactor : MonoBehaviour
     void HandleHoverUI(IInteractable interactObj, RaycastHit hit)
     {
         bool canPickup = animator.GetBool("CanPickup");
+        ClearLastInteractor();
 
-        // logic for entity tooltip
-        if (interactObj is EntityTooltipInteraction entity)
+        switch (interactObj)
         {
-            // if is zoomed, show entity tooltip
-            if (player.isZoomed)
-            {
+            case EntityTooltipInteraction entity when player.isZoomed:
                 entity.ShowUI();
                 lastInteractor = entity;
-            }
-            // if not zoomed, make sure that tooltip is hidden
-            else if (entity.HasShownUI)
-            {
+                break;
+
+            case EntityTooltipInteraction entity when !player.isZoomed:
                 ClearLastInteractor();
-            }
-        }
-        // logic for the rest of the interactables
-        else if (heldObject == null && canPickup)
-        {
-            // default interactable
-            if (hit.distance <= InteractionRange)
-            {
-                interactObj.ShowUI();
-                lastInteractor = interactObj;
-            }
-            // pickup interactable covering entity tooltip
-            else if (interactObj is PickUpObjectInteraction pickup && player.isZoomed)
-            {
+                break;
+
+            case PickUpObjectInteraction pickup when hit.distance <= InteractionRange && heldObject == null && canPickup:
+                pickup.ShowUI();
+                lastInteractor = pickup;
+                break;
+
+            case PickUpObjectInteraction pickup when pickup.EntityTooltipInteraction != null && player.isZoomed:
                 pickup.EntityTooltipInteraction.ShowUI();
                 lastInteractor = pickup.EntityTooltipInteraction;
-            }
-            // if not zoomed, make sure that tooltip is hidden
-            else
-            {
-                ClearLastInteractor();
-            }
+                break;
+
+            default:
+                if (hit.distance <= InteractionRange)
+                {
+                    interactObj.ShowUI();
+                    lastInteractor = interactObj;
+                }
+                break;
         }
     }
 

@@ -79,20 +79,26 @@ public class InteractionBase : MonoBehaviour, IInteractable
 
     public void AnimateUI()
     {
-        // Convert world position to screen position
-        Vector3 screenPos = mainCamera.WorldToScreenPoint(transform.position);
+        Vector3 viewportPos = mainCamera.WorldToViewportPoint(transform.position);
+        Vector3 screenPos = mainCamera.ViewportToScreenPoint(viewportPos);
+
+        Vector3 offset = new Vector3(floatDistanceX * -1, floatDistanceY, 0);
+        Vector3 targetPosition = screenPos + offset;
 
         float textWidth = UIHoverText.preferredWidth;
         float textHeight = UIHoverText.preferredHeight;
 
-        Vector3 targetPosition = screenPos + new Vector3(floatDistanceX * -1, floatDistanceY, 0);
+        //Debug.Log($"{name} - {textWidth}");
+        //Debug.Log($"{name} - {textHeight}");
 
-        // Clamp the position to ensure it stays within the screen bounds
         float margin = 10f;
         targetPosition.x = Mathf.Clamp(targetPosition.x, margin, Screen.width - textWidth - margin);
         targetPosition.y = Mathf.Clamp(targetPosition.y, margin + textHeight, Screen.height - margin);
 
-        UIHoverText.rectTransform.position = Vector3.Lerp(UIHoverText.rectTransform.position, targetPosition, Time.deltaTime * 5f
-        );
+        UIHoverText.rectTransform.position = Vector3.Lerp(
+                UIHoverText.rectTransform.position,
+                targetPosition,
+                Time.deltaTime * 5f
+            );
     }
 }
