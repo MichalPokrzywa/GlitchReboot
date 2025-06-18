@@ -103,13 +103,13 @@ public class GhostInput : MonoBehaviour, InputInterface
             return;
         }
 
-        float horizontalInput = input.GetHorizontalInput();
-        float verticalInput = input.GetVerticalInput();
-        bool isJumping = input.IsJumping();
-        bool isCrouching = input.IsCrouching();
-        bool isSprinting = input.IsSprinting();
-        float mouseX = input.GetMouseX();
-        float mouseY = input.GetMouseY();
+        float horizontalInput = input.GetMoveHorizontal();
+        float verticalInput = input.GetMoveVertical();
+        bool isJumping = input.IsJumpPressed();
+        bool isCrouching = input.IsCrouchHeld();
+        bool isSprinting = input.IsSprintHeld();
+        float mouseX = input.GetLookHorizontal();
+        float mouseY = input.GetLookVertical();
 
         bool isCurrentInputRepeated = recordedMovement.Count > 0
             && recordedMovement.Last().horizontal == horizontalInput
@@ -169,7 +169,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         startTime = Time.time;
     }
 
-    public float GetHorizontalInput()
+    public float GetMoveHorizontal()
     {
         if (state == State.REPLAY)
         {
@@ -179,7 +179,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         return 0;
     }
 
-    public float GetVerticalInput()
+    public float GetMoveVertical()
     {
         if (state == State.REPLAY)
         {
@@ -189,7 +189,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         return 0;
     }
 
-    public bool IsJumping()
+    public bool IsJumpPressed()
     {
         if (state == State.REPLAY)
         {
@@ -199,7 +199,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         return false;
     }
 
-    public bool IsCrouching()
+    public bool IsCrouchHeld()
     {
         if (state == State.REPLAY)
         {
@@ -209,7 +209,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         return false;
     }
 
-    public bool IsSprinting()
+    public bool IsSprintHeld()
     {
         if (state == State.REPLAY)
         {
@@ -219,7 +219,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         return false;
     }
 
-    public float GetMouseX()
+    public float GetLookHorizontal()
     {
         if (state == State.REPLAY)
         {
@@ -228,7 +228,7 @@ public class GhostInput : MonoBehaviour, InputInterface
         return 0;
     }
 
-    public float GetMouseY()
+    public float GetLookVertical()
     {
         if (state == State.REPLAY)
         {
@@ -246,22 +246,27 @@ public class GhostInput : MonoBehaviour, InputInterface
         state = State.NONE;
     }
 
-    public bool OnInteract()
+    public bool IsInteracting()
     {
         throw new System.NotImplementedException();
     }
 
-    public bool OnTabletUse()
+    public bool IsInteractingWithTablet()
     {
         throw new System.NotImplementedException();
     }
 
-    public bool OnFire()
+    public bool IsFirePressed()
     {
         throw new System.NotImplementedException();
     }
 
-    public bool OnEscape()
+    public bool IsPausePressed()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool IsZoomHeld()
     {
         throw new System.NotImplementedException();
     }

@@ -31,7 +31,7 @@ public class PanelManager : Singleton<PanelManager>
 
     void Update()
     {
-        if (implementedInput.OnEscape() && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
+        if (implementedInput.IsPausePressed() && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
         {
             pausePanel.TogglePanel();
         }

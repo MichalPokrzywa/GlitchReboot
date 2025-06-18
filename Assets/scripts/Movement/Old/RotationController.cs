@@ -22,8 +22,8 @@ public class RotationController : MonoBehaviour
 
     void FixedUpdate()
     {
-        float mouseX = input.GetMouseX() * Time.deltaTime * sensX;
-        float mouseY = input.GetMouseY() * Time.deltaTime * sensY;
+        float mouseX = input.GetLookHorizontal() * Time.deltaTime * sensX;
+        float mouseY = input.GetLookVertical() * Time.deltaTime * sensY;
 
         yRotation += mouseX;
         xRotation -= mouseY;

@@ -13,7 +13,6 @@ public class MovementSettings : ScriptableObject
         public float mouseSensitivity = 2;
         public float maxLookAngle = 50;
         public bool enableZoom = true;
-        public bool holdToZoom = true;
         public float zoomFOV = 30;
         public float stepTimeZoom = 10f;
         public KeyCode zoomKey = KeyCode.Mouse1;

@@ -72,12 +72,12 @@ public class Interactor : MonoBehaviour
     {
         bool canPickup = pickup.IsPickedUp && pickup.inhand && animator.GetBool("CanPickup");
 
-        if (implementedInput.OnInteract() && canPickup)
+        if (implementedInput.IsInteracting() && canPickup)
         {
             pickup.DropInFront();
             heldObject = null;
         }
-        else if (implementedInput.OnFire() && canPickup)
+        else if (implementedInput.IsFirePressed() && canPickup)
         {
             pickup.Throw();
             heldObject = null;
@@ -86,7 +86,7 @@ public class Interactor : MonoBehaviour
 
     void HandleInteractKey(IInteractable interactObj, RaycastHit hit)
     {
-        if (!implementedInput.OnInteract() || hit.distance > InteractionRange)
+        if (!implementedInput.IsInteracting() || hit.distance > InteractionRange)
             return;
 
         // logic for pickup object

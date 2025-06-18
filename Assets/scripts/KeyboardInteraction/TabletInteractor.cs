@@ -36,7 +36,7 @@ public class TabletInteractor : MonoBehaviour
 
     void Update()
     {
-        if (implementedInput.OnTabletUse() && !interactor.IsHoldingObject() && terminal.assignedTerminal != null)
+        if (implementedInput.IsInteractingWithTablet() && !interactor.IsHoldingObject() && terminal.assignedTerminal != null)
         {
             if (!isOn)
             {
@@ -54,7 +54,7 @@ public class TabletInteractor : MonoBehaviour
             }
         }
 
-        if (implementedInput.OnTabletUse() && isOn)
+        if (implementedInput.IsInteractingWithTablet() && isOn)
         {
             terminal.ChangeTextType();
         }

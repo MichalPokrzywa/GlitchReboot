@@ -72,14 +72,14 @@ public class PlayerMovement : MonoBehaviour
             rigidBody.linearVelocity += Vector3.up * Physics.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
             print(rigidBody.linearVelocity.y);
         }
-        
+
     }
 
     private void MyInput()
     {
-        horizontalInput = input.GetHorizontalInput();
-        verticalInput = input.GetVerticalInput();
-        isJumping = input.IsJumping() && readyToJump && isGrounded;
+        horizontalInput = input.GetMoveHorizontal();
+        verticalInput = input.GetMoveVertical();
+        isJumping = input.IsJumpPressed() && readyToJump && isGrounded;
 
         if (isJumping)
         {

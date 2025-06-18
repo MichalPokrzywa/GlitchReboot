@@ -85,9 +85,9 @@ public class MovementController : MonoBehaviour
 
     void MyInput()
     {
-        horizontalInput = input.GetHorizontalInput();
-        verticalInput = input.GetVerticalInput();
-        isJumping = input.IsJumping() && readyToJump && isGrounded;
+        horizontalInput = input.GetMoveHorizontal();
+        verticalInput = input.GetMoveVertical();
+        isJumping = input.IsJumpPressed() && readyToJump && isGrounded;
 
         if (isJumping)
         {
