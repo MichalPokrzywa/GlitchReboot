@@ -2,9 +2,11 @@ using UnityEngine;
 
 public class TriggerDetector : MonoBehaviour
 {
+    [SerializeField] private Transform train;
+
     void OnTriggerEnter(Collider other)
     {
-        transform.GetChild(0).GetComponent<TrainController>().drive = false;
+        train.GetChild(0).GetComponent<TrainController>().drive = false;
         Debug.Log("kurwa szmata pierdolona");
     }
 }
