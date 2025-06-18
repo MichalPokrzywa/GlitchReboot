@@ -10,5 +10,9 @@ public interface InputInterface
     public bool IsSprinting();
     public float GetMouseX();
     public float GetMouseY();
+    public bool OnInteract();
+    public bool OnTabletUse();
+    public bool OnFire();
+    public bool OnEscape();
     public void ResetState();
 }

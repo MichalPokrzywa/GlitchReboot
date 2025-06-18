@@ -35,14 +35,6 @@ public class PausePanel : Panel
         ResetState();
     }
 
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            TogglePanel();
-        }
-    }
-
     public override void Close(Action onComplete = null)
     {
         base.Close();

@@ -10,11 +10,12 @@ public class PanelManager : Singleton<PanelManager>
     [SerializeField] TipsPanel tipsPanel;
     [SerializeField] PausePanel pausePanel;
 
+    readonly InputInterface implementedInput = new StandardInput();
+
     HashSet<eTipType> shownTips = new HashSet<eTipType>();
+    Coroutine closeTipCoroutine;
 
     const float tipDisplayDuration = 5f;
-
-    Coroutine closeTipCoroutine;
 
     void Awake()
     {
@@ -26,6 +27,14 @@ public class PanelManager : Singleton<PanelManager>
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    void Update()
+    {
+        if (implementedInput.OnEscape() && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
+        {
+            pausePanel.TogglePanel();
+        }
     }
 
     void OnSceneUnloaded(UnityEngine.SceneManagement.Scene arg0)

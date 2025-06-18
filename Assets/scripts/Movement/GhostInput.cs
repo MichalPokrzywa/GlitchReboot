@@ -245,4 +245,24 @@ public class GhostInput : MonoBehaviour, InputInterface
         transform.position = startingPosition;
         state = State.NONE;
     }
+
+    public bool OnInteract()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool OnTabletUse()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool OnFire()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public bool OnEscape()
+    {
+        throw new System.NotImplementedException();
+    }
 }

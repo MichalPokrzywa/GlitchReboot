@@ -3,19 +3,22 @@ using UnityEngine;
 
 public class TabletInteractor : MonoBehaviour
 {
-    public GameObject tabletTerminal;
-    public TabletTerminal terminal;
-    public FirstPersonController firstPersonController;
-    public MarkerPointsSpawner markerSpawner;
-    public Interactor interactor;
+    [SerializeField] GameObject tabletTerminal;
+    [SerializeField] TabletTerminal terminal;
+    [SerializeField] FirstPersonController firstPersonController;
+    [SerializeField] MarkerPointsSpawner markerSpawner;
+    [SerializeField] Interactor interactor;
+    [SerializeField] Vector3 tabletPosition;
+    [SerializeField] Vector3 tabletRotation;
 
-    public Vector3 tabletPosition;
-    public Vector3 tabletRotation;
-    private Vector3 basePosition;
-    private Vector3 baseRotation;
-    private Sequence showSequence;
-    private Sequence hideSequence;
-    public bool isOn = false;
+    readonly InputInterface implementedInput = new StandardInput();
+
+    Vector3 basePosition;
+    Vector3 baseRotation;
+    Sequence showSequence;
+    Sequence hideSequence;
+
+    bool isOn = false;
 
     void Awake()
     {
@@ -23,7 +26,7 @@ public class TabletInteractor : MonoBehaviour
         showSequence = DOTween.Sequence();
         hideSequence = DOTween.Sequence();
     }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         basePosition = tabletTerminal.transform.localPosition;
@@ -33,7 +36,7 @@ public class TabletInteractor : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && !interactor.IsHoldingObject() && terminal.assignedTerminal != null)
+        if (implementedInput.OnTabletUse() && !interactor.IsHoldingObject() && terminal.assignedTerminal != null)
         {
             if (!isOn)
             {
@@ -51,13 +54,13 @@ public class TabletInteractor : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.E) && isOn)
+        if (implementedInput.OnTabletUse() && isOn)
         {
             terminal.ChangeTextType();
         }
     }
 
-    private void HideTablet()
+    void HideTablet()
     {
         hideSequence = DOTween.Sequence();
         hideSequence
@@ -76,7 +79,7 @@ public class TabletInteractor : MonoBehaviour
         hideSequence.Play();
     }
 
-    private void ShowTablet()
+    void ShowTablet()
     {
         showSequence = DOTween.Sequence();
         showSequence
