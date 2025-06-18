@@ -6,16 +6,32 @@ Shader "Custom/GlitchHexSkybox"
     {
         // Sky/Panorama
         _MainTex         ("Skybox Texture",       2D)    = "white" {}
+        _AltTex          ("Alternate Texture",    2D)    = "white" {}
 
-        [Header(Glitch Settings)]
+        [Header(Texture Swap Settings)]
         [Space]
-        // Glitch parameters
+        _SwapInterval    ("Swap Interval (sec)",  Float) = 10.0
+        _MainDuration    ("Main Texture Duration (sec)", Float) = 6.0
+
+        [Space]
+        [Header(Main Glitch Settings)]
+        [Space]
         _GlitchAmplitude ("Glitch Amplitude",   Float) = 0.2
         _GlitchNarrow    ("Glitch Narrowness",  Float) = 4.0
         _GlitchBlocky    ("Glitch Blockiness",  Float) = 2.0
         _GlitchMinimizer ("Glitch Minimizer",   Float) = 5.0
         _GlitchNumCell   ("Glitch Cells",      int) = 8
         _GlitchColor     ("Gltich Efect Color", Color) = (1,1,1,1)
+
+        [Space]
+        [Header(Glitch Alt Settings)]
+        [Space]
+        _AltGlitchAmplitude ("Alt Glitch Amplitude",   Float) = 0.1
+        _AltGlitchNarrow    ("Alt Glitch Narrowness",  Float) = 2.0
+        _AltGlitchBlocky    ("Alt Glitch Blockiness",  Float) = 1.0
+        _AltGlitchMinimizer ("Alt Glitch Minimizer",   Float) = 3.0
+        _AltGlitchNumCell   ("Alt Glitch Cells",       int)   = 5
+        _AltGlitchColor     ("Alt Glitch Color",       Color) = (1,0.5,0.5,1)
 
         [Space]
         [Header(Triangle Grid Settings)]
@@ -57,6 +73,9 @@ Shader "Custom/GlitchHexSkybox"
 
             //–– Properties
             sampler2D _MainTex;      float4 _MainTex_ST;
+            sampler2D _AltTex;       float4 _AltTex_ST;
+            float _SwapInterval;
+            float _MainDuration;
             float4   _LineColor, _GlitchColor;
             float    _LineWidth, _GridScale, _LineBlur;
             float4   _GroundColor;   float _FadeRange;
@@ -64,6 +83,9 @@ Shader "Custom/GlitchHexSkybox"
             float _ScanLineWidth,_TimeMultiplayer, _EnableTime;
             int _GlitchNumCell;
 
+            float _AltGlitchAmplitude, _AltGlitchNarrow, _AltGlitchBlocky, _AltGlitchMinimizer;
+            int   _AltGlitchNumCell;
+            float4 _AltGlitchColor;
 
             struct appdata
             {
@@ -148,6 +170,10 @@ Shader "Custom/GlitchHexSkybox"
 
             fixed4 frag(v2f i) : SV_Target
             {
+                float t      = _Time.y;
+                float cycle  = t - _SwapInterval * floor(t / _SwapInterval);
+                bool useMain = (cycle < _MainDuration);
+
                 // 1) Ray & horizon fade
                 float3 dir  = normalize(i.viewDir);
                 float  fade = saturate((dir.y/_FadeRange)*0.5 + 0.5);
@@ -159,7 +185,17 @@ Shader "Custom/GlitchHexSkybox"
                 float2 sphUV = float2(u,v);
 
                 //Sample Texture tilting and offset
-                float2 texUV = TRANSFORM_TEX(sphUV, _MainTex);
+                float2 mainUV = TRANSFORM_TEX(sphUV, _MainTex);
+                float2 altUV  = TRANSFORM_TEX(sphUV, _AltTex);
+                float2 texUV  = useMain ? mainUV : altUV;
+
+                // 2) pick which glitch params to use
+                float gAmp   = useMain ? _GlitchAmplitude    : _AltGlitchAmplitude;
+                float gNarrow= useMain ? _GlitchNarrow       : _AltGlitchNarrow;
+                float gBlocky= useMain ? _GlitchBlocky       : _AltGlitchBlocky;
+                float gMin   = useMain ? _GlitchMinimizer    : _AltGlitchMinimizer;
+                int   gCells = useMain ? _GlitchNumCell      : _AltGlitchNumCell;
+                float4 gCol  = useMain ? _GlitchColor        : _AltGlitchColor;
 
                 // 3) Glitch-distort that UV before sampling
                 float time = _Time.y;
@@ -167,9 +203,9 @@ Shader "Custom/GlitchHexSkybox"
                 if(_EnableTime == 1)
                     uv2.y += time * _TimeMultiplayer;
 
-                float2 cell = floor(sphUV * _GlitchNumCell);
-                float fbmVal = fbm(uv2, int(rand(cell,time)*6+1), _GlitchBlocky, _GlitchNarrow, time);
-                float shift = _GlitchAmplitude * pow(fbmVal, _GlitchMinimizer);
+                float2 cell = floor(sphUV * gCells);
+                float fbmVal = fbm(uv2, int(rand(cell,t)*6+1), gBlocky, gNarrow, t);
+                float shift = gAmp * pow(fbmVal, gMin);
                 shift = smoothstep(0.00001, 0.2, shift);
 
 
@@ -181,10 +217,25 @@ Shader "Custom/GlitchHexSkybox"
                 // 5) Sample your panorama
                 // final glitch UV offset
                 float2 gUV = texUV + float2(shift, 0);
-                float4 skyCol = tex2D(_MainTex,gUV);
-                float colR = tex2D(_MainTex, gUV + float2(shift, 0)).r * (1.0 - shift)+ rand(cell, time) * shift * _GlitchColor.r;
-                float colG = tex2D(_MainTex, gUV - float2(shift, 0)).g * (1.0 - shift) + rand(cell, time) * shift * _GlitchColor.g;
-                float colB = tex2D(_MainTex, gUV - float2(shift, 0)).b * (1.0 - shift)+ rand(cell, time) * shift * _GlitchColor.b;
+                float4 skyCol = useMain 
+                    ? tex2D(_MainTex, gUV) 
+                    : tex2D(_AltTex, gUV);
+
+                float colR = (useMain 
+                    ? tex2D(_MainTex, gUV + float2(shift,0)).r 
+                    : tex2D(_AltTex, gUV + float2(shift,0)).r)
+                  * (1.0 - shift)
+                  + rand(cell, t) * shift * _GlitchColor.r;
+                float colG = (useMain 
+                    ? tex2D(_MainTex, gUV - float2(shift,0)).g 
+                    : tex2D(_AltTex, gUV - float2(shift,0)).g)
+                  * (1.0 - shift)
+                  + rand(cell, t) * shift * _GlitchColor.g;
+                float colB = (useMain 
+                    ? tex2D(_MainTex, gUV - float2(shift,0)).b 
+                    : tex2D(_AltTex, gUV - float2(shift,0)).b)
+                  * (1.0 - shift)
+                  + rand(cell, t) * shift * _GlitchColor.b;
                 skyCol.rgb = float3(colR, colG, colB) - (0.01 * scan);
 
                 // 6) Build triangle grid in a *second* UVspace
