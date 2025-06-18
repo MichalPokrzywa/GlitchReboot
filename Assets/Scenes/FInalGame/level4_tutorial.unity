@@ -1287,6 +1287,10 @@ PrefabInstance:
       propertyPath: launchForce
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 193917076444085747, guid: 7e2bd958f2a6c2747ade13031491cab1, type: 3}
+      propertyPath: launchAngleDegrees
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6979934049752445965, guid: 7e2bd958f2a6c2747ade13031491cab1, type: 3}
       propertyPath: m_Name
       value: turret
@@ -4346,6 +4350,10 @@ PrefabInstance:
       propertyPath: m_AnchorMin.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 681540155764395068, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1685512951273789960, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
       propertyPath: m_Name
       value: Terminal
@@ -5035,6 +5043,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1265150698}
+    - target: {fileID: 193917076444085747, guid: 7e2bd958f2a6c2747ade13031491cab1, type: 3}
+      propertyPath: launchAngleDegrees
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6979934049752445965, guid: 7e2bd958f2a6c2747ade13031491cab1, type: 3}
       propertyPath: m_Name
       value: turret (1)
@@ -8804,7 +8816,7 @@ Transform:
   m_GameObject: {fileID: 8895434555920476927}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.3, z: 0}
+  m_LocalPosition: {x: 0, y: -7.98, z: 0}
   m_LocalScale: {x: 1180.3096, y: 1, z: 1084.51}
   m_ConstrainProportionsScale: 0
   m_Children: []

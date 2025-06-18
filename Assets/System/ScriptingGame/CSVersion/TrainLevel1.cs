@@ -11,7 +11,7 @@ public class TrainLevel1 : PuzzleBase
         foreach (GameObject t in turrets)
         {
             Debug.Log(t.transform.GetChild(0));
-            t.GetComponent<CannonController>().launchForce = GetVariableValue<int>("fireForce");
+            t.GetComponent<CannonController>().initialSpeed = GetVariableValue<int>("fireForce");
             if (GetVariableValue<int>("angle") == 0)
             {
                 t.transform.GetChild(0).localRotation = Quaternion.Euler(0f, 0f, 0f);
