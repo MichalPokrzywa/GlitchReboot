@@ -10,8 +10,6 @@ public class PanelManager : Singleton<PanelManager>
     [SerializeField] TipsPanel tipsPanel;
     [SerializeField] PausePanel pausePanel;
 
-    readonly InputInterface implementedInput = new StandardInput();
-
     HashSet<eTipType> shownTips = new HashSet<eTipType>();
     Coroutine closeTipCoroutine;
 
@@ -31,7 +29,7 @@ public class PanelManager : Singleton<PanelManager>
 
     void Update()
     {
-        if (implementedInput.IsPausePressed() && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
+        if (InputManager.Instance.IsPausePressed() && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
         {
             pausePanel.TogglePanel();
         }

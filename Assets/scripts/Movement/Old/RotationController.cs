@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Obsolete]
 public class RotationController : MonoBehaviour
 {
     InputInterface input = new StandardInput();

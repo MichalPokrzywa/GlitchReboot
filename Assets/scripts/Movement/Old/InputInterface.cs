@@ -1,9 +1,108 @@
 
 using System.Collections.Generic;
+using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.InputSystem.XR;
 
+[Obsolete]
+public interface InputInterface
+{
+    public float GetMoveHorizontal();
+    public float GetMoveVertical();
+    public bool IsJumpPressed();
+    public bool IsCrouchHeld();
+    public bool IsSprintHeld();
+    public float GetLookHorizontal();
+    public float GetLookVertical();
+    public bool IsInteracting();
+    public bool IsInteractingWithTablet();
+    public bool IsFirePressed();
+    public bool IsZoomHeld();
+    public bool IsPausePressed();
+    public void ResetState();
+}
+
+[Obsolete]
+public class StandardInput : InputInterface
+{
+    public float GetMoveHorizontal()
+    {
+        return Input.GetAxisRaw("Horizontal");
+    }
+
+    public float GetMoveVertical()
+    {
+        return Input.GetAxisRaw("Vertical");
+    }
+
+    public bool IsJumpPressed()
+    {
+        // Space or South button on gamepad
+        return Input.GetKey(KeyCode.Space) || Input.GetKey(KeyCode.JoystickButton0);
+    }
+
+    public bool IsCrouchHeld()
+    {
+        // LCtrl or East button on gamepad
+        return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.JoystickButton1);
+    }
+
+    public bool IsSprintHeld()
+    {
+        // LShift or RT on gamepad
+        return Input.GetKey(KeyCode.LeftShift);
+    }
+
+    public float GetLookHorizontal()
+    {
+        float mouseX = Input.GetAxisRaw("Mouse X");
+        float stickX = Input.GetAxisRaw("Joystick X");
+        return Mathf.Abs(mouseX) > 0.01f ? mouseX : stickX;
+    }
+
+    public float GetLookVertical()
+    {
+        float mouseY = Input.GetAxisRaw("Mouse Y");
+        float stickY = Input.GetAxisRaw("Joystick Y");
+        return Mathf.Abs(mouseY) > 0.01f ? mouseY : stickY;
+    }
+
+    public bool IsInteracting()
+    {
+        // E or North button on gamepad
+        return Input.GetKeyDown(KeyCode.E) || Input.GetKeyDown(KeyCode.JoystickButton3);
+    }
+
+    public bool IsInteractingWithTablet()
+    {
+        // Q or West button on gamepad
+        return Input.GetKeyDown(KeyCode.Q) || Input.GetKeyDown(KeyCode.JoystickButton2);
+    }
+
+    public bool IsFirePressed()
+    {
+        // LMB or 'LB' on Xbox controller
+        return Input.GetKeyDown(KeyCode.Mouse0) || Input.GetKeyDown(KeyCode.JoystickButton4);
+    }
+
+    public bool IsZoomHeld()
+    {
+        // RMB or 'RB' on Xbox controller
+        return Input.GetKey(KeyCode.Mouse1) || Input.GetKey(KeyCode.JoystickButton5);
+    }
+
+    public bool IsPausePressed()
+    {
+        // ESC or 'Start' on Xbox controller
+        return Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.JoystickButton7);
+    }
+    public void ResetState()
+    {
+        return;
+    }
+}
+
+[Obsolete]
 public class GhostInput : MonoBehaviour, InputInterface
 {
     InputInterface input = new StandardInput();

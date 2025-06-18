@@ -11,8 +11,6 @@ public class TabletInteractor : MonoBehaviour
     [SerializeField] Vector3 tabletPosition;
     [SerializeField] Vector3 tabletRotation;
 
-    readonly InputInterface implementedInput = new StandardInput();
-
     Vector3 basePosition;
     Vector3 baseRotation;
     Sequence showSequence;
@@ -36,7 +34,7 @@ public class TabletInteractor : MonoBehaviour
 
     void Update()
     {
-        if (implementedInput.IsInteractingWithTablet() && !interactor.IsHoldingObject() && terminal.assignedTerminal != null)
+        if (InputManager.Instance.IsInteractWithTabletPressed() && !interactor.IsHoldingObject() && terminal.assignedTerminal != null)
         {
             if (!isOn)
             {
@@ -54,7 +52,7 @@ public class TabletInteractor : MonoBehaviour
             }
         }
 
-        if (implementedInput.IsInteractingWithTablet() && isOn)
+        if (InputManager.Instance.IsInteractWithTabletPressed() && isOn)
         {
             terminal.ChangeTextType();
         }

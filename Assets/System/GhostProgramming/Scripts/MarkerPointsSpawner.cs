@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -13,21 +12,9 @@ public class MarkerPointsSpawner : MonoBehaviour
     public bool active = true;
 
     List<MarkerScript> markerPoints = new List<MarkerScript>();
+    int selectedMarkerIndex = 0;
 
     const int markerCount = 9;
-
-    public enum MarkerPointKey
-    {
-        Marker1 = KeyCode.Alpha1,
-        Marker2 = KeyCode.Alpha2,
-        Marker3 = KeyCode.Alpha3,
-        Marker4 = KeyCode.Alpha4,
-        Marker5 = KeyCode.Alpha5,
-        Marker6 = KeyCode.Alpha6,
-        Marker7 = KeyCode.Alpha7,
-        Marker8 = KeyCode.Alpha8,
-        Marker9 = KeyCode.Alpha9,
-    }
 
     void Awake()
     {
@@ -53,18 +40,29 @@ public class MarkerPointsSpawner : MonoBehaviour
         if (!active)
             return;
 
-        int index = 0;
-        foreach (MarkerPointKey key in Enum.GetValues(typeof(MarkerPointKey)))
+        for (int i = 0; i < markerPoints.Count; i++)
         {
-            CheckButtonPress(key, index);
-            index++;
+            var action = InputManager.Instance.GetMarkerAction(i);
+            if (action != null && action.triggered)
+            {
+                OnButtonPressed(i);
+                return;
+            }
         }
+
+        if (InputManager.Instance.IsNextMarkerPressed())
+            CycleMarker(1);
+        else if (InputManager.Instance.IsPreviousMarkerPressed())
+            CycleMarker(-1);
+
+        if (InputManager.Instance.IsSpawnMarkerPressed())
+            OnButtonPressed(selectedMarkerIndex);
+
     }
 
-    void CheckButtonPress(MarkerPointKey markerKey, int index)
+    void CycleMarker(int direction)
     {
-        if (Input.GetKeyUp((KeyCode)markerKey))
-            OnButtonPressed(index);
+        selectedMarkerIndex = (selectedMarkerIndex + direction + markerPoints.Count) % markerPoints.Count;
     }
 
     void OnButtonPressed(int buttonNumber)

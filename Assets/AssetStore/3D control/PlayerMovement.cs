@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    InputInterface input = new StandardInput();
-
     [Header("Movement")]
     public float moveSpeed;
     public float moveSpeedLimit;
@@ -77,9 +75,9 @@ public class PlayerMovement : MonoBehaviour
 
     private void MyInput()
     {
-        horizontalInput = input.GetMoveHorizontal();
-        verticalInput = input.GetMoveVertical();
-        isJumping = input.IsJumpPressed() && readyToJump && isGrounded;
+        horizontalInput = InputManager.Instance.GetMoveHorizontal();
+        verticalInput = InputManager.Instance.GetMoveVertical();
+        isJumping = InputManager.Instance.IsJumpPressed() && readyToJump && isGrounded;
 
         if (isJumping)
         {

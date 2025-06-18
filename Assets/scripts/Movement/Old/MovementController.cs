@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Obsolete]
 public class MovementController : MonoBehaviour
 {
     InputInterface input = new StandardInput();

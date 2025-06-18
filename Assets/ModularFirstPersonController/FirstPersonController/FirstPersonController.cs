@@ -15,9 +15,6 @@ using UnityEngine.UI;
 public class FirstPersonController : MonoBehaviour
 {
     #region Variables
-    InputInterface _input = new StandardInput();
-    public InputInterface ImplementedInput => _input;
-
     public MovementSettings movementSettings;
 
     Rigidbody rb;
@@ -146,12 +143,7 @@ public class FirstPersonController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-
         crosshairObject = GetComponentInChildren<Image>();
-
-        var ghostInput = gameObject.GetComponent<GhostInput>();
-        if (ghostInput)
-            _input = ghostInput;
 
         // Get movement settings from scriptable object
         GetMovementSettings();
@@ -190,14 +182,14 @@ public class FirstPersonController : MonoBehaviour
 
         if (enableHeadBob)
             HeadBob();
+
+        // Gets input and calls jump method
+        if (enableJump && InputManager.Instance.IsJumpPressed() && isGrounded)
+            Jump();
     }
 
     void FixedUpdate()
     {
-        // Gets input and calls jump method
-        if(enableJump && ImplementedInput.IsJumpPressed() && isGrounded)
-            Jump();
-
         if (enableCrouch)
             HandleCrouch();
 
@@ -252,16 +244,16 @@ public class FirstPersonController : MonoBehaviour
 
     void HandleCameraMovement()
     {
-        _yaw = transform.localEulerAngles.y + ImplementedInput.GetLookHorizontal() * mouseSensitivity;
+        _yaw = transform.localEulerAngles.y + InputManager.Instance.GetLookHorizontal() * mouseSensitivity;
 
         if (!invertCamera)
         {
-            _pitch -= mouseSensitivity * ImplementedInput.GetLookVertical();
+            _pitch -= mouseSensitivity * InputManager.Instance.GetLookVertical();
         }
         else
         {
             // Inverted Y
-            _pitch += mouseSensitivity * ImplementedInput.GetLookVertical();
+            _pitch += mouseSensitivity * InputManager.Instance.GetLookVertical();
         }
 
         // Clamp pitch between lookAngle
@@ -387,10 +379,10 @@ public class FirstPersonController : MonoBehaviour
 
     void HandleMovement()
     {
-        Vector3 input = new Vector3(ImplementedInput.GetMoveHorizontal(), 0, ImplementedInput.GetMoveVertical());
+        Vector3 input = new Vector3(InputManager.Instance.GetMoveHorizontal(), 0, InputManager.Instance.GetMoveVertical());
         isWalking = (input.x != 0 || input.z != 0) && isGrounded;
 
-        bool shouldSprint = enableSprint && ImplementedInput.IsSprintHeld()
+        bool shouldSprint = enableSprint && InputManager.Instance.IsSprintHeld()
                                          && sprintRemaining > 0f && !isSprintCooldown;
 
         float currentSpeed = shouldSprint ? sprintSpeed : walkSpeed;
@@ -465,7 +457,7 @@ public class FirstPersonController : MonoBehaviour
             // Behavior for hold to zoom
             if (cameraCanMove && !isSprinting)
             {
-                isZoomed = ImplementedInput.IsZoomHeld();
+                isZoomed = InputManager.Instance.IsZoomPressed();
             }
 
             Zoom(isZoomed);
@@ -485,7 +477,7 @@ public class FirstPersonController : MonoBehaviour
             return;
         }
 
-        bool shouldCrouch = ImplementedInput.IsCrouchHeld();
+        bool shouldCrouch = InputManager.Instance.IsCrouchHeld();
 
         // Behavior for hold to crouch
         if (holdToCrouch)

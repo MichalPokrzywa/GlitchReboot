@@ -15,7 +15,6 @@ public class Interactor : MonoBehaviour
     public Animator animator;
 
     IInteractable lastInteractor;
-    readonly InputInterface implementedInput = new StandardInput();
     PickUpObjectInteraction heldObject;
 
     void Update()
@@ -72,12 +71,12 @@ public class Interactor : MonoBehaviour
     {
         bool canPickup = pickup.IsPickedUp && pickup.inhand && animator.GetBool("CanPickup");
 
-        if (implementedInput.IsInteracting() && canPickup)
+        if (InputManager.Instance.IsInteractPressed() && canPickup)
         {
             pickup.DropInFront();
             heldObject = null;
         }
-        else if (implementedInput.IsFirePressed() && canPickup)
+        else if (InputManager.Instance.IsFirePressed() && canPickup)
         {
             pickup.Throw();
             heldObject = null;
@@ -86,7 +85,7 @@ public class Interactor : MonoBehaviour
 
     void HandleInteractKey(IInteractable interactObj, RaycastHit hit)
     {
-        if (!implementedInput.IsInteracting() || hit.distance > InteractionRange)
+        if (!InputManager.Instance.IsInteractPressed() || hit.distance > InteractionRange)
             return;
 
         // logic for pickup object

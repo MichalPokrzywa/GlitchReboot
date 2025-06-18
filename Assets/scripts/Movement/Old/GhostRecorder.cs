@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Obsolete]
 public class GhostRecorder : MonoBehaviour
 {
     [SerializeField] List<GameObject> ghosts;
@@ -82,7 +84,7 @@ public class GhostRecorder : MonoBehaviour
         if (ghostController == null)
             return;
 
-        ghostController.ImplementedInput.ResetState();
+        //ghostController.ImplementedInput.ResetState();
 
         int startMarker = buttonNumber;
         int endMarker = buttonNumber * 2 + 1;
@@ -95,45 +97,45 @@ public class GhostRecorder : MonoBehaviour
 
     void HandleGhostRecording(GameObject ghost, int index)
     {
-        var ghostController = ghost.GetComponent<FirstPersonController>();
-        if (ghostController == null)
-            return;
+    //    var ghostController = ghost.GetComponent<FirstPersonController>();
+    //    if (ghostController == null)
+    //        return;
 
-        var ghostInput = ghostController.ImplementedInput as GhostInput;
-        if (ghostInput == null)
-            return;
+    //    var ghostInput = ghostController.ImplementedInput as GhostInput;
+    //    if (ghostInput == null)
+    //        return;
 
-        var playerController = gameObject.GetComponent<FirstPersonController>();
-        if (playerController == null)
-            return;
+    //    var playerController = gameObject.GetComponent<FirstPersonController>();
+    //    if (playerController == null)
+    //        return;
 
-        string color = GetColorString(index);
-        int startMarker = index;
-        int endMarker = index * 2 + 1;
+    //    string color = GetColorString(index);
+    //    int startMarker = index;
+    //    int endMarker = index * 2 + 1;
 
-        switch (ghostInput.GhostMovementState)
-        {
-            // --- START RECORDING ---
-            case GhostInput.State.NONE:
-                // save starting position and rotation
-                ghostInput.SetReplayStartingPosition(transform.position, new Vector2(playerController.pitch, playerController.yaw));
-                ghostInput.SetState(GhostInput.State.RECORDING);
-                markerPoints[startMarker].Activate(transform.position);
-                Debug.Log($"<color={color}>Recording ghost {index}</color>");
-                break;
-            // --- END RECORDING ---
-            case GhostInput.State.RECORDING:
-                ghostInput.SetState(GhostInput.State.RECORDED);
-                markerPoints[endMarker].Activate(transform.position);
-                Debug.Log($"<color={color}>Recorded ghost {index}</color>");
-                break;
-            // --- REPLAY ---
-            case GhostInput.State.RECORDED or GhostInput.State.REPLAY:
-                ghostInput.PrepareForReplay();
-                ghostInput.SetState(GhostInput.State.REPLAY);
-                Debug.Log($"<color={color}>Replay ghost {index}</color>");
-                break;
-        }
+    //    switch (ghostInput.GhostMovementState)
+    //    {
+    //        // --- START RECORDING ---
+    //        case GhostInput.State.NONE:
+    //            // save starting position and rotation
+    //            ghostInput.SetReplayStartingPosition(transform.position, new Vector2(playerController.pitch, playerController.yaw));
+    //            ghostInput.SetState(GhostInput.State.RECORDING);
+    //            markerPoints[startMarker].Activate(transform.position);
+    //            Debug.Log($"<color={color}>Recording ghost {index}</color>");
+    //            break;
+    //        // --- END RECORDING ---
+    //        case GhostInput.State.RECORDING:
+    //            ghostInput.SetState(GhostInput.State.RECORDED);
+    //            markerPoints[endMarker].Activate(transform.position);
+    //            Debug.Log($"<color={color}>Recorded ghost {index}</color>");
+    //            break;
+    //        // --- REPLAY ---
+    //        case GhostInput.State.RECORDED or GhostInput.State.REPLAY:
+    //            ghostInput.PrepareForReplay();
+    //            ghostInput.SetState(GhostInput.State.REPLAY);
+    //            Debug.Log($"<color={color}>Replay ghost {index}</color>");
+    //            break;
+    //    }
     }
 
     // for pretty debugging messages c:
