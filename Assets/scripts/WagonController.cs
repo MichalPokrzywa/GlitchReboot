@@ -16,7 +16,7 @@ public class WagonController : MonoBehaviour
     }
 
 
-    void Update()
+    void FixedUpdate()
     {
         if (leader == null || railPath == null) return;
 

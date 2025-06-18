@@ -5,6 +5,7 @@ public class CannonController : InteractionBase
     public GameObject attachedObject;
     public GameObject player;
     public Transform firePoint; 
+    public GameObject projectilePrefab;
     public float launchForce = 10f; 
 
     protected override void Start()
@@ -13,25 +14,39 @@ public class CannonController : InteractionBase
         TooltipText = "[E] " + "LOAD GUN";
     }
 
+    public override void Update()
+    {
+        base .Update();
+        // Debug
+        Debug.DrawRay(firePoint.position, firePoint.forward * 5, Color.red, 2f);
+        //if (Input.GetKeyDown(KeyCode.Space)) // Strzał po naciśnięciu spacji
+        //{
+        //    FireProjectile();
+        //}
+    }
+
     public override void Interact()
     {
+        
+
         Debug.Log("Interakcja: E naciśnięte. Wpisz tutaj swoją logikę interakcji.");
         if(!player.GetComponent<Interactor>().IsHoldingObject())
         {
-            player.GetComponent<Rigidbody>().useGravity = false;
-            player.transform.position = firePoint.position;
-            player.transform.rotation = firePoint.rotation;
-            
+            FireProjectile();
         }
+
+
     }
 
 
     void FireProjectile()
     {
-        // Instancjonowanie pocisku
+        //GameObject projectile = Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
         //Rigidbody rb = projectile.GetComponent<Rigidbody>();
-        player.GetComponent<Rigidbody>().linearVelocity = firePoint.forward * launchForce; // Nadajemy pr�dko��
+        //rb.AddForce(firePoint.forward * launchForce, ForceMode.Impulse);
+        //Destroy(projectile, 5f);
 
-        // Zniszczenie pocisku po 5 sekundach
+        player.transform.position = firePoint.position;
+        player.GetComponent<Rigidbody>().AddForce(firePoint.forward * launchForce * 10f, ForceMode.Impulse); // Nadajemy pr�dko��
     }
 }
