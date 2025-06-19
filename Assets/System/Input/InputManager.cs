@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,11 +7,13 @@ public class InputManager : Singleton<InputManager>
     public enum DeviceType { KeyboardMouse, Gamepad }
 
     public DeviceType CurrentDevice { get; private set; }
+    public Action<DeviceType> onControlsChanged;
 
     public float mouseSensitivity = 0.1f;
     public float gamepadSensitivity = 0.4f;
     public bool invertInputY = false;
 
+    PlayerInput playerInput;
     InputSystem_Actions defaultControls;
     InputSystem_Actions currentControls;
 
@@ -22,7 +25,7 @@ public class InputManager : Singleton<InputManager>
 
     void Awake()
     {
-        var playerInput = GetComponent<PlayerInput>();
+        playerInput = GetComponent<PlayerInput>();
         playerInput.onControlsChanged += OnControlsChanged;
 
         CurrentDevice = playerInput.currentControlScheme == GamepadScheme
@@ -91,5 +94,7 @@ public class InputManager : Singleton<InputManager>
         CurrentDevice = playerInput.currentControlScheme == GamepadScheme
             ? DeviceType.Gamepad
             : DeviceType.KeyboardMouse;
+
+        onControlsChanged?.Invoke(CurrentDevice);
     }
 }
