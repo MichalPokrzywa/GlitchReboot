@@ -11,10 +11,9 @@ public class PanelManager : Singleton<PanelManager>
     [SerializeField] PausePanel pausePanel;
 
     HashSet<eTipType> shownTips = new HashSet<eTipType>();
+    Coroutine closeTipCoroutine;
 
     const float tipDisplayDuration = 5f;
-
-    Coroutine closeTipCoroutine;
 
     void Awake()
     {
@@ -26,6 +25,14 @@ public class PanelManager : Singleton<PanelManager>
 
         SceneManager.sceneLoaded += OnSceneLoaded;
         SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    void Update()
+    {
+        if (InputManager.Instance.IsPausePressed() && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
+        {
+            pausePanel.TogglePanel();
+        }
     }
 
     void OnSceneUnloaded(UnityEngine.SceneManagement.Scene arg0)

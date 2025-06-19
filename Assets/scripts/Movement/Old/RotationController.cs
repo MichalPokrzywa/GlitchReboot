@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Obsolete]
 public class RotationController : MonoBehaviour
 {
     InputInterface input = new StandardInput();
@@ -22,8 +24,8 @@ public class RotationController : MonoBehaviour
 
     void FixedUpdate()
     {
-        float mouseX = input.GetMouseX() * Time.deltaTime * sensX;
-        float mouseY = input.GetMouseY() * Time.deltaTime * sensY;
+        float mouseX = input.GetLookHorizontal() * Time.deltaTime * sensX;
+        float mouseY = input.GetLookVertical() * Time.deltaTime * sensY;
 
         yRotation += mouseX;
         xRotation -= mouseY;
