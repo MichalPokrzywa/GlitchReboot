@@ -169,7 +169,7 @@ public class FirstPersonController : MonoBehaviour
     {
         HandleCursor();
 
-        if (enableZoom)
+        if (enableZoom && cameraCanMove)
             HandleZoom();
 
         if (cameraCanMove)
@@ -190,7 +190,7 @@ public class FirstPersonController : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (enableCrouch)
+        if (playerCanMove && enableCrouch)
             HandleCrouch();
 
         if (playerCanMove)
@@ -455,7 +455,7 @@ public class FirstPersonController : MonoBehaviour
         {
             // Changes isZoomed when key is pressed
             // Behavior for hold to zoom
-            if (cameraCanMove && !isSprinting)
+            if (!isSprinting)
             {
                 isZoomed = InputManager.Instance.IsZoomPressed();
             }
