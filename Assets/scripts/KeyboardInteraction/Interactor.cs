@@ -35,7 +35,7 @@ public class Interactor : MonoBehaviour
         );
         //Debug.Log($"{holdPoint.position}, {handPoint.position}");
 
-        if(!canInteract)
+        if (!canInteract)
             return;
 
         HandleInteraction();
@@ -150,7 +150,7 @@ public class Interactor : MonoBehaviour
 
     public void HideLastUI()
     {
-        lastInteractor?.HideUI();
+        ClearLastInteractor();
     }
 
     // called by the pickup when it actually drops

@@ -9,11 +9,16 @@ public class InputManager : Singleton<InputManager>
 
     public float mouseSensitivity = 0.1f;
     public float gamepadSensitivity = 0.4f;
+    public bool invertInputY = false;
 
     InputSystem_Actions defaultControls;
     InputSystem_Actions currentControls;
 
     const string GamepadScheme = "Gamepad";
+
+    const float defaultMouseSensitivity = 0.1f;
+    const float defaultGamepadSensitivity = 0.4f;
+    const bool defaultInvertInputY = false;
 
     void Awake()
     {
@@ -24,12 +29,12 @@ public class InputManager : Singleton<InputManager>
             ? DeviceType.Gamepad
             : DeviceType.KeyboardMouse;
 
+        RestoreDefaultSettings();
+
         defaultControls = new InputSystem_Actions();
         currentControls = defaultControls;
         currentControls.Enable();
     }
-
-    #region Controls getters
 
     public float GetMoveHorizontal() => currentControls.Player.Move.ReadValue<Vector2>().x;
 
@@ -42,7 +47,8 @@ public class InputManager : Singleton<InputManager>
     public float GetLookVertical()
     {
         var rawInput = currentControls.Player.Look.ReadValue<Vector2>().y;
-        return CurrentDevice == DeviceType.Gamepad ? rawInput * gamepadSensitivity : rawInput * mouseSensitivity;
+        var value = CurrentDevice == DeviceType.Gamepad ? rawInput * gamepadSensitivity : rawInput * mouseSensitivity;
+        return value * (invertInputY ? -1 : 1);
     }
     public bool IsCrouchHeld() => currentControls.Player.Crouch.IsPressed();
     public bool IsSprintHeld() => currentControls.Player.Sprint.IsPressed();
@@ -55,7 +61,6 @@ public class InputManager : Singleton<InputManager>
     public bool IsSpawnMarkerPressed() => currentControls.Player.SpawnMarker.triggered;
     public bool IsNextMarkerPressed() => currentControls.Player.NextMarker.triggered;
     public bool IsPreviousMarkerPressed() => currentControls.Player.PrevMarker.triggered;
-    #endregion
 
     public InputAction GetMarkerAction(int index)
     {
@@ -72,6 +77,13 @@ public class InputManager : Singleton<InputManager>
             case 8: return currentControls.Player.Marker9;
             default: return null;
         }
+    }
+
+    public void RestoreDefaultSettings()
+    {
+        mouseSensitivity = defaultMouseSensitivity;
+        gamepadSensitivity = defaultGamepadSensitivity;
+        invertInputY = defaultInvertInputY;
     }
 
     void OnControlsChanged(PlayerInput playerInput)

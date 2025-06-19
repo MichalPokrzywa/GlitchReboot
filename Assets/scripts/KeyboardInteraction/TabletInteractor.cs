@@ -42,7 +42,6 @@ public class TabletInteractor : MonoBehaviour
                 {
                     PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.TerminalLanguageChange);
                     ShowTablet();
-                    interactor.HideLastUI();
                 }
             }
             else
@@ -52,7 +51,7 @@ public class TabletInteractor : MonoBehaviour
             }
         }
 
-        if (InputManager.Instance.IsInteractWithTabletPressed() && isOn)
+        if (InputManager.Instance.IsInteractPressed() && isOn)
         {
             terminal.ChangeTextType();
         }
@@ -87,6 +86,7 @@ public class TabletInteractor : MonoBehaviour
                 firstPersonController.lockCursor = false;
                 markerSpawner.active = false;
                 interactor.canInteract = false;
+                interactor.HideLastUI();
                 tabletTerminal.SetActive(true);
             })
             .OnComplete((() => isOn = true))
