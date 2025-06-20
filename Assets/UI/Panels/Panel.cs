@@ -1,6 +1,7 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Panel : MonoBehaviour
 {
@@ -19,6 +20,17 @@ public class Panel : MonoBehaviour
     Tween tween;
 
     const float scaleDuration = 0.25f;
+
+    void Start()
+    {
+        InputManager.Instance.onControlsChanged += UpdateEventSystemSelectedGO;
+    }
+
+    void OnDestroy()
+    {
+        if (InputManager.Instance != null)
+            InputManager.Instance.onControlsChanged -= UpdateEventSystemSelectedGO;
+    }
 
     public virtual void TogglePanel()
     {
@@ -66,5 +78,14 @@ public class Panel : MonoBehaviour
     {
         panelToggle = false;
         animationInProgress = false;
+    }
+
+    void UpdateEventSystemSelectedGO(InputManager.DeviceType deviceType)
+    {
+        if (deviceType == InputManager.DeviceType.Gamepad)
+        {
+            if (firstItemToSelect != null)
+                EventSystem.current.SetSelectedGameObject(firstItemToSelect);
+        }
     }
 }

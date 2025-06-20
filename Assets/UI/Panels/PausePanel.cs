@@ -1,26 +1,33 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
 
 public class PausePanel : Panel
 {
     [SerializeField] Button controlsButton;
+    [SerializeField] Button settingsButton;
     [SerializeField] Button returnToMenuButton;
+    [SerializeField] Button backButton;
+
+    [SerializeField] GameObject controlsPanel;
+    [SerializeField] GameObject settingsPanel;
+
     [SerializeField] Camera mainCamera;
     [SerializeField] Volume depthOfField;
     [SerializeField] FirstPersonController firstPersonController;
 
+    GameObject activePanel;
+
     void Awake()
     {
-        if (controlsButton != null)
-        {
-            controlsButton.onClick.AddListener(ControlsPanel);
-            firstItemToSelect = controlsButton.gameObject;
-        }
+        controlsButton?.onClick.AddListener(() => TogglePanel(controlsPanel));
+        settingsButton?.onClick.AddListener(() => TogglePanel(settingsPanel));
+        returnToMenuButton?.onClick.AddListener(ReturnToMenu);
+        backButton?.onClick.AddListener(() => TogglePanel(null));
 
-        if (returnToMenuButton != null)
-            returnToMenuButton.onClick.AddListener(ReturnToMenu);
+        firstItemToSelect = controlsButton.gameObject;
 
         onPanelOpen += RestoreTime;
         onPanelClose += StopTime;
@@ -28,11 +35,10 @@ public class PausePanel : Panel
 
     void OnDestroy()
     {
-        if (controlsButton != null)
-            controlsButton.onClick.RemoveListener(ControlsPanel);
-
-        if (returnToMenuButton != null)
-            returnToMenuButton.onClick.RemoveListener(ReturnToMenu);
+        controlsButton?.onClick.RemoveAllListeners();
+        settingsButton?.onClick.RemoveAllListeners();
+        returnToMenuButton.onClick.RemoveListener(ReturnToMenu);
+        backButton?.onClick.RemoveListener(() => TogglePanel(null));
 
         onPanelOpen -= RestoreTime;
         onPanelClose -= StopTime;
@@ -124,8 +130,24 @@ public class PausePanel : Panel
         PanelManager.Instance.ReturnToMenu();
     }
 
-    void ControlsPanel()
+    void TogglePanel(GameObject panelToShow)
     {
+        bool shouldShow = (panelToShow != null && panelToShow != activePanel);
+        settingsPanel?.SetActive(false);
+        controlsPanel?.SetActive(false);
 
+        if (shouldShow)
+        {
+            panelToShow.SetActive(true);
+            activePanel = panelToShow;
+            backButton.gameObject.SetActive(true);
+            EventSystem.current.SetSelectedGameObject(backButton.gameObject);
+        }
+        else
+        {
+            activePanel = null;
+            backButton.gameObject.SetActive(false);
+            EventSystem.current.SetSelectedGameObject(firstItemToSelect);
+        }
     }
 }

@@ -1,27 +1,39 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class MainMenuPanel : MonoBehaviour
 {
     [SerializeField] Button playButton;
     [SerializeField] Button settingsButton;
+    [SerializeField] Button controlsButton;
     [SerializeField] Button creditsButton;
     [SerializeField] Button exitButton;
+
     [SerializeField] GameObject settingsPanel;
+    [SerializeField] GameObject controlsPanel;
     [SerializeField] GameObject creditsPanel;
 
-    bool creditsPanelToggle = false;
-    bool settingsPanelToggle = false;
+    GameObject activePanel;
 
     void Start()
     {
-        RegisterToEvents();
-        PanelManager.Instance.UpdateEventSystemSelectedObject(playButton.gameObject);
+        playButton?.onClick.AddListener(Play);
+        settingsButton?.onClick.AddListener(() => TogglePanel(settingsPanel));
+        controlsButton?.onClick.AddListener(() => TogglePanel(controlsPanel));
+        creditsButton?.onClick.AddListener(() => TogglePanel(creditsPanel));
+        exitButton?.onClick.AddListener(ExitGame);
+
+        EventSystem.current.SetSelectedGameObject(playButton.gameObject);
     }
 
     void OnDestroy()
     {
-        UnregisterFromEvents();
+        playButton?.onClick.RemoveListener(Play);
+        settingsButton?.onClick.RemoveAllListeners();
+        controlsButton?.onClick.RemoveAllListeners();
+        creditsButton?.onClick.RemoveAllListeners();
+        exitButton?.onClick.RemoveListener(ExitGame);
     }
 
     void Play()
@@ -29,24 +41,24 @@ public class MainMenuPanel : MonoBehaviour
         DependencyManager.sceneLoader.LoadScene(Scene.Tutorial);
     }
 
-    void ShowSettingsPanel()
+    void TogglePanel(GameObject panelToShow)
     {
-        // Toggle the settings panel visibility
-        settingsPanelToggle = !settingsPanelToggle;
-        creditsPanelToggle = false;
+        if (panelToShow == null) return;
 
-        settingsPanel?.SetActive(settingsPanelToggle);
-        creditsPanel?.SetActive(creditsPanelToggle);
-    }
+        bool shouldShow = panelToShow != activePanel;
+        settingsPanel?.SetActive(false);
+        creditsPanel?.SetActive(false);
+        controlsPanel?.SetActive(false);
 
-    void ShowCreditsPanel()
-    {
-        // Toggle the credits panel visibility
-        creditsPanelToggle = !creditsPanelToggle;
-        settingsPanelToggle = false;
-
-        settingsPanel?.SetActive(settingsPanelToggle);
-        creditsPanel?.SetActive(creditsPanelToggle);
+        if (shouldShow)
+        {
+            panelToShow.SetActive(true);
+            activePanel = panelToShow;
+        }
+        else
+        {
+            activePanel = null;
+        }
     }
 
     void ExitGame()
@@ -57,37 +69,4 @@ public class MainMenuPanel : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
-
-
-    void RegisterToEvents()
-    {
-        if (playButton != null)
-            playButton.onClick.AddListener(Play);
-
-        if (settingsButton != null)
-            settingsButton.onClick.AddListener(ShowSettingsPanel);
-
-        if (creditsButton != null)
-            creditsButton.onClick.AddListener(ShowCreditsPanel);
-
-        if (exitButton != null)
-            exitButton.onClick.AddListener(ExitGame);
-    }
-
-
-    void UnregisterFromEvents()
-    {
-        if (playButton != null)
-            playButton.onClick.RemoveListener(Play);
-
-        if (settingsButton != null)
-            settingsButton.onClick.RemoveListener(ShowSettingsPanel);
-
-        if (creditsButton != null)
-            creditsButton.onClick.RemoveListener(ShowCreditsPanel);
-
-        if (exitButton != null)
-            exitButton.onClick.RemoveListener(ExitGame);
-    }
-
 }

@@ -24,7 +24,7 @@ public class AudioManager : MonoBehaviour
     public AudioMixerGroup musicGroup;
     public AudioMixerGroup soundsGroup;
 
-    private void Start()
+    private void Awake()
     {
         LoadVolumes();
         PlayMenuMusic();
@@ -45,6 +45,8 @@ public class AudioManager : MonoBehaviour
         musicVolume = volume;
         DataManager.SaveData(MusicVolumeKey, musicVolume);
         audioMixer.SetFloat("Music", musicVolume);
+
+        musicAudioSource.volume = volume;
     }
 
     public void SetSoundVolume(float volume)
@@ -52,6 +54,8 @@ public class AudioManager : MonoBehaviour
         soundsVolume = volume;
         DataManager.SaveData(SoundVolumeKey, soundsVolume);
         audioMixer.SetFloat("Sound", soundsVolume);
+
+        soundsAudioSource.volume = volume;
     }
 
     public void PlayMenuMusic()

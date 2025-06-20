@@ -9,9 +9,10 @@ public class InputManager : Singleton<InputManager>
     public DeviceType CurrentDevice { get; private set; }
     public InputSystem_Actions CurrentControls => currentControls;
     public Action<DeviceType> onControlsChanged;
+    public Action<float> OnSensitivityChanged;
 
-    public float mouseSensitivity = 0.1f;
-    public float gamepadSensitivity = 0.4f;
+    public float mouseSensitivity;
+    public float gamepadSensitivity;
     public bool invertInputY = false;
 
     PlayerInput playerInput;
@@ -20,8 +21,8 @@ public class InputManager : Singleton<InputManager>
 
     const string GamepadScheme = "Gamepad";
 
-    const float defaultMouseSensitivity = 0.1f;
-    const float defaultGamepadSensitivity = 0.4f;
+    const float defaultMouseSensitivity = 0.4f;
+    const float defaultGamepadSensitivity = 1f;
     const bool defaultInvertInputY = false;
 
 
@@ -99,7 +100,15 @@ public class InputManager : Singleton<InputManager>
         }
     }
 
-    public void RestoreDefaultSettings()
+    public float GetCurrentCursorSensitivity()
+    {
+        if (CurrentDevice == DeviceType.Gamepad)
+            return gamepadSensitivity;
+        else
+            return mouseSensitivity;
+    }
+
+    void RestoreDefaultSettings()
     {
         mouseSensitivity = defaultMouseSensitivity;
         gamepadSensitivity = defaultGamepadSensitivity;

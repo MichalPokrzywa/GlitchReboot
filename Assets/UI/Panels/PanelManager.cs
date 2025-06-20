@@ -76,12 +76,6 @@ public class PanelManager : Singleton<PanelManager>
         NarrativeSystem.Instance.ResetNarrative();
     }
 
-    public void UpdateEventSystemSelectedObject(GameObject firstSelected)
-    {
-        EnsureEventSystemRef();
-        eventSystem.SetSelectedGameObject(firstSelected);
-    }
-
     void EnsureEventSystemRef()
     {
         if (eventSystem == null)
@@ -127,7 +121,7 @@ public class PanelManager : Singleton<PanelManager>
 
     void OnPanelOpen()
     {
-        UpdateEventSystemSelectedObject(pausePanel.FirstItemToSelect);
+        EventSystem.current.SetSelectedGameObject(pausePanel.FirstItemToSelect);
     }
 
     IEnumerator CloseTip()

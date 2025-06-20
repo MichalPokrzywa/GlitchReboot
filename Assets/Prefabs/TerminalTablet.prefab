@@ -3020,6 +3020,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 863773139901139157}
     m_Modifications:
+    - target: {fileID: 405933364424806134, guid: 0eb208b8073844541bb2ed6979e73258, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 3633025ae5e7a4c4695e28f40ff5738c, type: 3}
     - target: {fileID: 619776915503305495, guid: 0eb208b8073844541bb2ed6979e73258, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -3099,6 +3103,18 @@ PrefabInstance:
     - target: {fileID: 5974527821729085228, guid: 0eb208b8073844541bb2ed6979e73258, type: 3}
       propertyPath: m_Name
       value: VirtualMouseUI
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672028358072375937, guid: 0eb208b8073844541bb2ed6979e73258, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672028358072375937, guid: 0eb208b8073844541bb2ed6979e73258, type: 3}
+      propertyPath: m_EffectDistance.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8672028358072375937, guid: 0eb208b8073844541bb2ed6979e73258, type: 3}
+      propertyPath: m_EffectDistance.y
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

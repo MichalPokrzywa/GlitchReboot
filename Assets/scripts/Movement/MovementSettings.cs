@@ -9,8 +9,6 @@ public class MovementSettings : ScriptableObject
     {
         public float FOV = 80;
         public bool enableCameraRotation = true;
-        public bool invertCameraRotation = false;
-        public float mouseSensitivity = 2;
         public float maxLookAngle = 50;
         public bool enableZoom = true;
         public float zoomFOV = 30;
