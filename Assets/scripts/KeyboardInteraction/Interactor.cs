@@ -51,7 +51,10 @@ public class Interactor : MonoBehaviour
             return;
         }
 
-        if (!Physics.Raycast(r, out RaycastHit hit))
+        int layerToIgnore = LayerMask.NameToLayer("IgnoreInteractor");
+        int layerMask = ~(1 << layerToIgnore);
+
+        if (!Physics.Raycast(r, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
             ClearLastInteractor();
             return;
