@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Interactor : MonoBehaviour
@@ -94,7 +93,7 @@ public class Interactor : MonoBehaviour
         {
             gameObject.layer = LayerMask.NameToLayer("PlayerWithObject");
             pickup.MoveToHand(handPoint, holdPoint, this);
-            PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.DiceThrow);
+            PanelManager.Instance.ShowTipsOnce(TipsPanel.eTipType.DiceDrop, TipsPanel.eTipType.DiceThrow);
             heldObject = pickup;
             interactObj.HideUI();
         }

@@ -1,17 +1,24 @@
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static TipsPanel;
 
 public class InteractionBase : MonoBehaviour, IInteractable
 {
-    public GameObject UIHoverObject;
-    public TextMeshProUGUI UIHoverText;
-    protected string TooltipText = "[E] Use";
-    public float floatDistanceX = 100f; // Maksymalna wysokość pływania
-    public float floatDistanceY = 100f;
-    private Vector3 originalPosition;
-    public Camera mainCamera;
+    [SerializeField] protected GameObject UIHoverObject;
+    [SerializeField] protected TextMeshProUGUI UIHoverText;
+    [SerializeField] protected string actionSuffix;
+    [SerializeField] protected Camera mainCamera;
+    [SerializeField] protected float floatDistanceX = 100f; // Maksymalna wysokość pływania
+    [SerializeField] protected float floatDistanceY = 100f;
+
     public bool HasShownUI { get; set; }
+
+    protected string TooltipText = string.Empty;
+
+    Vector3 originalPosition;
+    string displayedText;
 
     protected virtual void Start()
     {
@@ -66,7 +73,19 @@ public class InteractionBase : MonoBehaviour, IInteractable
     {
         //Debug.Log("Show UI");
         UIHoverObject.SetActive(true);
-        UIHoverText.text = TooltipText;
+
+        if (string.IsNullOrEmpty(TooltipText))
+        {
+            var currentControls = InputManager.Instance.CurrentControls.Player;
+            var binding = InputManager.Instance.GetBinding(currentControls.Interact);
+            displayedText = $"{binding} {actionSuffix}";
+        }
+        else
+        {
+            displayedText = $"{TooltipText} {actionSuffix}";
+        }
+
+        UIHoverText.text = displayedText;
         HasShownUI = true;
     }
 
@@ -75,6 +94,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
        // Debug.Log("Hide UI");
         UIHoverObject.SetActive(false);
         HasShownUI = false;
+        displayedText = string.Empty;
     }
 
     public void AnimateUI()

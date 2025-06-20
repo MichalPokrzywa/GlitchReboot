@@ -7,6 +7,7 @@ public class InputManager : Singleton<InputManager>
     public enum DeviceType { KeyboardMouse, Gamepad }
 
     public DeviceType CurrentDevice { get; private set; }
+    public InputSystem_Actions CurrentControls => currentControls;
     public Action<DeviceType> onControlsChanged;
 
     public float mouseSensitivity = 0.1f;
@@ -22,6 +23,7 @@ public class InputManager : Singleton<InputManager>
     const float defaultMouseSensitivity = 0.1f;
     const float defaultGamepadSensitivity = 0.4f;
     const bool defaultInvertInputY = false;
+
 
     void Awake()
     {
@@ -39,6 +41,7 @@ public class InputManager : Singleton<InputManager>
         currentControls.Enable();
     }
 
+    #region ControlGetters
     public float GetMoveHorizontal() => currentControls.Player.Move.ReadValue<Vector2>().x;
 
     public float GetMoveVertical() => currentControls.Player.Move.ReadValue<Vector2>().y;
@@ -64,6 +67,20 @@ public class InputManager : Singleton<InputManager>
     public bool IsSpawnMarkerPressed() => currentControls.Player.SpawnMarker.triggered;
     public bool IsNextMarkerPressed() => currentControls.Player.NextMarker.triggered;
     public bool IsPreviousMarkerPressed() => currentControls.Player.PrevMarker.triggered;
+
+    #endregion
+
+    public string GetBinding(InputAction action)
+    {
+        if (action == null)
+            return string.Empty;
+
+        string scheme = playerInput.currentControlScheme;
+
+        return action.GetBindingDisplayString(
+            bindingMask: InputBinding.MaskByGroup(scheme),
+            options: InputBinding.DisplayStringOptions.DontUseShortDisplayNames);
+    }
 
     public InputAction GetMarkerAction(int index)
     {

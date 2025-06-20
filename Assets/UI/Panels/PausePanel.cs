@@ -1,17 +1,52 @@
 using System;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UI;
 
 public class PausePanel : Panel
 {
+    [SerializeField] Button controlsButton;
+    [SerializeField] Button returnToMenuButton;
     [SerializeField] Camera mainCamera;
     [SerializeField] Volume depthOfField;
     [SerializeField] FirstPersonController firstPersonController;
 
+    void Awake()
+    {
+        if (controlsButton != null)
+        {
+            controlsButton.onClick.AddListener(ControlsPanel);
+            firstItemToSelect = controlsButton.gameObject;
+        }
+
+        if (returnToMenuButton != null)
+            returnToMenuButton.onClick.AddListener(ReturnToMenu);
+
+        onPanelOpen += RestoreTime;
+        onPanelClose += StopTime;
+    }
+
+    void OnDestroy()
+    {
+        if (controlsButton != null)
+            controlsButton.onClick.RemoveListener(ControlsPanel);
+
+        if (returnToMenuButton != null)
+            returnToMenuButton.onClick.RemoveListener(ReturnToMenu);
+
+        onPanelOpen -= RestoreTime;
+        onPanelClose -= StopTime;
+    }
+
+    void OnDisable()
+    {
+        ResetState();
+    }
+
     bool EnsurePlayerRef()
     {
         if (firstPersonController == null)
-            firstPersonController = FindObjectOfType<FirstPersonController>();
+            firstPersonController = FindFirstObjectByType<FirstPersonController>();
 
         return firstPersonController != null;
     }
@@ -30,17 +65,20 @@ public class PausePanel : Panel
         return depthOfField != null;
     }
 
-    void OnDisable()
+    void RestoreTime()
     {
-        ResetState();
+        Time.timeScale = 0f;
     }
 
-    public override void Close(Action onComplete = null)
+    void StopTime()
+    {
+        Time.timeScale = 1f;
+    }
+
+    public override void Close()
     {
         base.Close();
 
-        // stop the game time
-        Time.timeScale = 1f;
         AudioListener.pause = false;
 
         if (EnsurePlayerRef())
@@ -52,9 +90,9 @@ public class PausePanel : Panel
             depthOfField.enabled = false;
     }
 
-    public override void Open(Action onComplete = null)
+    public override void Open()
     {
-        base.Open(() => Time.timeScale = 0f);
+        base.Open();
 
         AudioListener.pause = true;
 
@@ -81,8 +119,13 @@ public class PausePanel : Panel
             depthOfField.enabled = false;
     }
 
-    public void ReturnToMenu()
+    void ReturnToMenu()
     {
         PanelManager.Instance.ReturnToMenu();
+    }
+
+    void ControlsPanel()
+    {
+
     }
 }

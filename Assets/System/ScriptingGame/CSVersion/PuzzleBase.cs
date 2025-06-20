@@ -102,7 +102,7 @@ public class PuzzleBase : MonoBehaviour
     {
         TabletTerminal.Instance.AssignTerminal(this);
         TabletTerminal.Instance.SendText(UpdateTemplate(codeText), UpdateTemplate(naturalText));
-        PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.Terminal);
+        PanelManager.Instance.ShowTipsOnce(TipsPanel.eTipType.Tablet);
     }
 
     public void SwapLanguage()

@@ -2010,6 +2010,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8152360472594621214, guid: 2a894cddf4be72b489324fa732a93938, type: 3}
+      propertyPath: itemsToReset.Array.data[0].initialPosition.x
+      value: 1.7130127
+      objectReference: {fileID: 0}
+    - target: {fileID: 8152360472594621214, guid: 2a894cddf4be72b489324fa732a93938, type: 3}
+      propertyPath: itemsToReset.Array.data[0].initialPosition.y
+      value: 0.526001
+      objectReference: {fileID: 0}
+    - target: {fileID: 8152360472594621214, guid: 2a894cddf4be72b489324fa732a93938, type: 3}
+      propertyPath: itemsToReset.Array.data[0].initialPosition.z
+      value: -4.903
+      objectReference: {fileID: 0}
+    - target: {fileID: 8152360472594621214, guid: 2a894cddf4be72b489324fa732a93938, type: 3}
+      propertyPath: itemsToReset.Array.data[0].initialRotation.w
+      value: -0.36481467
+      objectReference: {fileID: 0}
+    - target: {fileID: 8152360472594621214, guid: 2a894cddf4be72b489324fa732a93938, type: 3}
+      propertyPath: itemsToReset.Array.data[0].initialRotation.y
+      value: 0.9310802
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
@@ -2119,7 +2139,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1666264728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenuPanel, Assembly-CSharp
         m_MethodName: Play
         m_Mode: 1
@@ -2670,7 +2690,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1666264728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenuPanel, Assembly-CSharp
         m_MethodName: ExitGame
         m_Mode: 1
@@ -10628,7 +10648,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1666264728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenuPanel, Assembly-CSharp
         m_MethodName: ShowCreditsPanel
         m_Mode: 1
@@ -11837,6 +11857,7 @@ GameObject:
   - component: {fileID: 1634683736}
   - component: {fileID: 1634683739}
   - component: {fileID: 1634683738}
+  - component: {fileID: 1634683740}
   m_Layer: 5
   m_Name: MainPanel
   m_TagString: Untagged
@@ -11945,6 +11966,24 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
+--- !u!114 &1634683740
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1634683734}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd01f986e6176d145ad8163cdf846ebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playButton: {fileID: 310411535}
+  settingsButton: {fileID: 1778745507}
+  creditsButton: {fileID: 1412674585}
+  exitButton: {fileID: 388846329}
+  settingsPanel: {fileID: 1936703704}
+  creditsPanel: {fileID: 1307671871}
 --- !u!4 &1636717158 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4826401387028506, guid: 68c5f8e43c078eb438ca0fc2a376d9f8, type: 3}
@@ -12138,7 +12177,6 @@ GameObject:
   - component: {fileID: 1666264726}
   - component: {fileID: 1666264725}
   - component: {fileID: 1666264724}
-  - component: {fileID: 1666264728}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -12233,20 +12271,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!114 &1666264728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1666264723}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bd01f986e6176d145ad8163cdf846ebd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  settingsPanel: {fileID: 1936703704}
-  creditsPanel: {fileID: 1307671871}
 --- !u!1001 &1668028982
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12643,7 +12667,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1666264728}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: MainMenuPanel, Assembly-CSharp
         m_MethodName: ShowSettingsPanel
         m_Mode: 1
@@ -14569,6 +14593,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 25941848616765563, guid: 158c8264ae230e94c992905122518a24, type: 3}
+      propertyPath: m_Size.y
+      value: 0.3111476
+      objectReference: {fileID: 0}
+    - target: {fileID: 25941848616765563, guid: 158c8264ae230e94c992905122518a24, type: 3}
+      propertyPath: m_Center.y
+      value: -0.06827517
+      objectReference: {fileID: 0}
     - target: {fileID: 348883409555013370, guid: 158c8264ae230e94c992905122518a24, type: 3}
       propertyPath: m_LocalPosition.x
       value: 960
@@ -14759,11 +14791,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3015581144765506255, guid: 158c8264ae230e94c992905122518a24, type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3015581144765506255, guid: 158c8264ae230e94c992905122518a24, type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3015581144765506255, guid: 158c8264ae230e94c992905122518a24, type: 3}
       propertyPath: m_LocalPosition.x
@@ -15256,11 +15288,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7535028729874541674, guid: 158c8264ae230e94c992905122518a24, type: 3}
       propertyPath: m_Size.y
-      value: 0.19122769
+      value: 0.07371482
       objectReference: {fileID: 0}
     - target: {fileID: 7535028729874541674, guid: 158c8264ae230e94c992905122518a24, type: 3}
       propertyPath: m_Center.y
-      value: 0.095613845
+      value: 0.03685741
       objectReference: {fileID: 0}
     - target: {fileID: 7536992306188343472, guid: 158c8264ae230e94c992905122518a24, type: 3}
       propertyPath: stairs
