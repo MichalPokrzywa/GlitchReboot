@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SkyboxGlitchMaterialLevel2
+  m_Name: SkyboxGlitchMaterialLevel3
   m_Shader: {fileID: 4800000, guid: 30b4c3150ac605c4a8e50a237ea3cbf6, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -54,8 +54,8 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 37cec8d528699904db6c507a64fb994e, type: 3}
-        m_Scale: {x: 1, y: 1}
+        m_Texture: {fileID: 2800000, guid: 0972ba05433ff934f8fe56211e13ad1f, type: 3}
+        m_Scale: {x: 3, y: 3}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
         m_Texture: {fileID: 0}
@@ -162,7 +162,7 @@ Material:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _GlitchColor: {r: 0.7688679, g: 1, b: 0.7842767, a: 0.9490196}
-    - _GroundColor: {r: 0.5, g: 0.49292445, b: 0.49292445, a: 1}
+    - _GroundColor: {r: 0, g: 0, b: 0, a: 1}
     - _HexLineColor: {r: 0.2474635, g: 0.7830189, b: 0.55378586, a: 1}
     - _LineColor: {r: 0, g: 0, b: 0, a: 1}
     - _SkyColor: {r: 0, g: 0.2608695, b: 1, a: 1}
