@@ -4,7 +4,6 @@
 //
 // "Enable/Disable Headbob, Changed look rotations - should result in reduced camera jitters" || version 1.0.1
 
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,19 +28,13 @@ public class FirstPersonController : MonoBehaviour
     public float pitch => _pitch;
 
     float fov = 60f;
-    bool invertCamera = false;
     bool cameraCanMove = true;
-    float mouseSensitivity = 2f;
     float maxLookAngle = 50f;
 
     // Crosshair
     public bool lockCursor = true;
-    public bool crosshair = true;
-    public Sprite crosshairImage;
-    public Color crosshairColor = Color.white;
-
-    // Internal Variables
-    Image crosshairObject;
+    public bool useCrosshair = true;
+    public GameObject crosshair;
 
     #region Camera Zoom Variables
 
@@ -143,7 +136,6 @@ public class FirstPersonController : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
-        crosshairObject = GetComponentInChildren<Image>();
 
         // Get movement settings from scriptable object
         GetMovementSettings();
@@ -209,6 +201,9 @@ public class FirstPersonController : MonoBehaviour
             return;
 
         Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+
+        if (useCrosshair)
+            crosshair.gameObject.SetActive(lockCursor);
     }
 
     public void StopMovement()
@@ -244,40 +239,27 @@ public class FirstPersonController : MonoBehaviour
 
     void HandleCameraMovement()
     {
-        _yaw = transform.localEulerAngles.y + InputManager.Instance.GetLookHorizontal() * mouseSensitivity;
+        float sesitivityFactor = 1f;
+        if (isZoomed)
+            sesitivityFactor = 0.5f;
 
-        if (!invertCamera)
-        {
-            _pitch -= mouseSensitivity * InputManager.Instance.GetLookVertical();
-        }
-        else
-        {
-            // Inverted Y
-            _pitch += mouseSensitivity * InputManager.Instance.GetLookVertical();
-        }
-
+        _yaw = transform.localEulerAngles.y + InputManager.Instance.GetLookHorizontal() * sesitivityFactor;
+        _pitch -= InputManager.Instance.GetLookVertical() * sesitivityFactor;
         // Clamp pitch between lookAngle
         _pitch = Mathf.Clamp(_pitch, -maxLookAngle, maxLookAngle);
 
         transform.localEulerAngles = new Vector3(0, _yaw, 0);
+
         if (playerCamera != null)
             playerCamera.transform.localEulerAngles = new Vector3(_pitch, 0, 0);
     }
 
     void SetupCrosshair()
     {
-        if (crosshairObject == null)
+        if (crosshair == null)
             return;
 
-        if (crosshair)
-        {
-            crosshairObject.sprite = crosshairImage;
-            crosshairObject.color = crosshairColor;
-        }
-        else
-        {
-            crosshairObject.gameObject.SetActive(false);
-        }
+        crosshair.gameObject.SetActive(useCrosshair);
     }
 
     void SetupSprintBar()
@@ -380,7 +362,8 @@ public class FirstPersonController : MonoBehaviour
     void HandleMovement()
     {
         Vector3 input = new Vector3(InputManager.Instance.GetMoveHorizontal(), 0, InputManager.Instance.GetMoveVertical());
-        isWalking = (input.x != 0 || input.z != 0) && isGrounded;
+        bool isMoving = (input.x != 0 || input.z != 0);
+        isWalking = isMoving && isGrounded;
 
         bool shouldSprint = enableSprint && InputManager.Instance.IsSprintHeld()
                                          && sprintRemaining > 0f && !isSprintCooldown;
@@ -403,7 +386,7 @@ public class FirstPersonController : MonoBehaviour
 
         rb.AddForce(velocityChange, ForceMode.VelocityChange);
 
-        isSprinting = shouldSprint && isWalking;
+        isSprinting = shouldSprint && isMoving;
         if (isSprinting)
         {
             // If player is sprinting, stop crouching
@@ -425,11 +408,6 @@ public class FirstPersonController : MonoBehaviour
                 sprintBarCG.alpha -= 3 * Time.fixedDeltaTime;
             }
         }
-    }
-
-    public static bool AreFloatsEqual(float a, float b, float epsilon = 0.0001f)
-    {
-        return Mathf.Abs(a - b) < epsilon;
     }
 
     Vector3 HandleFriction(Vector3 targetVelocity, Vector3 velocity)
@@ -463,7 +441,7 @@ public class FirstPersonController : MonoBehaviour
             Zoom(isZoomed);
         }
     }
-            //playerCamera.DOFieldOfView(targetFOV, zoomStepTime);
+
     void HandleCrouch()
     {
         // If player is not grounded, stop crouching
@@ -582,8 +560,6 @@ public class FirstPersonController : MonoBehaviour
         #region Camera Settings
         fov = movementSettings.cameraVariables.FOV;
         cameraCanMove = movementSettings.cameraVariables.enableCameraRotation;
-        invertCamera = movementSettings.cameraVariables.invertCameraRotation;
-        mouseSensitivity = movementSettings.cameraVariables.mouseSensitivity;
         maxLookAngle = movementSettings.cameraVariables.maxLookAngle;
         enableZoom = movementSettings.cameraVariables.enableZoom;
         zoomFOV = movementSettings.cameraVariables.zoomFOV;
@@ -690,19 +666,15 @@ public class FirstPersonController : MonoBehaviour
         */
 
         fpc.lockCursor = EditorGUILayout.ToggleLeft(new GUIContent("Lock and Hide Cursor", "Turns off the cursor visibility and locks it to the middle of the screen."), fpc.lockCursor);
-        fpc.crosshair = EditorGUILayout.ToggleLeft(new GUIContent("Auto Crosshair", "Determines if the basic crosshair will be turned on, and sets is to the center of the screen."), fpc.crosshair);
+        fpc.useCrosshair = EditorGUILayout.ToggleLeft(new GUIContent("Auto Crosshair", "Determines if the basic useCrosshair will be turned on, and sets is to the center of the screen."), fpc.useCrosshair);
 
-        // Only displays crosshair options if crosshair is enabled
-        if(fpc.crosshair)
+        // Only displays useCrosshair options if useCrosshair is enabled
+        if(fpc.useCrosshair)
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel(new GUIContent("Crosshair Image", "Sprite to use as the crosshair."));
-            fpc.crosshairImage = (Sprite)EditorGUILayout.ObjectField(fpc.crosshairImage, typeof(Sprite), false);
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            fpc.crosshairColor = EditorGUILayout.ColorField(new GUIContent("Crosshair Color", "Determines the color of the crosshair."), fpc.crosshairColor);
+            EditorGUILayout.PrefixLabel(new GUIContent("Crosshair", "Crosshair object"));
+            fpc.crosshair = (GameObject)EditorGUILayout.ObjectField(fpc.crosshair, typeof(GameObject), true);
             EditorGUILayout.EndHorizontal();
             EditorGUI.indentLevel--;
         }

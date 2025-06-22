@@ -17,6 +17,9 @@ namespace UnityEngine.InputSystem.UI
         // Clamp the virtual mouse position to the canvas
         private Vector2 TransformToCanvas(Vector2 position)
         {
+            if (m_Canvas.worldCamera == null)
+                m_Canvas.worldCamera = Camera.main;
+
             RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRectTransform, position,
                 m_Canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : m_Canvas.worldCamera, out position);
 
@@ -372,6 +375,10 @@ namespace UnityEngine.InputSystem.UI
                     {
                         Vector3 worldPos = Vector3.zero;
                         Vector2 screenPoint = newPosition;
+
+                        if (m_Canvas.worldCamera == null)
+                            m_Canvas.worldCamera = Camera.main;
+
                         RectTransformUtility.ScreenPointToWorldPointInRectangle(canvasRectTransform, screenPoint, m_Canvas.worldCamera, out worldPos);
                         m_CursorTransform.position = worldPos;
                     }

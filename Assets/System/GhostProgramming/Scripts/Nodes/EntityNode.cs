@@ -82,7 +82,7 @@ namespace GhostProgramming
         {
             var list = GetEntityList();
 
-            if (list == null)
+            if (list == null || list.Count == 0)
             {
                 UpdateDropdownState(false);
                 return;

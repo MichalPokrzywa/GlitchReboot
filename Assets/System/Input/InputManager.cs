@@ -7,10 +7,12 @@ public class InputManager : Singleton<InputManager>
     public enum DeviceType { KeyboardMouse, Gamepad }
 
     public DeviceType CurrentDevice { get; private set; }
+    public InputSystem_Actions CurrentControls => currentControls;
     public Action<DeviceType> onControlsChanged;
+    public Action<float> OnSensitivityChanged;
 
-    public float mouseSensitivity = 0.1f;
-    public float gamepadSensitivity = 0.4f;
+    public float mouseSensitivity;
+    public float gamepadSensitivity;
     public bool invertInputY = false;
 
     PlayerInput playerInput;
@@ -19,9 +21,10 @@ public class InputManager : Singleton<InputManager>
 
     const string GamepadScheme = "Gamepad";
 
-    const float defaultMouseSensitivity = 0.1f;
-    const float defaultGamepadSensitivity = 0.4f;
+    const float defaultMouseSensitivity = 0.4f;
+    const float defaultGamepadSensitivity = 1f;
     const bool defaultInvertInputY = false;
+
 
     void Awake()
     {
@@ -39,6 +42,7 @@ public class InputManager : Singleton<InputManager>
         currentControls.Enable();
     }
 
+    #region ControlGetters
     public float GetMoveHorizontal() => currentControls.Player.Move.ReadValue<Vector2>().x;
 
     public float GetMoveVertical() => currentControls.Player.Move.ReadValue<Vector2>().y;
@@ -65,6 +69,20 @@ public class InputManager : Singleton<InputManager>
     public bool IsNextMarkerPressed() => currentControls.Player.NextMarker.triggered;
     public bool IsPreviousMarkerPressed() => currentControls.Player.PrevMarker.triggered;
 
+    #endregion
+
+    public string GetBinding(InputAction action)
+    {
+        if (action == null)
+            return string.Empty;
+
+        string scheme = playerInput.currentControlScheme;
+
+        return action.GetBindingDisplayString(
+            bindingMask: InputBinding.MaskByGroup(scheme),
+            options: InputBinding.DisplayStringOptions.DontUseShortDisplayNames);
+    }
+
     public InputAction GetMarkerAction(int index)
     {
         switch (index)
@@ -82,7 +100,15 @@ public class InputManager : Singleton<InputManager>
         }
     }
 
-    public void RestoreDefaultSettings()
+    public float GetCurrentCursorSensitivity()
+    {
+        if (CurrentDevice == DeviceType.Gamepad)
+            return gamepadSensitivity;
+        else
+            return mouseSensitivity;
+    }
+
+    void RestoreDefaultSettings()
     {
         mouseSensitivity = defaultMouseSensitivity;
         gamepadSensitivity = defaultGamepadSensitivity;
