@@ -22,7 +22,7 @@ public class InputManager : Singleton<InputManager>
     const string GamepadScheme = "Gamepad";
 
     const float defaultMouseSensitivity = 0.4f;
-    const float defaultGamepadSensitivity = 1f;
+    const float defaultGamepadSensitivity = 2f;
     const bool defaultInvertInputY = false;
 
 
@@ -59,15 +59,15 @@ public class InputManager : Singleton<InputManager>
     }
     public bool IsCrouchHeld() => currentControls.Player.Crouch.IsPressed();
     public bool IsSprintHeld() => currentControls.Player.Sprint.IsPressed();
-    public bool IsZoomPressed() => currentControls.Player.Zoom.IsPressed();
-    public bool IsJumpPressed() => currentControls.Player.Jump.triggered;
-    public bool IsFirePressed() => currentControls.Player.Fire.triggered;
-    public bool IsInteractPressed() => currentControls.Player.Interact.triggered;
-    public bool IsInteractWithTabletPressed() => currentControls.Player.TabletInteract.triggered;
-    public bool IsPausePressed() => currentControls.Player.Pause.triggered;
-    public bool IsSpawnMarkerPressed() => currentControls.Player.SpawnMarker.triggered;
-    public bool IsNextMarkerPressed() => currentControls.Player.NextMarker.triggered;
-    public bool IsPreviousMarkerPressed() => currentControls.Player.PrevMarker.triggered;
+    public bool IsZoomHeld() => currentControls.Player.Zoom.IsPressed();
+    public bool IsJumpPressed() => currentControls.Player.Jump.WasPerformedThisFrame();
+    public bool IsFirePressed() => currentControls.Player.Fire.WasPerformedThisFrame();
+    public bool IsInteractPressed() => currentControls.Player.Interact.WasPerformedThisFrame();
+    public bool IsInteractWithTabletPressed() => currentControls.Player.TabletInteract.WasPerformedThisFrame();
+    public bool IsPausePressed() => currentControls.Player.Pause.WasPerformedThisFrame();
+    public bool IsSpawnMarkerPressed() => currentControls.Player.SpawnMarker.WasPerformedThisFrame();
+    public bool IsNextMarkerPressed() => currentControls.Player.NextMarker.WasPerformedThisFrame();
+    public bool IsPreviousMarkerPressed() => currentControls.Player.PrevMarker.WasPerformedThisFrame();
 
     #endregion
 

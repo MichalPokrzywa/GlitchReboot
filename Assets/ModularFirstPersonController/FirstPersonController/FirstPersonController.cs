@@ -133,6 +133,11 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
 
+    int stopMovementRequests = 0;
+    Vector3 input;
+    bool isMoving;
+    bool shouldSprint;
+
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
@@ -149,6 +154,8 @@ public class FirstPersonController : MonoBehaviour
         defaultWalkSpeed = walkSpeed;
         sprintRemaining = sprintDuration;
         sprintCooldownReset = sprintCooldown;
+
+        stopMovementRequests = 0;
     }
 
     void Start()
@@ -174,6 +181,13 @@ public class FirstPersonController : MonoBehaviour
 
         if (enableHeadBob)
             HeadBob();
+
+        input = new Vector3(InputManager.Instance.GetMoveHorizontal(), 0, InputManager.Instance.GetMoveVertical());
+        isMoving = (input.x != 0 || input.z != 0);
+        isWalking = isMoving && isGrounded;
+
+        shouldSprint = enableSprint && InputManager.Instance.IsSprintHeld()
+                                         && sprintRemaining > 0f && !isSprintCooldown;
 
         // Gets input and calls jump method
         if (enableJump && InputManager.Instance.IsJumpPressed() && isGrounded)
@@ -201,6 +215,7 @@ public class FirstPersonController : MonoBehaviour
             return;
 
         Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+        Cursor.visible = !lockCursor;
 
         if (useCrosshair)
             crosshair.gameObject.SetActive(lockCursor);
@@ -208,19 +223,31 @@ public class FirstPersonController : MonoBehaviour
 
     public void StopMovement()
     {
-        cameraCanMove = false;
-        playerCanMove = false;
-        enableHeadBob = false;
-        rb.linearVelocity = Vector3.zero;
-        enableJump = false;
+        stopMovementRequests++;
+        if (stopMovementRequests > 0)
+        {
+            cameraCanMove = false;
+            playerCanMove = false;
+            enableHeadBob = false;
+            rb.linearVelocity = Vector3.zero;
+            enableJump = false;
+            lockCursor = false;
+        }
     }
 
     public void StartMovement()
     {
-        cameraCanMove = true;
-        playerCanMove = true;
-        enableHeadBob = true;
-        enableJump = true;
+        stopMovementRequests--;
+        // Ensure it doesn't go negative
+        stopMovementRequests = Mathf.Max(stopMovementRequests, 0);
+        if (stopMovementRequests <= 0)
+        {
+            cameraCanMove = true;
+            playerCanMove = true;
+            enableHeadBob = true;
+            enableJump = true;
+            lockCursor = true;
+        }
     }
 
     public void Rotate(float pitch, float yaw)
@@ -361,13 +388,6 @@ public class FirstPersonController : MonoBehaviour
 
     void HandleMovement()
     {
-        Vector3 input = new Vector3(InputManager.Instance.GetMoveHorizontal(), 0, InputManager.Instance.GetMoveVertical());
-        bool isMoving = (input.x != 0 || input.z != 0);
-        isWalking = isMoving && isGrounded;
-
-        bool shouldSprint = enableSprint && InputManager.Instance.IsSprintHeld()
-                                         && sprintRemaining > 0f && !isSprintCooldown;
-
         float currentSpeed = shouldSprint ? sprintSpeed : walkSpeed;
 
         Vector3 targetVelocity = transform.TransformDirection(input) * currentSpeed;
@@ -435,7 +455,7 @@ public class FirstPersonController : MonoBehaviour
             // Behavior for hold to zoom
             if (!isSprinting)
             {
-                isZoomed = InputManager.Instance.IsZoomPressed();
+                isZoomed = InputManager.Instance.IsZoomHeld();
             }
 
             Zoom(isZoomed);
@@ -473,17 +493,14 @@ public class FirstPersonController : MonoBehaviour
     {
         Vector3 origin = new Vector3(transform.position.x, transform.position.y - (transform.localScale.y * .5f), transform.position.z);
         Vector3 direction = transform.TransformDirection(Vector3.down);
-        float distance = .75f;
+        float distance = 0.85f;
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, distance))
-        {
-            Debug.DrawRay(origin, direction * distance, Color.red);
             isGrounded = true;
-        }
         else
-        {
             isGrounded = false;
-        }
+
+        Debug.DrawRay(origin, direction * distance, Color.red);
     }
 
     void Jump()

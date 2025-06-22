@@ -25,6 +25,10 @@ public class MainMenuPanel : MonoBehaviour
         exitButton?.onClick.AddListener(ExitGame);
 
         EventSystem.current.SetSelectedGameObject(playButton.gameObject);
+
+        settingsPanel?.SetActive(false);
+        controlsPanel?.SetActive(false);
+        creditsPanel?.SetActive(false);
     }
 
     void OnDestroy()

@@ -17,6 +17,7 @@ public class PausePanel : Panel
     [SerializeField] Camera mainCamera;
     [SerializeField] Volume depthOfField;
     [SerializeField] FirstPersonController firstPersonController;
+    [SerializeField] Image raycastBlocker;
 
     GameObject activePanel;
 
@@ -85,28 +86,28 @@ public class PausePanel : Panel
     {
         base.Close();
 
+        raycastBlocker.enabled = false;
         AudioListener.pause = false;
 
         if (EnsurePlayerRef())
-        {
-            firstPersonController.lockCursor = true;
             firstPersonController.StartMovement();
-        }
+
         if (EnsureCameraRef())
             depthOfField.enabled = false;
+
+        TogglePanel(null);
     }
 
     public override void Open()
     {
         base.Open();
 
+        raycastBlocker.enabled = true;
         AudioListener.pause = true;
 
         if (EnsurePlayerRef())
-        {
-            firstPersonController.lockCursor = false;
             firstPersonController.StopMovement();
-        }
+
         if (EnsureCameraRef())
             depthOfField.enabled = true;
     }
@@ -115,12 +116,11 @@ public class PausePanel : Panel
     {
         base.ResetState();
         Time.timeScale = 1f;
-        if (firstPersonController != null)
-        {
-            firstPersonController.lockCursor = true;
-            firstPersonController.StartMovement();
-        }
         AudioListener.pause = false;
+
+        if (firstPersonController != null)
+            firstPersonController.StartMovement();
+
         if (depthOfField != null)
             depthOfField.enabled = false;
     }
