@@ -28,6 +28,7 @@ public class GhostLevel1 : PuzzleBase
     private bool terminalState = false;
     private float duration = 6f;
     private bool boomWindow = false;
+
     public void Awake()
     {
         stairsBasicPosition = stairs.position;
@@ -37,42 +38,49 @@ public class GhostLevel1 : PuzzleBase
         platformTransform = platform.transform.Find("Waypoints").Find("Waypoint").transform;
     }
 
+    protected override void Start()
+    {
+        base.Start();
+        variablePlatform1.GetComponent<GlitchSwitcher>().ApplyGlitch(true);
+        variablePlatform2.GetComponent<GlitchSwitcher>().ApplyGlitch(true);
+    }
+
     public override void DoTerminalCode()
     {
-        if (GetVariableValue<bool>("stairsPlatform"))
+        if (GetVariableValue<bool>("Stairs"))
         {
             stairsState = true;
             StartCoroutine(SmoothMoveStairs(stairsCover, new Vector3(stairsCoverBasicPosition.x, stairsCoverBasicPosition.y, stairsCoverBasicPosition.z + 12f), duration));
             StartCoroutine(FloorGlitch(duration+0.2f));
             StartCoroutine(SmoothMoveStairs(stairs, new Vector3(stairsBasicPosition.x, stairsBasicPosition.y + 12f, stairsBasicPosition.z), duration));
-        }else if (GetVariableValue<bool>("bridgePlatform"))
+        }else if (GetVariableValue<bool>("Bridge"))
         {
             bridgeState = true;
             StartCoroutine(SmoothMoveStairs(bridge, new Vector3(bridgeBasicPosition.x, bridgeBasicPosition.y, bridgeBasicPosition.z + 18f), duration));
             StartCoroutine(BridgeGlitch(duration + 0.2f));
-        }else if (!GetVariableValue<bool>("stairsPlatform") && stairsState)
+        }else if (!GetVariableValue<bool>("Stairs") && stairsState)
         {
             stairsState = false;
             StartCoroutine(SmoothMoveStairs(stairsCover, new Vector3(stairsCoverBasicPosition.x, stairsCoverBasicPosition.y, stairsCoverBasicPosition.z ), duration));
             StartCoroutine(FloorGlitch(duration + 0.2f));
             StartCoroutine(SmoothMoveStairs(stairs, new Vector3(stairsBasicPosition.x, stairsBasicPosition.y , stairsBasicPosition.z), duration));
-        }else if (!GetVariableValue<bool>("bridgePlatform") && bridgeState)
+        }else if (!GetVariableValue<bool>("Bridge") && bridgeState)
         {
             bridgeState = false;
             StartCoroutine(SmoothMoveStairs(bridge, new Vector3(bridgeBasicPosition.x, bridgeBasicPosition.y, bridgeBasicPosition.z ), duration));
             StartCoroutine(BridgeGlitch(duration + 0.2f));
-        }else if (GetVariableValue<bool>("movingPlatform"))
+        }else if (GetVariableValue<bool>("MovingPlatform"))
         {
             platformState = true;
             platformTransform.position += new Vector3(0f, 0f, 16f);
             Debug.Log(platform.transform.position);
             Debug.Log(platformTransform.position);
-        }else if(!GetVariableValue<bool>("movingPlatform") && platformState)
+        }else if(!GetVariableValue<bool>("MovingPlatform") && platformState)
         {
             platformState = false;
             platformTransform.position = platformBasicPosition;
         }
-        else if (GetVariableValue<bool>("terminalFloor2"))
+        else if (GetVariableValue<bool>("TerminalFloor2"))
         {
             terminalState = true;
             terminal.GetComponent<GlitchSwitcher>().ApplyGlitch(false);
@@ -88,7 +96,7 @@ public class GhostLevel1 : PuzzleBase
                 Camera.main.DOShakePosition(0.3f, 0.5f, 5, randomnessMode: ShakeRandomnessMode.Harmonic);
             }
         }
-        else if (!GetVariableValue<bool>("terminalFloor2") && terminalState)
+        else if (!GetVariableValue<bool>("TerminalFloor2") && terminalState)
         {
             terminalState = false;
             terminal.GetComponent<GlitchSwitcher>().ApplyGlitch(true);
