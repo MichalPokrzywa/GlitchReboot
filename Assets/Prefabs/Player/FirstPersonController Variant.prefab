@@ -311,6 +311,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 6274080956667428276}
     - target: {fileID: 4459864850019384740, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: crosshair
+      value: 
+      objectReference: {fileID: 7528634406025149244}
+    - target: {fileID: 4459864850019384740, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: jumpPower
       value: 1
       objectReference: {fileID: 0}
@@ -330,6 +334,10 @@ PrefabInstance:
       propertyPath: zoomStepTime
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 4459864850019384740, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: crosshairImage
+      value: 
+      objectReference: {fileID: 21300000, guid: ba90c49095fe3414bb5a3f640e995494, type: 3}
     - target: {fileID: 4459864850019384740, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: unlimitedSprint
       value: 1
@@ -352,12 +360,32 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850190357392, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 60
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 4459864850190357392, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 60
+      value: 45
       objectReference: {fileID: 0}
+    - target: {fileID: 4459864850190357392, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459864850190357392, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459864850190357392, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459864850190357393, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: m_Name
+      value: Cursor
+      objectReference: {fileID: 0}
+    - target: {fileID: 4459864850190357395, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 664b488ce87afdd44bff8f986476a923, type: 3}
     - target: {fileID: 4459864850190357395, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -425,6 +453,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 3879451796660416199}
   m_SourcePrefab: {fileID: 100100000, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+--- !u!1 &7528634406025149244 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4459864850190357393, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
+  m_PrefabInstance: {fileID: 6169802199090161837}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &7528634406053254403 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4459864850019384750, guid: 6bacecc4f3df9584198879c73a6b6c36, type: 3}
@@ -443,14 +476,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   InteractionSource: {fileID: 7528634406910017424}
+  InteractionRange: 3
   holdDistance: 2
   holdSmoothSpeed: 10
   holdPoint: {fileID: 7960105786080236497}
   handPoint: {fileID: 7837387986080566808}
-  canInteract: 1
-  InteractionRange: 3
-  animator: {fileID: 6274080956667428276}
   player: {fileID: 7528634406053254409}
+  canInteract: 1
+  animator: {fileID: 6274080956667428276}
 --- !u!114 &3331515570137778250
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,7 +503,6 @@ MonoBehaviour:
   interactor: {fileID: 454374496872750106}
   tabletPosition: {x: 0, y: 0, z: 0.35}
   tabletRotation: {x: -90, y: 0, z: 0}
-  isOn: 0
 --- !u!114 &6891945889305634539
 MonoBehaviour:
   m_ObjectHideFlags: 0

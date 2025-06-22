@@ -8,21 +8,22 @@ using UnityEngine.SceneManagement;
 
 public class NarrativeSystem : Singleton<NarrativeSystem>
 {
-    [SerializeField] AudioSource audioSource;
     [SerializeField] TextMeshProUGUI textDisplay;
     [SerializeField] float fadeDuration = 1f;
     [SerializeField] private float typeSpeed = 0.05f;
 
     Coroutine runningCoroutine;
+    AudioSource audioSource;
     Color startColor;
 
     const float constDisplayTime = 3f;
 
     public bool IsPlaying => audioSource.isPlaying;
 
-    void Awake()
+    void Start()
     {
         startColor = textDisplay.color;
+        audioSource = DependencyManager.audioManager.soundsAudioSource;
     }
 
     public void SetText(string text, float additionalDisplayTime = 0f, Color? color = null)

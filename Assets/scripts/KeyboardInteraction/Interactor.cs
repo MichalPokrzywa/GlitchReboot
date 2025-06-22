@@ -1,19 +1,20 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class Interactor : MonoBehaviour
 {
-    public Transform InteractionSource;
-    public float InteractionRange = 10;    // EntityTooltipInteraction is always shown, regardless of this
-    public float holdDistance = 2f;        // default distance to hold objects
-    public float holdSmoothSpeed = 10f;    // how quickly the holdPoint moves
-    public Transform holdPoint;
-    public Transform handPoint;
+    [SerializeField] Transform InteractionSource;
+    [SerializeField] float InteractionRange = 10;    // EntityTooltipInteraction is always shown, regardless of this
+    [SerializeField] float holdDistance = 2f;        // default distance to hold objects
+    [SerializeField] float holdSmoothSpeed = 10f;    // how quickly the holdPoint moves
+    [SerializeField] Transform holdPoint;
+    [SerializeField] Transform handPoint;
+    [SerializeField] FirstPersonController player;
+
     public bool canInteract = true;
     public Animator animator;
-    public FirstPersonController player;
-    private IInteractable lastInteractor;
-    private PickUpObjectInteraction heldObject;
+
+    IInteractable lastInteractor;
+    PickUpObjectInteraction heldObject;
 
     void Update()
     {
@@ -33,7 +34,7 @@ public class Interactor : MonoBehaviour
         );
         //Debug.Log($"{holdPoint.position}, {handPoint.position}");
 
-        if(!canInteract)
+        if (!canInteract)
             return;
 
         HandleInteraction();
@@ -49,7 +50,10 @@ public class Interactor : MonoBehaviour
             return;
         }
 
-        if (!Physics.Raycast(r, out RaycastHit hit))
+        int layerToIgnore = LayerMask.NameToLayer("IgnoreInteractor");
+        int layerMask = ~(1 << layerToIgnore);
+
+        if (!Physics.Raycast(r, out RaycastHit hit, Mathf.Infinity, layerMask))
         {
             ClearLastInteractor();
             return;
@@ -69,12 +73,12 @@ public class Interactor : MonoBehaviour
     {
         bool canPickup = pickup.IsPickedUp && pickup.inhand && animator.GetBool("CanPickup");
 
-        if (Input.GetKeyDown(KeyCode.E) && canPickup)
+        if (InputManager.Instance.IsInteractPressed() && canPickup)
         {
             pickup.DropInFront();
             heldObject = null;
         }
-        else if (Input.GetKeyDown(KeyCode.Mouse0) && canPickup)
+        else if (InputManager.Instance.IsFirePressed() && canPickup)
         {
             pickup.Throw();
             heldObject = null;
@@ -83,7 +87,7 @@ public class Interactor : MonoBehaviour
 
     void HandleInteractKey(IInteractable interactObj, RaycastHit hit)
     {
-        if (!Input.GetKeyDown(KeyCode.E) || hit.distance > InteractionRange)
+        if (!InputManager.Instance.IsInteractPressed() || hit.distance > InteractionRange)
             return;
 
         // logic for pickup object
@@ -92,7 +96,7 @@ public class Interactor : MonoBehaviour
         {
             gameObject.layer = LayerMask.NameToLayer("PlayerWithObject");
             pickup.MoveToHand(handPoint, holdPoint, this);
-            PanelManager.Instance.ShowTipOnce(TipsPanel.eTipType.DiceThrow);
+            PanelManager.Instance.ShowTipsOnce(TipsPanel.eTipType.DiceDrop, TipsPanel.eTipType.DiceThrow);
             heldObject = pickup;
             interactObj.HideUI();
         }
@@ -116,7 +120,7 @@ public class Interactor : MonoBehaviour
                 lastInteractor = entity;
                 break;
 
-            case EntityTooltipInteraction entity when !player.isZoomed:
+            case EntityTooltipInteraction when !player.isZoomed:
                 ClearLastInteractor();
                 break;
 
@@ -148,7 +152,7 @@ public class Interactor : MonoBehaviour
 
     public void HideLastUI()
     {
-        lastInteractor?.HideUI();
+        ClearLastInteractor();
     }
 
     // called by the pickup when it actually drops

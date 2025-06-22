@@ -1,48 +1,73 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class TipsPanel : Panel
 {
     [SerializeField] TextMeshProUGUI text;
-    [SerializeField] string diceTip = "Press [E] to drop the dice, or click LMB to throw it.";
-    [SerializeField] string terminalTip = "Press [Q] to open the terminal";
-    [SerializeField] string terminalLanguageChangeTip = "Press [E] to change language in the terminal";
+
+    private Dictionary<eTipType, (Func<InputSystem_Actions.PlayerActions, InputAction> actionSelector, string tipSuffix)> tipData;
 
     public enum eTipType
     {
         None,
         DiceThrow,
-        Terminal,
-        TerminalLanguageChange
+        DiceDrop,
+        Tablet,
+        TabletLanguage,
+        Zoom,
+        SpawnMarker,
+        NextMarker,
+        PrevMarker
     }
 
-    public void SetText(eTipType tipType)
+    void Awake()
     {
-        switch (tipType)
+        tipData = new()
         {
-            case eTipType.DiceThrow:
-                text.text = diceTip;
-                break;
-            case eTipType.Terminal:
-                text.text = terminalTip;
-                break;
-            case eTipType.TerminalLanguageChange:
-                text.text = terminalLanguageChangeTip;
-                break;
-            default:
-                text.text = string.Empty;
-                break;
+            { eTipType.DiceThrow, (p => p.Fire, " to throw the dice") },
+            { eTipType.DiceDrop, (p => p.Interact, " to drop the dice") },
+            { eTipType.Tablet, (p => p.TabletInteract, " to open the tablet") },
+            { eTipType.TabletLanguage, (p => p.Interact, " to change language in the terminal") },
+            { eTipType.Zoom,  (p => p.Zoom, " to zoom")},
+            { eTipType.SpawnMarker, (p => p.SpawnMarker, " to spawn a marker") },
+            { eTipType.NextMarker, (p => p.NextMarker, " to select next marker") },
+            { eTipType.PrevMarker, (p => p.PrevMarker, " to select previous marker") }
+        };
+    }
+
+    public void SetTips(params eTipType[] tips)
+    {
+        if (tips == null || tips.Length == 0 || (tips.Length == 1 && tips[0] == eTipType.None))
+        {
+            text.text = string.Empty;
+            return;
         }
+
+        var currentControls = InputManager.Instance.CurrentControls.Player;
+        var combinedText = string.Empty;
+
+        foreach (var tipType in tips)
+        {
+            if (tipType == eTipType.None)
+                continue;
+
+            if (!tipData.TryGetValue(tipType, out var tip))
+            {
+                Debug.LogWarning($"Tip type {tipType} not defined in TipData.");
+                continue;
+            }
+
+            string binding = InputManager.Instance.GetBinding(tip.actionSelector(currentControls));
+            combinedText += $"{binding}{tip.tipSuffix}\n";
+        }
+
+        text.text = combinedText.TrimEnd('\n');
     }
 
-    public override void Close(Action onComplete = null)
-    {
-        base.Close();
-    }
+    public override void Close() => base.Close();
 
-    public override void Open(Action onComplete = null)
-    {
-        base.Open();
-    }
+    public override void Open() => base.Open();
 }

@@ -9,14 +9,10 @@ public class MovementSettings : ScriptableObject
     {
         public float FOV = 80;
         public bool enableCameraRotation = true;
-        public bool invertCameraRotation = false;
-        public float mouseSensitivity = 2;
         public float maxLookAngle = 50;
         public bool enableZoom = true;
-        public bool holdToZoom = true;
         public float zoomFOV = 30;
         public float stepTimeZoom = 10f;
-        public KeyCode zoomKey = KeyCode.Mouse1;
     }
 
     [Serializable]
@@ -34,7 +30,6 @@ public class MovementSettings : ScriptableObject
         public float sprintCooldown = 0.5f;
         public float sprintFOV = 90;
         public float stepTimeSprint = 8f;
-        public KeyCode sprintKey = KeyCode.LeftShift;
     }
 
     [Serializable]
@@ -42,7 +37,6 @@ public class MovementSettings : ScriptableObject
     {
         public bool enableJump = true;
         public float jumpPower = 1f;
-        public KeyCode jumpKey = KeyCode.Space;
     }
 
     [Serializable]
@@ -51,7 +45,6 @@ public class MovementSettings : ScriptableObject
         public bool enableCrouch = true;
         public float crouchHeight = 0.75f;
         public float crouchSpeedReduction = 0.5f;
-        public KeyCode crouchKey = KeyCode.LeftControl;
     }
 
     [Serializable]

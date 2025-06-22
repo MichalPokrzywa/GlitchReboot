@@ -1,7 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using static TipsPanel;
 
@@ -11,21 +11,75 @@ public class PanelManager : Singleton<PanelManager>
     [SerializeField] PausePanel pausePanel;
 
     HashSet<eTipType> shownTips = new HashSet<eTipType>();
+    Coroutine closeTipCoroutine;
+    EventSystem eventSystem;
 
     const float tipDisplayDuration = 5f;
-
-    Coroutine closeTipCoroutine;
 
     void Awake()
     {
         if (tipsPanel == null)
-            tipsPanel = FindObjectOfType<TipsPanel>();
+            tipsPanel = FindFirstObjectByType<TipsPanel>();
 
         if (pausePanel == null)
-            pausePanel = FindObjectOfType<PausePanel>();
+            pausePanel = FindFirstObjectByType<PausePanel>();
 
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        SceneManager.sceneUnloaded += OnSceneUnloaded;
+        RegisterToEvents();
+    }
+
+    void OnDisable()
+    {
+        UnregisterFromEvents();
+    }
+
+    void Update()
+    {
+        if (InputManager.Instance.IsPausePressed() && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
+        {
+            pausePanel.TogglePanel();
+        }
+    }
+
+    public void ShowTipsOnce(params eTipType[] tips)
+    {
+        if (tips == null || tips.Length == 0)
+            return;
+
+        List<eTipType> newTips = new();
+        foreach (var tip in tips)
+        {
+            if (tip != eTipType.None && !shownTips.Contains(tip))
+            {
+                newTips.Add(tip);
+                shownTips.Add(tip);
+            }
+        }
+
+        if (newTips.Count == 0)
+            return;
+
+        if (tipsPanel.isOpen && closeTipCoroutine != null)
+        {
+            StopCoroutine(closeTipCoroutine);
+            closeTipCoroutine = null;
+        }
+
+        tipsPanel.Open();
+        tipsPanel.SetTips(newTips.ToArray());
+
+        closeTipCoroutine = StartCoroutine(CloseTip());
+    }
+
+    public void ReturnToMenu()
+    {
+        DependencyManager.sceneLoader.LoadScene(Scene.MainMenu);
+        NarrativeSystem.Instance.ResetNarrative();
+    }
+
+    void EnsureEventSystemRef()
+    {
+        if (eventSystem == null)
+            eventSystem = FindFirstObjectByType<EventSystem>();
     }
 
     void OnSceneUnloaded(UnityEngine.SceneManagement.Scene arg0)
@@ -40,27 +94,22 @@ public class PanelManager : Singleton<PanelManager>
         pausePanel.gameObject.SetActive(DependencyManager.sceneLoader.currentScene != Scene.MainMenu);
     }
 
-    public void ShowTipOnce(eTipType tipType)
+    void RegisterToEvents()
     {
-        if (tipType == eTipType.None || shownTips.Contains(tipType))
-            return;
+        if (pausePanel != null)
+            pausePanel.onPanelOpen += OnPanelOpen;
 
-        if (tipsPanel.isOpen)
-        {
-            StopCoroutine(closeTipCoroutine);
-            closeTipCoroutine = null;
-        }
-
-        shownTips.Add(tipType);
-        tipsPanel.Open();
-        tipsPanel.SetText(tipType);
-        closeTipCoroutine = StartCoroutine(CloseTip());
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
-    public void ReturnToMenu()
+    void UnregisterFromEvents()
     {
-        DependencyManager.sceneLoader.LoadScene(Scene.MainMenu);
-        NarrativeSystem.Instance.ResetNarrative();
+        if (pausePanel != null)
+            pausePanel.onPanelOpen -= OnPanelOpen;
+
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
     void ResetPanels()
@@ -68,6 +117,11 @@ public class PanelManager : Singleton<PanelManager>
         tipsPanel?.Close();
         pausePanel?.Close();
         pausePanel?.ResetState();
+    }
+
+    void OnPanelOpen()
+    {
+        EventSystem.current.SetSelectedGameObject(pausePanel.FirstItemToSelect);
     }
 
     IEnumerator CloseTip()

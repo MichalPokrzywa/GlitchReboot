@@ -1,39 +1,67 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class MainMenuPanel : MonoBehaviour
 {
+    [SerializeField] Button playButton;
+    [SerializeField] Button settingsButton;
+    [SerializeField] Button controlsButton;
+    [SerializeField] Button creditsButton;
+    [SerializeField] Button exitButton;
+
     [SerializeField] GameObject settingsPanel;
+    [SerializeField] GameObject controlsPanel;
     [SerializeField] GameObject creditsPanel;
 
-    bool creditsPanelToggle = false;
-    bool settingsPanelToggle = false;
+    GameObject activePanel;
 
-    public void Play()
+    void Start()
+    {
+        playButton?.onClick.AddListener(Play);
+        settingsButton?.onClick.AddListener(() => TogglePanel(settingsPanel));
+        controlsButton?.onClick.AddListener(() => TogglePanel(controlsPanel));
+        creditsButton?.onClick.AddListener(() => TogglePanel(creditsPanel));
+        exitButton?.onClick.AddListener(ExitGame);
+
+        EventSystem.current.SetSelectedGameObject(playButton.gameObject);
+    }
+
+    void OnDestroy()
+    {
+        playButton?.onClick.RemoveListener(Play);
+        settingsButton?.onClick.RemoveAllListeners();
+        controlsButton?.onClick.RemoveAllListeners();
+        creditsButton?.onClick.RemoveAllListeners();
+        exitButton?.onClick.RemoveListener(ExitGame);
+    }
+
+    void Play()
     {
         DependencyManager.sceneLoader.LoadScene(Scene.Tutorial);
     }
 
-    public void ShowSettingsPanel()
+    void TogglePanel(GameObject panelToShow)
     {
-        // Toggle the settings panel visibility
-        settingsPanelToggle = !settingsPanelToggle;
-        creditsPanelToggle = false;
+        if (panelToShow == null) return;
 
-        settingsPanel?.SetActive(settingsPanelToggle);
-        creditsPanel?.SetActive(creditsPanelToggle);
+        bool shouldShow = panelToShow != activePanel;
+        settingsPanel?.SetActive(false);
+        creditsPanel?.SetActive(false);
+        controlsPanel?.SetActive(false);
+
+        if (shouldShow)
+        {
+            panelToShow.SetActive(true);
+            activePanel = panelToShow;
+        }
+        else
+        {
+            activePanel = null;
+        }
     }
 
-    public void ShowCreditsPanel()
-    {
-        // Toggle the credits panel visibility
-        creditsPanelToggle = !creditsPanelToggle;
-        settingsPanelToggle = false;
-
-        settingsPanel?.SetActive(settingsPanelToggle);
-        creditsPanel?.SetActive(creditsPanelToggle);
-    }
-
-    public void ExitGame()
+    void ExitGame()
     {
         Application.Quit();
         // If running in the editor, stop playing

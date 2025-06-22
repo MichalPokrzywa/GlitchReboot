@@ -4,23 +4,16 @@
 //
 // "Enable/Disable Headbob, Changed look rotations - should result in reduced camera jitters" || version 1.0.1
 
-using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
 #if UNITY_EDITOR
     using UnityEditor;
-    using System.Net;
 #endif
 
 public class FirstPersonController : MonoBehaviour
 {
     #region Variables
-    InputInterface _input = new StandardInput();
-    public InputInterface ImplementedInput => _input;
-
     public MovementSettings movementSettings;
 
     Rigidbody rb;
@@ -29,32 +22,24 @@ public class FirstPersonController : MonoBehaviour
 
     public Camera playerCamera;
 
-    float _yaw = 0.0f; // Rotation around the y axis
-    float _pitch = 0.0f; // Rotation around the x axis
+    float _yaw = 0.0f;      // Rotation around the y-axis
+    float _pitch = 0.0f;    // Rotation around the x-axis
     public float yaw => _yaw;
     public float pitch => _pitch;
 
     float fov = 60f;
-    bool invertCamera = false;
     bool cameraCanMove = true;
-    float mouseSensitivity = 2f;
     float maxLookAngle = 50f;
 
     // Crosshair
     public bool lockCursor = true;
-    public bool crosshair = true;
-    public Sprite crosshairImage;
-    public Color crosshairColor = Color.white;
-
-    // Internal Variables
-    Image crosshairObject;
+    public bool useCrosshair = true;
+    public GameObject crosshair;
 
     #region Camera Zoom Variables
 
     public bool isZoomed = false;
     bool enableZoom = true;
-    bool holdToZoom = false;
-    KeyCode zoomKey = KeyCode.Mouse1;
     float zoomFOV = 30f;
     float zoomStepTime = 5f;
 
@@ -77,7 +62,6 @@ public class FirstPersonController : MonoBehaviour
 
     bool enableSprint = true;
     bool unlimitedSprint = false;
-    KeyCode sprintKey = KeyCode.LeftShift;
     float sprintSpeed = 7f;
     float sprintDuration = 5f;
     float sprintCooldown = .5f;
@@ -106,7 +90,6 @@ public class FirstPersonController : MonoBehaviour
     #region Jump
 
     bool enableJump = true;
-    KeyCode jumpKey = KeyCode.Space;
     float jumpPower = 5f;
 
     // Internal Variables
@@ -117,7 +100,6 @@ public class FirstPersonController : MonoBehaviour
     #region Crouch
 
     bool enableCrouch = true;
-    KeyCode crouchKey = KeyCode.LeftControl;
     float crouchHeight = .75f;
     float speedReduction = .5f;
 
@@ -145,21 +127,15 @@ public class FirstPersonController : MonoBehaviour
     #region Animations
 
     public Animator animator;
-    private float speed;
+    float speed;
 
     #endregion
 
     #endregion
 
-    private void Awake()
+    void Awake()
     {
         rb = GetComponent<Rigidbody>();
-
-        crosshairObject = GetComponentInChildren<Image>();
-
-        var ghostInput = gameObject.GetComponent<GhostInput>();
-        if (ghostInput)
-            _input = ghostInput;
 
         // Get movement settings from scriptable object
         GetMovementSettings();
@@ -171,27 +147,21 @@ public class FirstPersonController : MonoBehaviour
         originalScale = transform.localScale;
         jointOriginalPos = joint.localPosition;
         defaultWalkSpeed = walkSpeed;
-
-        if (!unlimitedSprint)
-        {
-            sprintRemaining = sprintDuration;
-            sprintCooldownReset = sprintCooldown;
-        }
+        sprintRemaining = sprintDuration;
+        sprintCooldownReset = sprintCooldown;
     }
 
     void Start()
     {
-        HandleCrosshair();
-        HandleSprintBar();
+        SetupCrosshair();
+        SetupSprintBar();
     }
 
-    float camRotation;
-
-    private void Update()
+    void Update()
     {
         HandleCursor();
 
-        if (enableZoom)
+        if (enableZoom && cameraCanMove)
             HandleZoom();
 
         if (cameraCanMove)
@@ -204,15 +174,15 @@ public class FirstPersonController : MonoBehaviour
 
         if (enableHeadBob)
             HeadBob();
+
+        // Gets input and calls jump method
+        if (enableJump && InputManager.Instance.IsJumpPressed() && isGrounded)
+            Jump();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        // Gets input and calls jump method
-        if(enableJump && ImplementedInput.IsJumping() && isGrounded)
-            Jump();
-
-        if (enableCrouch)
+        if (playerCanMove && enableCrouch)
             HandleCrouch();
 
         if (playerCanMove)
@@ -230,10 +200,10 @@ public class FirstPersonController : MonoBehaviour
         if (playerCamera == null)
             return;
 
-        if (lockCursor)
-            Cursor.lockState = CursorLockMode.Locked;
-        else
-            Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
+
+        if (useCrosshair)
+            crosshair.gameObject.SetActive(lockCursor);
     }
 
     public void StopMovement()
@@ -263,50 +233,36 @@ public class FirstPersonController : MonoBehaviour
     public void Zoom(bool shouldZoom)
     {
         isZoomed = shouldZoom;
-        // Lerps camera.fieldOfView to allow for a smooth transistion
         float targetFOV = isZoomed ? zoomFOV : fov;
         playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, zoomStepTime * Time.deltaTime);
     }
 
     void HandleCameraMovement()
     {
-        _yaw = transform.localEulerAngles.y + ImplementedInput.GetMouseX() * mouseSensitivity;
+        float sesitivityFactor = 1f;
+        if (isZoomed)
+            sesitivityFactor = 0.5f;
 
-        if (!invertCamera)
-        {
-            _pitch -= mouseSensitivity * ImplementedInput.GetMouseY();
-        }
-        else
-        {
-            // Inverted Y
-            _pitch += mouseSensitivity * ImplementedInput.GetMouseY();
-        }
-
+        _yaw = transform.localEulerAngles.y + InputManager.Instance.GetLookHorizontal() * sesitivityFactor;
+        _pitch -= InputManager.Instance.GetLookVertical() * sesitivityFactor;
         // Clamp pitch between lookAngle
         _pitch = Mathf.Clamp(_pitch, -maxLookAngle, maxLookAngle);
 
         transform.localEulerAngles = new Vector3(0, _yaw, 0);
+
         if (playerCamera != null)
             playerCamera.transform.localEulerAngles = new Vector3(_pitch, 0, 0);
     }
 
-    void HandleCrosshair()
+    void SetupCrosshair()
     {
-        if (crosshairObject == null)
+        if (crosshair == null)
             return;
 
-        if (crosshair)
-        {
-            crosshairObject.sprite = crosshairImage;
-            crosshairObject.color = crosshairColor;
-        }
-        else
-        {
-            crosshairObject.gameObject.SetActive(false);
-        }
+        crosshair.gameObject.SetActive(useCrosshair);
     }
 
-    void HandleSprintBar()
+    void SetupSprintBar()
     {
         sprintBarCG = GetComponentInChildren<CanvasGroup>();
         if (sprintBarCG == null)
@@ -340,39 +296,49 @@ public class FirstPersonController : MonoBehaviour
 
     void HandleSprinting()
     {
+        HandleFOV();
+        HandleSprintEnergy();
+        HandleSprintCooldown();
+        UpdateSprintBar();
+    }
+
+    void HandleFOV()
+    {
+        if (playerCamera == null || isZoomed)
+            return;
+
+        float targetFOV = isSprinting ? sprintFOV : fov;
+        if (playerCamera.fieldOfView != targetFOV)
+        {
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, targetFOV, sprintFOVStepTime * Time.deltaTime);
+        }
+    }
+
+    void HandleSprintEnergy()
+    {
+        if (unlimitedSprint)
+            return;
+
         if (isSprinting)
         {
-            isZoomed = false;
-            if (playerCamera != null && playerCamera.fieldOfView != sprintFOV)
+            sprintRemaining -= Time.deltaTime;
+            if (sprintRemaining <= 0)
             {
-                playerCamera.DOFieldOfView(sprintFOV, sprintFOVStepTime);
-            }
-                //playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, sprintFOV, sprintFOVStepTime * Time.fixedDeltaTime);
-
-            // Drain sprint remaining while sprinting
-            if (!unlimitedSprint)
-            {
-                sprintRemaining -= 1 * Time.deltaTime;
-                if (sprintRemaining <= 0)
-                {
-                    isSprinting = false;
-                    isSprintCooldown = true;
-                }
+                isSprinting = false;
+                isSprintCooldown = true;
             }
         }
         else
         {
-            // Regain sprint while not sprinting
-            if (playerCamera != null && playerCamera.fieldOfView != fov)
-                playerCamera.DOFieldOfView(fov, sprintFOVStepTime);
-            sprintRemaining = Mathf.Clamp(sprintRemaining += 1 * Time.deltaTime, 0, sprintDuration);
+            sprintRemaining = Mathf.Clamp(sprintRemaining + Time.deltaTime, 0, sprintDuration);
         }
+    }
 
-        // Handles sprint cooldown
-        // When sprint remaining == 0 stops sprint ability until hitting cooldown
+    void HandleSprintCooldown()
+    {
         if (isSprintCooldown)
         {
-            sprintCooldown -= 1 * Time.deltaTime;
+            sprintCooldown -= Time.deltaTime;
             if (sprintCooldown <= 0)
             {
                 isSprintCooldown = false;
@@ -382,95 +348,65 @@ public class FirstPersonController : MonoBehaviour
         {
             sprintCooldown = sprintCooldownReset;
         }
+    }
 
-        // Handles sprintBar
-        if (useSprintBar && !unlimitedSprint)
-        {
-            float sprintRemainingPercent = sprintRemaining / sprintDuration;
-            sprintBar.transform.localScale = new Vector3(sprintRemainingPercent, 1f, 1f);
-        }
+    void UpdateSprintBar()
+    {
+        if (!useSprintBar || unlimitedSprint || sprintBar == null)
+            return;
+
+        float sprintRemainingPercent = sprintRemaining / sprintDuration;
+        sprintBar.transform.localScale = new Vector3(sprintRemainingPercent, 1f, 1f);
     }
 
     void HandleMovement()
     {
-        // Calculate how fast we should be moving
-        Vector3 targetVelocity = new Vector3(ImplementedInput.GetHorizontalInput(), 0, ImplementedInput.GetVerticalInput());
+        Vector3 input = new Vector3(InputManager.Instance.GetMoveHorizontal(), 0, InputManager.Instance.GetMoveVertical());
+        bool isMoving = (input.x != 0 || input.z != 0);
+        isWalking = isMoving && isGrounded;
 
-        // Checks if player is walking and isGrounded
-        // Will allow head bob
-        if (targetVelocity.x != 0 || targetVelocity.z != 0 && isGrounded)
+        bool shouldSprint = enableSprint && InputManager.Instance.IsSprintHeld()
+                                         && sprintRemaining > 0f && !isSprintCooldown;
+
+        float currentSpeed = shouldSprint ? sprintSpeed : walkSpeed;
+
+        Vector3 targetVelocity = transform.TransformDirection(input) * currentSpeed;
+        animator?.SetFloat("Speed", targetVelocity.magnitude);
+
+        Vector3 velocity = rb.linearVelocity;
+        Vector3 velocityChange = (targetVelocity - velocity);
+
+        // Continuous slow down when not moving
+        if (enableFriction)
+            velocityChange = HandleFriction(targetVelocity, velocity);
+
+        velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
+        velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
+        velocityChange.y = 0;
+
+        rb.AddForce(velocityChange, ForceMode.VelocityChange);
+
+        isSprinting = shouldSprint && isMoving;
+        if (isSprinting)
         {
-            isWalking = true;
-        }
-        else
-        {
-            isWalking = false;
-        }
-
-        // All movement calculations while sprint is active
-        if (enableSprint && ImplementedInput.IsSprinting() && sprintRemaining > 0f && !isSprintCooldown)
-        {
-            targetVelocity = transform.TransformDirection(targetVelocity) * sprintSpeed;
-
-            // Apply a force that attempts to reach our target velocity
-            Vector3 velocity = rb.linearVelocity;
-            Vector3 velocityChange = (targetVelocity - velocity);
-
-            // Continuous slow down when not moving
-            if (enableFriction)
-                velocityChange = HandleFriction(targetVelocity, velocity);
-
-            velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-            velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-            velocityChange.y = 0;
-
-            // Player is only moving when valocity change != 0
-            // Makes sure fov change only happens during movement
-            if (velocityChange.x != 0 || velocityChange.z != 0)
+            // If player is sprinting, stop crouching
+            if (isCrouched)
             {
-                isSprinting = true;
-
-                // If player is sprinting, stop crouching
-                if (isCrouched)
-                {
-                    isCrouched = false;
-                    Crouch();
-                }
-
-                if (sprintBarCG != null && hideBarWhenFull && !unlimitedSprint)
-                {
-                    sprintBarCG.alpha += 5 * Time.fixedDeltaTime;
-                }
+                isCrouched = false;
+                Crouch();
             }
 
-            rb.AddForce(velocityChange, ForceMode.VelocityChange);
+            if (sprintBarCG != null && hideBarWhenFull && !unlimitedSprint)
+            {
+                sprintBarCG.alpha += 5 * Time.fixedDeltaTime;
+            }
         }
-        // All movement calculations while walking
         else
         {
-            isSprinting = false;
-
             if (sprintBarCG != null && hideBarWhenFull && sprintRemaining == sprintDuration)
             {
                 sprintBarCG.alpha -= 3 * Time.fixedDeltaTime;
             }
-
-            targetVelocity = transform.TransformDirection(targetVelocity) * walkSpeed;
-
-            // Apply a force that attempts to reach our target velocity
-            Vector3 velocity = rb.linearVelocity;
-            Vector3 velocityChange = (targetVelocity - velocity);
-
-            animator?.SetFloat("Speed", targetVelocity.magnitude);
-            // Continuous slow down when not moving
-            if (enableFriction)
-                velocityChange = HandleFriction(targetVelocity, velocity);
-
-            velocityChange.x = Mathf.Clamp(velocityChange.x, -maxVelocityChange, maxVelocityChange);
-            velocityChange.z = Mathf.Clamp(velocityChange.z, -maxVelocityChange, maxVelocityChange);
-            velocityChange.y = 0;
-
-            rb.AddForce(velocityChange, ForceMode.VelocityChange);
         }
     }
 
@@ -496,23 +432,16 @@ public class FirstPersonController : MonoBehaviour
         if (playerCamera != null)
         {
             // Changes isZoomed when key is pressed
-            // Behavior for toogle zoom
-            if (cameraCanMove && Input.GetKeyDown(zoomKey) && !holdToZoom && !isSprinting)
-            {
-                isZoomed = !isZoomed;
-            }
-
-            // Changes isZoomed when key is pressed
             // Behavior for hold to zoom
-            if (cameraCanMove && holdToZoom && !isSprinting)
+            if (!isSprinting)
             {
-                isZoomed = Input.GetKey(zoomKey);
+                isZoomed = InputManager.Instance.IsZoomPressed();
             }
 
             Zoom(isZoomed);
         }
     }
-            //playerCamera.DOFieldOfView(targetFOV, zoomStepTime);
+
     void HandleCrouch()
     {
         // If player is not grounded, stop crouching
@@ -526,7 +455,7 @@ public class FirstPersonController : MonoBehaviour
             return;
         }
 
-        bool shouldCrouch = ImplementedInput.IsCrouching();
+        bool shouldCrouch = InputManager.Instance.IsCrouchHeld();
 
         // Behavior for hold to crouch
         if (holdToCrouch)
@@ -540,7 +469,7 @@ public class FirstPersonController : MonoBehaviour
     }
 
     // Sets isGrounded based on a raycast sent straigth down from the player object
-    private void CheckGround()
+    void CheckGround()
     {
         Vector3 origin = new Vector3(transform.position.x, transform.position.y - (transform.localScale.y * .5f), transform.position.z);
         Vector3 direction = transform.TransformDirection(Vector3.down);
@@ -557,7 +486,7 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    private void Jump()
+    void Jump()
     {
         // When crouched, uncrouch for a jump
         if (isCrouched)
@@ -572,7 +501,7 @@ public class FirstPersonController : MonoBehaviour
         isGrounded = false;
     }
 
-    private void Crouch()
+    void Crouch()
     {
         // Crouches player down to crouchHeight
         // Reduces walkSpeed
@@ -590,12 +519,12 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    private void HeadBob()
+    void HeadBob()
     {
-        if(isWalking)
+        if (isWalking)
         {
             // Calculates HeadBob speed during sprint
-            if(isSprinting)
+            if (isSprinting)
             {
                 timer += Time.deltaTime * (bobSpeed + sprintSpeed);
             }
@@ -620,7 +549,7 @@ public class FirstPersonController : MonoBehaviour
         }
     }
 
-    private void GetMovementSettings()
+    void GetMovementSettings()
     {
         if (movementSettings == null)
         {
@@ -631,14 +560,10 @@ public class FirstPersonController : MonoBehaviour
         #region Camera Settings
         fov = movementSettings.cameraVariables.FOV;
         cameraCanMove = movementSettings.cameraVariables.enableCameraRotation;
-        invertCamera = movementSettings.cameraVariables.invertCameraRotation;
-        mouseSensitivity = movementSettings.cameraVariables.mouseSensitivity;
         maxLookAngle = movementSettings.cameraVariables.maxLookAngle;
         enableZoom = movementSettings.cameraVariables.enableZoom;
-        holdToZoom = movementSettings.cameraVariables.holdToZoom;
         zoomFOV = movementSettings.cameraVariables.zoomFOV;
         zoomStepTime = movementSettings.cameraVariables.stepTimeZoom;
-        zoomKey = movementSettings.cameraVariables.zoomKey;
         #endregion
 
         #region Movement Settings
@@ -653,20 +578,17 @@ public class FirstPersonController : MonoBehaviour
         sprintCooldown = movementSettings.movementVariables.sprintCooldown;
         sprintFOV = movementSettings.movementVariables.sprintFOV;
         sprintFOVStepTime = movementSettings.movementVariables.stepTimeSprint;
-        sprintKey = movementSettings.movementVariables.sprintKey;
         #endregion
 
         #region Jump Settings
         enableJump = movementSettings.jumpVariables.enableJump;
         jumpPower = movementSettings.jumpVariables.jumpPower;
-        jumpKey = movementSettings.jumpVariables.jumpKey;
         #endregion
 
         #region Crouch Settings
         enableCrouch = movementSettings.crouchVariables.enableCrouch;
         crouchHeight = movementSettings.crouchVariables.crouchHeight;
         speedReduction = movementSettings.crouchVariables.crouchSpeedReduction;
-        crouchKey = movementSettings.crouchVariables.crouchKey;
         #endregion
 
         #region Head Bob Settings
@@ -744,19 +666,15 @@ public class FirstPersonController : MonoBehaviour
         */
 
         fpc.lockCursor = EditorGUILayout.ToggleLeft(new GUIContent("Lock and Hide Cursor", "Turns off the cursor visibility and locks it to the middle of the screen."), fpc.lockCursor);
-        fpc.crosshair = EditorGUILayout.ToggleLeft(new GUIContent("Auto Crosshair", "Determines if the basic crosshair will be turned on, and sets is to the center of the screen."), fpc.crosshair);
+        fpc.useCrosshair = EditorGUILayout.ToggleLeft(new GUIContent("Auto Crosshair", "Determines if the basic useCrosshair will be turned on, and sets is to the center of the screen."), fpc.useCrosshair);
 
-        // Only displays crosshair options if crosshair is enabled
-        if(fpc.crosshair)
+        // Only displays useCrosshair options if useCrosshair is enabled
+        if(fpc.useCrosshair)
         {
             EditorGUI.indentLevel++;
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.PrefixLabel(new GUIContent("Crosshair Image", "Sprite to use as the crosshair."));
-            fpc.crosshairImage = (Sprite)EditorGUILayout.ObjectField(fpc.crosshairImage, typeof(Sprite), false);
-            EditorGUILayout.EndHorizontal();
-
-            EditorGUILayout.BeginHorizontal();
-            fpc.crosshairColor = EditorGUILayout.ColorField(new GUIContent("Crosshair Color", "Determines the color of the crosshair."), fpc.crosshairColor);
+            EditorGUILayout.PrefixLabel(new GUIContent("Crosshair", "Crosshair object"));
+            fpc.crosshair = (GameObject)EditorGUILayout.ObjectField(fpc.crosshair, typeof(GameObject), true);
             EditorGUILayout.EndHorizontal();
             EditorGUI.indentLevel--;
         }
