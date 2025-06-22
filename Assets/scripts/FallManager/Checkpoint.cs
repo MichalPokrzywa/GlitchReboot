@@ -18,7 +18,7 @@ public class Checkpoint : BoxTrigger
             FallManager.Instance.SetCheckpoint(checkpointTarget);
         }
     }
-    
+#if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         // 1. Rysowanie pola BoxCollidera (checkpointa)
@@ -45,8 +45,8 @@ public class Checkpoint : BoxTrigger
             UnityEditor.Handles.Label(checkpointTarget.position + Vector3.up * 0.3f, "Checkpoint Target");
         }
     }
+#endif  //UNITY_EDITOR
 
-    
     private void AutoCreateCheckpointTarget()
     {
         if (checkpointTarget == null)
