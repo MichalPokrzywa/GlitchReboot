@@ -75,7 +75,15 @@ public class GhostLevel1 : PuzzleBase
             platformTransform.position += new Vector3(0f, 0f, 16f);
             Debug.Log(platform.transform.position);
             Debug.Log(platformTransform.position);
-        }else if(!GetVariableValue<bool>("MovingPlatform") && platformState)
+            if (!boomWindow)
+            {
+                boomWindow = true;
+                windowDestructable.Explode();
+                windowDestructableParticle.Play(true);
+                Camera.main.DOShakePosition(0.3f, 0.5f, 5, randomnessMode: ShakeRandomnessMode.Harmonic);
+            }
+        }
+        else if(!GetVariableValue<bool>("MovingPlatform") && platformState)
         {
             platformState = false;
             platformTransform.position = platformBasicPosition;
@@ -88,13 +96,6 @@ public class GhostLevel1 : PuzzleBase
             terminal.GetComponent<GhostLevel2>().GetCanvas().SetActive(true);
             variablePlatform1.GetComponent<GlitchSwitcher>().ApplyGlitch(false);
             variablePlatform2.GetComponent<GlitchSwitcher>().ApplyGlitch(false);
-            if (!boomWindow)
-            {
-                boomWindow = true;
-                windowDestructable.Explode();
-                windowDestructableParticle.Play(true);
-                Camera.main.DOShakePosition(0.3f, 0.5f, 5, randomnessMode: ShakeRandomnessMode.Harmonic);
-            }
         }
         else if (!GetVariableValue<bool>("TerminalFloor2") && terminalState)
         {

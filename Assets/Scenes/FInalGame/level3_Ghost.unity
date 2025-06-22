@@ -7990,8 +7990,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glitchMaterial: {fileID: -876546973899608171, guid: 69bf0ea30a1c7de47a008176c77763f3, type: 3}
-  glitchOnStart: 1
-  strenght: 0.15
+  glitchOnStart: 0
+  strenght: 0.1
   checkerBoxes: 1
   glitchColor: 1
 --- !u!1001 &276588015
@@ -11134,6 +11134,11 @@ Light:
   m_LightUnit: 1
   m_LuxAtDistance: 1
   m_EnableSpotReflector: 1
+--- !u!1 &387385540 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5316763115926677116, guid: 175c095f821034b40b8d718c33ca3952, type: 3}
+  m_PrefabInstance: {fileID: 797160621}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &389510073
 GameObject:
   m_ObjectHideFlags: 0
@@ -14151,8 +14156,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   glitchMaterial: {fileID: -876546973899608171, guid: 69bf0ea30a1c7de47a008176c77763f3, type: 3}
-  glitchOnStart: 1
-  strenght: 0.15
+  glitchOnStart: 0
+  strenght: 0.1
   checkerBoxes: 1
   glitchColor: 1
 --- !u!1001 &514280178
@@ -27047,7 +27052,7 @@ MonoBehaviour:
   onCodeUpdate:
     m_PersistentCalls:
       m_Calls: []
-  elevator: {fileID: 0}
+  elevator: {fileID: 387385540}
 --- !u!1001 &889450727
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -58948,7 +58953,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4934833856949886, guid: 4dd02b5f854b6c84990fbeb810abffe4, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.34
+      value: -7.092
       objectReference: {fileID: 0}
     - target: {fileID: 4934833856949886, guid: 4dd02b5f854b6c84990fbeb810abffe4, type: 3}
       propertyPath: m_LocalPosition.y
