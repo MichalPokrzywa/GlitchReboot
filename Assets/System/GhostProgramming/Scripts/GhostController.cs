@@ -27,6 +27,8 @@ public class GhostController : EntityBase
     Coroutine pathCoroutine;
     Vector3? lastTargetUnreachablePosition = null;
     Vector3? lastMyUnreachablePosition = null;
+    Vector3 targetPos;
+    string ghostColor;
 
     float distance;
     float stillTime = 0f;
@@ -35,6 +37,7 @@ public class GhostController : EntityBase
     const float maxStillTime = 2f;
     const float pathCalculationInterval = 0.5f;
     const float actionDelay = 0.25f;
+    [SerializeField] float rotationSpeed = 0.5f;
 
     public enum InteractionDistance
     {
@@ -44,16 +47,21 @@ public class GhostController : EntityBase
         Close,
     }
 
-    void Awake()
+    void Start()
     {
         agent = GetComponent<NavMeshAgent>();
-        UpdateEntityNameSuffix();
-        EntityManager.instance.Register<GhostController>(this);
+        EntityManager.Instance.Register<GhostController>(this);
         SetColor();
+        UpdateEntityDisplayName();
     }
 
     void Update()
     {
+        if (target != null)
+            targetPos = target.transform.position;
+
+        RotateTowards(targetPos);
+
         // If there is no target - do nothing
         if (target == null)
             return;
@@ -229,6 +237,13 @@ public class GhostController : EntityBase
         return true;
     }
 
+    public override void UpdateEntityDisplayName()
+    {
+        entityName = "Ghost";
+        entityNameSuffix = ghostColor.ToString();
+        base.UpdateEntityDisplayName();
+    }
+
     async Task<bool> DoPickUp(PickUpObjectInteraction objectToPickUp, ExecutionResult result)
     {
         // check if object is pickable
@@ -347,21 +362,48 @@ public class GhostController : EntityBase
         }
     }
 
+    void RotateTowards(Vector3 targetPos)
+    {
+        Vector3 direction = (targetPos - transform.position).normalized;
+        direction.y = 0f;
+
+        if (direction == Vector3.zero)
+            return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+    }
+
     void SetColor()
     {
         Color color;
-        float intensity = 1f;
+        float intensity = 2f;
 
         switch (entityId)
         {
             case 1:
-                color = Color.blue * intensity;
+                color = Color.cyan * intensity;
+                ghostColor = "<b>Blue</b>";
                 break;
             case 2:
                 color = Color.green * intensity;
+                ghostColor = "<b>Green</b>";
+                break;
+            case 3:
+                color = Color.red * intensity;
+                ghostColor = "<b>Red</b>";
+                break;
+            case 4:
+                color = Color.yellow * intensity;
+                ghostColor = "<b>Yellow</b>";
+                break;
+            case 5:
+                color = Color.magenta * intensity;
+                ghostColor = "<b>Magenta</b>";
                 break;
             default:
-                color = Color.red * intensity;
+                color = Color.white * intensity;
+                ghostColor = "<b>White</b>";
                 break;
         }
 

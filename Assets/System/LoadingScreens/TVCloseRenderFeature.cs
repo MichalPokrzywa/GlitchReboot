@@ -64,6 +64,7 @@ public class TVCloseRenderFeature : ScriptableRendererFeature
         sequence.Join(DOTween.To(() => renderPass.EdgeDarkness, x => renderPass.EdgeDarkness = x, 1f, duration * 0.6f).SetEase(Ease.InQuad));
         sequence.Join(DOTween.To(() => renderPass.ShrinkX, x => renderPass.ShrinkX = x, 0.7f, duration * 0.6f).SetEase(Ease.InQuad));
         sequence.Append(DOTween.To(() => renderPass.ShrinkX, x => renderPass.ShrinkX = x, 0f, duration * 0.2f).SetEase(Ease.OutCubic));
+        sequence.SetUpdate(true);
         sequence.OnComplete(() => onComplete?.Invoke());
     }
     public void PlayOpenEffect(float duration, System.Action onComplete = null)

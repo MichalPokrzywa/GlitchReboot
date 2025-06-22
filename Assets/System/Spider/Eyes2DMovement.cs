@@ -8,8 +8,8 @@ using Vector3 = UnityEngine.Vector3;
 public class Eyes2DMovement : MonoBehaviour
 {
     [Header("References")]
-    [SerializeField] Transform target;
-    [SerializeField] Camera mainCamera;
+    public Transform target;
+    public Camera mainCamera;
     [SerializeField] List<RectTransform> pupils = new List<RectTransform>();
     [SerializeField] List<Slider> eyelids = new List<Slider>();
 
@@ -27,7 +27,13 @@ public class Eyes2DMovement : MonoBehaviour
 
     void Update()
     {
-        if (target == null || pupils.Count == 0 || mainCamera == null)
+        if (target == null || pupils.Count == 0)
+            return;
+
+        if (mainCamera == null)
+            mainCamera = Camera.main;
+
+        if (mainCamera == null)
             return;
 
         LookAtTarget();

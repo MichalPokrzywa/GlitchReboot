@@ -5,17 +5,10 @@ using UnityEngine.Events;
 public class ButtonInteraction : InteractionBase
 {
     public OnButtonPressed onButtonPressed;
-    public string buttonActionName;
 
-    protected override void Awake()
+    protected override void Start()
     {
-        base.Awake();
-    }
-
-    void Start()
-    {
-        base.Awake();
-        TooltipText = "[E] " + buttonActionName;
+        base.Start();
     }
     public override void Interact()
     {

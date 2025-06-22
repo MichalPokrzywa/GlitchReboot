@@ -11,5 +11,10 @@ public class RepositionScript : MonoBehaviour
             collision.gameObject.transform.position = rePosition.transform.position;
             collision.gameObject.transform.SetParent(null);
         }
+        else if (collision.gameObject.GetComponent<ResetObject>() != null)
+        {
+            collision.gameObject.GetComponent<ResetObject>().ResetToInitialState();
+        }
+
     }
 }

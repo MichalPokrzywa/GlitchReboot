@@ -22,10 +22,14 @@ public class SpiderBehaviour : MonoBehaviour
         public int animSmoothness;
         [Range(0, 1f)]
         public float minBodyHeight;
-        public float waitTime = 0f;
+
+        public float textDisplayAdditionalTime = 0f;
+        public float waitTimeAtWaypoint = 0f;
         public Emotion emotion;
         [TextArea(5,10)]
         public string speech;
+
+        public Scene scene;
         public int voiceKey;
         public bool teleportToNext = false;
         [HideInInspector]
@@ -40,9 +44,11 @@ public class SpiderBehaviour : MonoBehaviour
     [SerializeField] List<GameObject> eyebrowsHappy;
     [SerializeField] List<GameObject> eyebrowsAngry;
     [SerializeField] RectTransform smile;
+    [SerializeField] Eyes2DMovement eyes;
 
     [Header("Movement Settings")]
     [SerializeField] float rotationSpeed = 5f;
+    [SerializeField] float startWaitTime = 3f;
     [SerializeField] bool loop = false;
     [SerializeField] List<TargetData> targetData = new List<TargetData>();
 
@@ -52,12 +58,19 @@ public class SpiderBehaviour : MonoBehaviour
     int currentTargetIndex = 0;
     bool playAtStart = false;
     bool isWaiting = false;
+    bool initialized = false;
     bool isMovementActive = false;
     public bool isTalking = false;
 
     const float targetDistThreshold = 0.01f;
     void Start()
     {
+        if (player == null)
+            player = FindObjectOfType<FirstPersonController>().gameObject;
+
+        if (eyes.target == null)
+            eyes.target = player.transform;
+
         if (targetData.Count == 0)
         {
             Debug.LogWarning("No targets assigned to SpiderBehaviour. Staying in Place");
@@ -73,7 +86,7 @@ public class SpiderBehaviour : MonoBehaviour
         SetEmotion(targetData[0].emotion);
 
         // Ensure glitch is off initially
-        glitchSwitcher.ApplyGlitch(false);
+        glitchSwitcher?.ApplyGlitch(false);
 
         // Assign triggers to target colliders
         foreach (var data in targetData)
@@ -136,6 +149,12 @@ public class SpiderBehaviour : MonoBehaviour
 
     IEnumerator HandleTargetReached(TargetData data)
     {
+        if (!initialized)
+        {
+            initialized = true;
+            yield return new WaitForSeconds(startWaitTime);
+        }
+
         if(data.isDone)
             yield break;
         if(targetData[currentTargetIndex] != data)
@@ -144,11 +163,12 @@ public class SpiderBehaviour : MonoBehaviour
         data.overrideStep = false;
         isTalking = true;
         if (!string.IsNullOrEmpty(data.speech))
-            NarrativeSystem.Instance.SetText(data.speech);
+            NarrativeSystem.Instance.SetText(data.speech, data.textDisplayAdditionalTime);
         if (data.voiceKey != 0)
-            NarrativeSystem.Instance.Play(data.voiceKey);
+            NarrativeSystem.Instance.Play(data.scene, data.voiceKey);
 
-        yield return new WaitForSeconds(data.waitTime);
+        yield return new WaitForSeconds(data.waitTimeAtWaypoint);
+
         data.isDone = true;
         isMovementActive = true;
 
@@ -202,7 +222,7 @@ public class SpiderBehaviour : MonoBehaviour
         {
             StartCoroutine(HandleTargetReached(targetData[nextIndex]));
         }
-        
+
     }
 
     void MoveTowards(Vector3 targetPos, float speed)

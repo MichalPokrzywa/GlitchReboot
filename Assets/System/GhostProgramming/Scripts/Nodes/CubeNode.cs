@@ -6,11 +6,6 @@ public class CubeNode : EntityNode<VariableDice>
 {
     protected override List<VariableDice> GetEntityList()
     {
-        return EntityManager.instance.GetEntities<VariableDice>();
-    }
-
-    protected override string GetEntityName()
-    {
-        return "Variable Dice";
+        return EntityManager.Instance.GetEntities<VariableDice>();
     }
 }

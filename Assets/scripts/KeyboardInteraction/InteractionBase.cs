@@ -1,19 +1,26 @@
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UIElements;
+using static TipsPanel;
 
 public class InteractionBase : MonoBehaviour, IInteractable
 {
-    public GameObject UIHoverObject;
-    public TextMeshProUGUI UIHoverText;
-    protected string TooltipText = "[E] Użyj";
-    public float floatDistanceX = 100f; // Maksymalna wysokość pływania
-    public float floatDistanceY = 100f;
-    private Vector3 originalPosition;
-    public Camera mainCamera;
+    [SerializeField] protected GameObject UIHoverObject;
+    [SerializeField] protected TextMeshProUGUI UIHoverText;
+    [SerializeField] protected string actionSuffix;
+    [SerializeField] protected Camera mainCamera;
+    [SerializeField] protected float floatDistanceX = 100f; // Maksymalna wysokość pływania
+    [SerializeField] protected float floatDistanceY = 100f;
+
     public bool HasShownUI { get; set; }
 
-    protected virtual void Awake()
+    protected string TooltipText = string.Empty;
+
+    Vector3 originalPosition;
+    string displayedText;
+
+    protected virtual void Start()
     {
         Init();
     }
@@ -49,6 +56,7 @@ public class InteractionBase : MonoBehaviour, IInteractable
             UIHoverText = UIHoverObject.GetComponent<TextMeshProUGUI>();
             if (UIHoverText == null)
                 Debug.LogError("UI Hover Text object has no TextMeshProUGUI!");
+            UIHoverObject.SetActive(false);
         }
 
         // 3) Cache main camera
@@ -65,7 +73,19 @@ public class InteractionBase : MonoBehaviour, IInteractable
     {
         //Debug.Log("Show UI");
         UIHoverObject.SetActive(true);
-        UIHoverText.text = TooltipText;
+
+        if (string.IsNullOrEmpty(TooltipText))
+        {
+            var currentControls = InputManager.Instance.CurrentControls.Player;
+            var binding = InputManager.Instance.GetBinding(currentControls.Interact);
+            displayedText = $"{binding} {actionSuffix}";
+        }
+        else
+        {
+            displayedText = $"{TooltipText} {actionSuffix}";
+        }
+
+        UIHoverText.text = displayedText;
         HasShownUI = true;
     }
 
@@ -74,19 +94,31 @@ public class InteractionBase : MonoBehaviour, IInteractable
        // Debug.Log("Hide UI");
         UIHoverObject.SetActive(false);
         HasShownUI = false;
+        displayedText = string.Empty;
     }
 
     public void AnimateUI()
     {
-        // Przekształcenie pozycji obiektu na ekran
-        Vector3 screenPos = mainCamera.WorldToScreenPoint(transform.position);
+        Vector3 viewportPos = mainCamera.WorldToViewportPoint(transform.position);
+        Vector3 screenPos = mainCamera.ViewportToScreenPoint(viewportPos);
 
-        // Zyskujemy szerokość tekstu (można także użyć preferredWidth z TextMeshProUGUI)
+        Vector3 offset = new Vector3(floatDistanceX * -1, floatDistanceY, 0);
+        Vector3 targetPosition = screenPos + offset;
+
         float textWidth = UIHoverText.preferredWidth;
-        Vector3 targetPosition = Vector3.zero;
+        float textHeight = UIHoverText.preferredHeight;
 
-        targetPosition = screenPos + new Vector3((floatDistanceX  * -1), floatDistanceY, 0);
+        //Debug.Log($"{name} - {textWidth}");
+        //Debug.Log($"{name} - {textHeight}");
 
-        UIHoverText.rectTransform.position = Vector3.Lerp(UIHoverText.rectTransform.position, targetPosition, Time.deltaTime * 5f);
+        float margin = 10f;
+        targetPosition.x = Mathf.Clamp(targetPosition.x, margin, Screen.width - textWidth - margin);
+        targetPosition.y = Mathf.Clamp(targetPosition.y, margin + textHeight, Screen.height - margin);
+
+        UIHoverText.rectTransform.position = Vector3.Lerp(
+                UIHoverText.rectTransform.position,
+                targetPosition,
+                Time.deltaTime * 5f
+            );
     }
 }

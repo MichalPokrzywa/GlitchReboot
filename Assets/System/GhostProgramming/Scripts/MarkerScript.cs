@@ -1,22 +1,21 @@
-using TMPro;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class MarkerScript : EntityBase
 {
-    [SerializeField] TextMeshProUGUI markerText;
     [SerializeField] Transform target;
+    [SerializeField] Renderer renderer;
 
     public bool isActive => gameObject.activeSelf;
 
-    Renderer renderer;
-
-    void Awake()
+    void Start()
     {
-        renderer = GetComponent<Renderer>();
-        UpdateEntityNameSuffix();
-        EntityManager.instance.Register<MarkerScript>(this);
-        this.gameObject.SetActive(false);
+        if (renderer == null)
+            renderer = GetComponent<Renderer>();
+
+        EntityManager.Instance.Register<MarkerScript>(this);
+        UpdateEntityDisplayName();
+
+        Deactivate();
     }
 
     void Update()
@@ -27,6 +26,12 @@ public class MarkerScript : EntityBase
             transform.LookAt(target.transform);
             transform.Rotate(0, 180, 0);
         }
+    }
+
+    public override void UpdateEntityDisplayName()
+    {
+        entityName = "Marker";
+        base.UpdateEntityDisplayName();
     }
 
     public void SetTarget(Transform target)
@@ -45,15 +50,13 @@ public class MarkerScript : EntityBase
         gameObject.SetActive(false);
     }
 
-    public void SetText(string text)
-    {
-        markerText.text = text;
-    }
-
     public void SetColor(Color color)
     {
         if (renderer == null)
+        {
+            Debug.LogError($"{gameObject.name} - renderer not found");
             return;
+        }
 
         renderer.material.SetColor("_MainColor", color);
     }

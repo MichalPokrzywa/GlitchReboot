@@ -5,9 +5,10 @@ public class DependencyManager : MonoBehaviour
     public static AudioManager audioManager;
     public static DataManager dataManager = new DataManager();
     //public static SaveManager saveManager;
-    public static SceneLoader sceneLoader; 
+    public static SceneLoader sceneLoader;
 
     [SerializeField] Scene initiallyLoadedScene;
+    [SerializeField] bool initSceneOnStart = false;
 
     private void Awake()
     {
@@ -18,7 +19,8 @@ public class DependencyManager : MonoBehaviour
 
         SetResolution();
 
-        sceneLoader.LoadScene(initiallyLoadedScene);
+        if (initSceneOnStart)
+            sceneLoader.LoadScene(initiallyLoadedScene);
     }
 
     void SetResolution()

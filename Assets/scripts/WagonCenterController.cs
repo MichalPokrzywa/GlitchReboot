@@ -11,7 +11,7 @@ public class WagonCenterController : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool drawDebugLines = true;
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (frontWheel == null || rearWheel == null) return;
 

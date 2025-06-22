@@ -2,6 +2,7 @@ using MoonSharp.Interpreter;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -30,6 +31,8 @@ public class PuzzleBase : MonoBehaviour
     {
         foreach (VariablePlatform plat in allLevelPlatforms)
         {
+            plat.puzzleBase = this;
+
             INamedVariableHandler h = plat.GetHandler();
 
             namedHandlers.Add(h);
@@ -99,11 +102,17 @@ public class PuzzleBase : MonoBehaviour
     {
         TabletTerminal.Instance.AssignTerminal(this);
         TabletTerminal.Instance.SendText(UpdateTemplate(codeText), UpdateTemplate(naturalText));
+        PanelManager.Instance.ShowTipsOnce(TipsPanel.eTipType.Tablet);
     }
 
     public void SwapLanguage()
     {
         canvas.ChangeTextType(UpdateTemplate(codeText), UpdateTemplate(naturalText));
+    }
+
+    public GameObject GetCanvas()
+    {
+        return canvas.GameObject();
     }
 
     #region Utility

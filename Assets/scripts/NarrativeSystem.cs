@@ -4,44 +4,29 @@ using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class NarrativeSystem : Singleton<NarrativeSystem>
 {
-    [SerializeField] AudioSource audioSource;
     [SerializeField] TextMeshProUGUI textDisplay;
     [SerializeField] float fadeDuration = 1f;
     [SerializeField] private float typeSpeed = 0.05f;
-    [SerializeField] List<AudioClip> audioClips = new List<AudioClip>();
-
-    //static NarrativeSystem _instance;
 
     Coroutine runningCoroutine;
+    AudioSource audioSource;
     Color startColor;
 
-    //public static NarrativeSystem instance
-    //{
-    //    get
-    //    {
-    //        if (_instance == null)
-    //        {
-    //            _instance = FindFirstObjectByType<NarrativeSystem>();
-    //            if (_instance == null)
-    //            {
-    //                GameObject singletonGO = new GameObject("NarrativeSystem (Singleton)");
-    //                _instance = singletonGO.AddComponent<NarrativeSystem>();
-    //            }
-    //        }
+    const float constDisplayTime = 3f;
 
-    //        return _instance;
-    //    }
-    //}
+    public bool IsPlaying => audioSource.isPlaying;
 
-    void Awake()
+    void Start()
     {
         startColor = textDisplay.color;
+        audioSource = DependencyManager.audioManager.soundsAudioSource;
     }
 
-    public void SetText(string text, float displayTime = 3f, Color? color = null)
+    public void SetText(string text, float additionalDisplayTime = 0f, Color? color = null)
     {
         // Stop any in-progress type/fade
         if (runningCoroutine != null)
@@ -52,17 +37,17 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
         SetAlpha(1f);
 
         // Start the new typewriter+fade coroutine
-        runningCoroutine = StartCoroutine(TypeAndFade(text, typeSpeed, displayTime));
+        runningCoroutine = StartCoroutine(TypeAndFade(text, typeSpeed, constDisplayTime + additionalDisplayTime));
     }
 
-    public void Play(int key)
+    public void Play(Scene scene, int id)
     {
-        AudioClip voice = audioClips[key - 1];
+        var audio = DependencyManager.audioManager.audioStorage.GetSpiderVoiceOver(scene, id - 1);
 
         if (audioSource.isPlaying)
             audioSource.Stop();
 
-        audioSource.clip = voice;
+        audioSource.clip = audio;
         audioSource.Play();
     }
 
@@ -131,5 +116,17 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
         SetAlpha(0f);
         textDisplay.text = "";
         runningCoroutine = null;
+    }
+
+    public void ResetNarrative()
+    {
+        StopAllCoroutines();
+        SetAlpha(1f);
+        textDisplay.text = string.Empty;
+        if (audioSource != null)
+        {
+            audioSource.Stop();
+            audioSource.time = 0f;
+        }
     }
 }

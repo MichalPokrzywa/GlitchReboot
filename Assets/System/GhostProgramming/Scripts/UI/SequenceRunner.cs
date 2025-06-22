@@ -149,6 +149,7 @@ public class SequenceRunner : MonoBehaviour
         foreach (var block in sequence.Blocks)
         {
             block.BlockNode.isInRunningSequence = true;
+            sequence.IsRunning = true;
         }
 
         int actionsCount = 0;
@@ -187,7 +188,9 @@ public class SequenceRunner : MonoBehaviour
             foreach (var block in sequence.Blocks)
             {
                 block.BlockNode.isInRunningSequence = false;
+                sequence.IsRunning = false;
             }
+
             if (runningSequences.TryGetValue(sequence, out var cts))
             {
                 cts.Dispose();

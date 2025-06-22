@@ -20,17 +20,21 @@ public class LevelExitElevator : MonoBehaviour
     public float doorCloseDuration = 0.5f;       // Time to close doors
     public Vector3 doorLeftCloseOffset = new Vector3(-1f, 0f, 0f);
     public Vector3 doorRightCloseOffset = new Vector3(1f, 0f, 0f);
+    public bool doorsOpen = true;
 
     private Vector3 doorLeftOpenPos;
     private Vector3 doorRightOpenPos;
-    private bool doorsOpen = false;
 
     void Start()
     {
         doorLeftOpenPos = leftDoor.localPosition;
         doorRightOpenPos = rightDoor.localPosition;
+        if (!doorsOpen)
+        {
+            CloseDoors();
+        }
     }
-    void CloseDoors()
+    void CloseDoorsPlayerEnter()
     {
         Sequence seq = DOTween.Sequence();
 
@@ -65,12 +69,45 @@ public class LevelExitElevator : MonoBehaviour
         );
     }
 
+    void CloseDoors()
+    {
+        Sequence seq = DOTween.Sequence();
+        
+        seq.Append(
+                DOTween.Sequence()
+                    .Join(leftDoor.DOLocalMove(doorLeftOpenPos + doorLeftCloseOffset, doorCloseDuration).SetEase(Ease.InQuad))
+                    .Join(rightDoor.DOLocalMove(doorRightOpenPos + doorRightCloseOffset, doorCloseDuration).SetEase(Ease.InQuad))
+                    .OnComplete(() =>
+                    {
+                        doorsOpen = false;
+                        Debug.Log("Doors closed.");
+                    })
+        );
+    }
+
+    public void OpenDoors()
+    {
+        Sequence seq = DOTween.Sequence();
+
+        seq.Append(
+            DOTween.Sequence()
+                .Join(leftDoor.DOLocalMove(doorLeftOpenPos, doorCloseDuration).SetEase(Ease.InQuad))
+                .Join(rightDoor.DOLocalMove(doorRightOpenPos, doorCloseDuration).SetEase(Ease.InQuad))
+                    .OnComplete(() =>
+                    {
+                        doorsOpen = false;
+                        Debug.Log("Doors open.");
+                    })
+        );
+    }
+
+
     void OnTriggerEnter(Collider other)
     {
-        if (doorsOpen) return;
+        if (!doorsOpen) return;
         if (other.CompareTag("Player"))
         {
-            CloseDoors();
+            CloseDoorsPlayerEnter();
         }
     }
 

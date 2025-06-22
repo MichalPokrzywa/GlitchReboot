@@ -18,18 +18,20 @@ public class Destructable : MonoBehaviour
     private float PieceDestroyDelay = 5f;
     [SerializeField]
     private float PieceSleepCheckDelay = 0.1f;
+    [SerializeField]
+    private bool byCollision = true;
 
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.layer == LayerMask.NameToLayer("VariableDice"))
+        if (collision.gameObject.layer == LayerMask.NameToLayer("VariableDice") && byCollision)
         {
             Explode(collision.gameObject.GetComponent<Rigidbody>());
         }
     }
 
 
-    public void Explode(Rigidbody objectThrown)
+    public void Explode(Rigidbody objectThrown = null)
     {
         //Destroy(Rigidbody);
         if(GetComponent<Collider>() != null)

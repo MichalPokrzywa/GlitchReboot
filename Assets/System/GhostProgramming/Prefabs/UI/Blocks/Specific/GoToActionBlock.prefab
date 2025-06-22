@@ -9,14 +9,6 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 305972218523469280, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 305972218523469280, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 305972218523469280, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -35,6 +27,14 @@ PrefabInstance:
     - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_text
       value: GoTo()
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: m_fontSize
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 2625978327243891556, guid: c5f51fc2b93905c4e81f04c78c0e7fc0, type: 3}
       propertyPath: m_fontSizeBase
@@ -235,3 +235,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prevNode: {fileID: 0}
   nextNode: {fileID: 0}
+  isInRunningSequence: 0
+  isValid: 1
+  currentlyExecuting: 0

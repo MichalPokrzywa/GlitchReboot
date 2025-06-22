@@ -1,11 +1,17 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 [CreateAssetMenu(menuName = "Audio/Audio Storage")]
 public class AudioStorage : ScriptableObject
 {
     [Header("Sounds")]
     [SerializeField] private List<SoundClip> sounds;
+
+    [SerializeField] List<SpiderVoiceOver> spiderVoiceOvers;
 
     [Header("Menu music")]
     [SerializeField] private List<AudioClip> menuMusicClips;
@@ -15,6 +21,13 @@ public class AudioStorage : ScriptableObject
 
     private AudioClip lastMenuMusicClip = null;
     private AudioClip lastGameplayMusicClip = null;
+
+    [Serializable]
+    class SpiderVoiceOver
+    {
+        public Scene scene;
+        public List<AudioClip> clips;
+    }
 
     public AudioClip GetSoundByType(Sound sound)
     {
@@ -72,11 +85,26 @@ public class AudioStorage : ScriptableObject
         do
         {
             newClip = gameplayMusicClips[Random.Range(0, gameplayMusicClips.Count)];
-        } 
+        }
         while (newClip == lastGameplayMusicClip);
 
         lastGameplayMusicClip = newClip;
         return newClip;
+    }
+
+    public AudioClip GetSpiderVoiceOver(Scene scene, int id)
+    {
+        if (spiderVoiceOvers == null || spiderVoiceOvers.Count == 0)
+            return null;
+
+        SpiderVoiceOver voiceOver = spiderVoiceOvers.Find(vo => vo.scene == scene);
+        if (voiceOver == null || voiceOver.clips.Count == 0)
+            return null;
+
+        if (id < 0 || id >= voiceOver.clips.Count)
+            return null;
+
+        return voiceOver.clips[id];
     }
 }
 

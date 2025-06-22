@@ -133,20 +133,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4758265886054515327, guid: 9c64d76b4c6c9cb4098714da901db2ea, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4758265886054515327, guid: 9c64d76b4c6c9cb4098714da901db2ea, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4758265886054515327, guid: 9c64d76b4c6c9cb4098714da901db2ea, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7081506757413332219, guid: 9c64d76b4c6c9cb4098714da901db2ea, type: 3}
       propertyPath: m_text
       value: Drop()
+      objectReference: {fileID: 0}
+    - target: {fileID: 7081506757413332219, guid: 9c64d76b4c6c9cb4098714da901db2ea, type: 3}
+      propertyPath: m_fontSize
+      value: 24
+      objectReference: {fileID: 0}
+    - target: {fileID: 7081506757413332219, guid: 9c64d76b4c6c9cb4098714da901db2ea, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 24
       objectReference: {fileID: 0}
     - target: {fileID: 7726484399614889190, guid: 9c64d76b4c6c9cb4098714da901db2ea, type: 3}
       propertyPath: m_Name
@@ -179,3 +179,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prevNode: {fileID: 0}
   nextNode: {fileID: 0}
+  isInRunningSequence: 0
+  isValid: 1
+  currentlyExecuting: 0

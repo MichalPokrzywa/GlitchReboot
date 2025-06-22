@@ -34,7 +34,18 @@ public class ResetObject : MonoBehaviour
 
     public List<ResettableItem> itemsToReset = new();
 
-
+    void Start()
+    {
+        ResettableItem baseValues = new ResettableItem
+        {
+            initialPosition = transform.position,
+            initialRotation = transform.rotation,
+            activeOnReset = gameObject.activeSelf,
+            actionType = ResetActionType.TransformReset
+        };
+        itemsToReset.Clear();
+        itemsToReset.Add(baseValues);
+    }
     // Called when the script is first added or reset
     void Reset()
     {

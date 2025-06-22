@@ -19,6 +19,7 @@ public class PickUpObjectInteraction : InteractionBase
    public bool onTarget = false;
    public bool isAnimationPlaying = false;
    public bool inhand = false;
+   public EntityTooltipInteraction EntityTooltipInteraction;
    private Transform diceTransform;
    private ePickUpState PickUpState;
 
@@ -30,17 +31,12 @@ public class PickUpObjectInteraction : InteractionBase
         Dropping
     }
 
-    protected override void Awake()
-   {
-       base.Awake();
-
-   }
-
-   private void Start()
-   {
-      rb = GetComponent<Rigidbody>();
-      PickUpState = ePickUpState.Dropped;
-   }
+    protected override void Start()
+    {
+       base.Start();
+       rb = GetComponent<Rigidbody>();
+       PickUpState = ePickUpState.Dropped;
+    }
 
    public override void Interact()
    {
