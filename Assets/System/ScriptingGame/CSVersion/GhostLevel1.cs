@@ -1,4 +1,5 @@
 using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.ProBuilder.Shapes;
@@ -14,6 +15,8 @@ public class GhostLevel1 : PuzzleBase
     [SerializeField] private GameObject terminal;
     [SerializeField] private GameObject variablePlatform1;
     [SerializeField] private GameObject variablePlatform2;
+    [SerializeField] private Destructable windowDestructable;
+    [SerializeField] private ParticleSystem windowDestructableParticle;
     private Transform platformTransform;
     private Vector3 stairsBasicPosition;
     private Vector3 stairsCoverBasicPosition;
@@ -24,7 +27,7 @@ public class GhostLevel1 : PuzzleBase
     private bool platformState = false;
     private bool terminalState = false;
     private float duration = 6f;
-
+    private bool boomWindow = false;
     public void Awake()
     {
         stairsBasicPosition = stairs.position;
@@ -77,13 +80,19 @@ public class GhostLevel1 : PuzzleBase
             terminal.GetComponent<GhostLevel2>().GetCanvas().SetActive(true);
             variablePlatform1.GetComponent<GlitchSwitcher>().ApplyGlitch(false);
             variablePlatform2.GetComponent<GlitchSwitcher>().ApplyGlitch(false);
+            if (!boomWindow)
+            {
+                boomWindow = true;
+                windowDestructable.Explode();
+                windowDestructableParticle.Play(true);
+                Camera.main.DOShakePosition(0.3f, 0.5f, 5, randomnessMode: ShakeRandomnessMode.Harmonic);
+            }
         }
         else if (!GetVariableValue<bool>("terminalFloor2") && terminalState)
         {
             terminalState = false;
             terminal.GetComponent<GlitchSwitcher>().ApplyGlitch(true);
             terminal.GetComponent<GhostLevel2>().SetActive();
-            Debug.Log("siema eniu");
             terminal.GetComponent<GhostLevel2>().GetCanvas().SetActive(false);
             variablePlatform1.GetComponent<GlitchSwitcher>().ApplyGlitch(true);
             variablePlatform2.GetComponent<GlitchSwitcher>().ApplyGlitch(true);
