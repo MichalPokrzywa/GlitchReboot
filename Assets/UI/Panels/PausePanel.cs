@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
@@ -20,6 +20,7 @@ public class PausePanel : Panel
     [SerializeField] Image raycastBlocker;
 
     GameObject activePanel;
+    List<Button> allButtons = new List<Button>();
 
     void Awake()
     {
@@ -27,6 +28,8 @@ public class PausePanel : Panel
         settingsButton?.onClick.AddListener(() => TogglePanel(settingsPanel));
         returnToMenuButton?.onClick.AddListener(ReturnToMenu);
         backButton?.onClick.AddListener(() => TogglePanel(null));
+
+        allButtons = new List<Button>() { controlsButton, settingsButton, returnToMenuButton, backButton };
 
         firstItemToSelect = controlsButton.gameObject;
 
@@ -86,8 +89,13 @@ public class PausePanel : Panel
     {
         base.Close();
 
+        foreach (var button in allButtons)
+            button.interactable = true;
+
         raycastBlocker.enabled = false;
         AudioListener.pause = false;
+
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.PAUSE, null);
 
         if (EnsurePlayerRef())
             firstPersonController.StartMovement();
@@ -105,6 +113,8 @@ public class PausePanel : Panel
         raycastBlocker.enabled = true;
         AudioListener.pause = true;
 
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.PAUSE, true);
+
         if (EnsurePlayerRef())
             firstPersonController.StopMovement();
 
@@ -121,13 +131,20 @@ public class PausePanel : Panel
         if (firstPersonController != null)
             firstPersonController.StartMovement();
 
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.PAUSE, null);
+
         if (depthOfField != null)
             depthOfField.enabled = false;
+
+        foreach (var button in allButtons)
+            button.interactable = true;
     }
 
     void ReturnToMenu()
     {
         PanelManager.Instance.ReturnToMenu();
+        foreach (var button in allButtons)
+            button.interactable = false;
     }
 
     void TogglePanel(GameObject panelToShow)

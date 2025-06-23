@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using static TipsPanel;
 
@@ -40,6 +41,12 @@ public class PanelManager : Singleton<PanelManager>
             && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
         {
             pausePanel.TogglePanel();
+
+            var virtualMouse = FindFirstObjectByType<CustomVirtualMouseInput>(FindObjectsInactive.Include);
+            if (pausePanel.isOpen && virtualMouse != null)
+                virtualMouse.gameObject.SetActive(false);
+            else if (!pausePanel.isOpen && virtualMouse != null)
+                virtualMouse.gameObject.SetActive(true);
         }
     }
 

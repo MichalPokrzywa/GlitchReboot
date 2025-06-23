@@ -32,7 +32,6 @@ public class FirstPersonController : MonoBehaviour
     float maxLookAngle = 50f;
 
     // Crosshair
-    public bool lockCursor = true;
     public bool useCrosshair = true;
     public GameObject crosshair;
 
@@ -45,7 +44,6 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
     #endregion
-
     #region Movement Variables
 
     bool playerCanMove = true;
@@ -57,6 +55,8 @@ public class FirstPersonController : MonoBehaviour
     // Internal Variables
     bool isWalking = false;
     float defaultWalkSpeed;
+    Vector3 input;
+    bool isMoving;
 
     #region Sprint
 
@@ -84,9 +84,9 @@ public class FirstPersonController : MonoBehaviour
     float sprintBarHeight;
     bool isSprintCooldown = false;
     float sprintCooldownReset;
+    bool shouldSprint;
 
     #endregion
-
     #region Jump
 
     bool enableJump = true;
@@ -96,7 +96,6 @@ public class FirstPersonController : MonoBehaviour
     bool isGrounded = false;
 
     #endregion
-
     #region Crouch
 
     bool enableCrouch = true;
@@ -110,7 +109,6 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
     #endregion
-
     #region Head Bob
 
     public Transform joint;
@@ -123,20 +121,15 @@ public class FirstPersonController : MonoBehaviour
     float timer = 0;
 
     #endregion
-
     #region Animations
 
     public Animator animator;
     float speed;
 
     #endregion
-
     #endregion
 
     int stopMovementRequests = 0;
-    Vector3 input;
-    bool isMoving;
-    bool shouldSprint;
 
     void Awake()
     {
@@ -166,8 +159,6 @@ public class FirstPersonController : MonoBehaviour
 
     void Update()
     {
-        HandleCursor();
-
         if (enableZoom && cameraCanMove)
             HandleZoom();
 
@@ -209,18 +200,6 @@ public class FirstPersonController : MonoBehaviour
         Gizmos.DrawRay(transform.position, transform.forward * 2);
     }
 
-    void HandleCursor()
-    {
-        if (playerCamera == null)
-            return;
-
-        Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
-        Cursor.visible = !lockCursor;
-
-        if (useCrosshair)
-            crosshair.gameObject.SetActive(lockCursor);
-    }
-
     public void StopMovement()
     {
         stopMovementRequests++;
@@ -231,22 +210,27 @@ public class FirstPersonController : MonoBehaviour
             enableHeadBob = false;
             rb.linearVelocity = Vector3.zero;
             enableJump = false;
-            lockCursor = false;
+            crosshair.gameObject.SetActive(false);
         }
     }
 
     public void StartMovement()
     {
         stopMovementRequests--;
-        // Ensure it doesn't go negative
-        stopMovementRequests = Mathf.Max(stopMovementRequests, 0);
+        if (stopMovementRequests < 0)
+        {
+            // Ensure it doesn't go negative
+            stopMovementRequests = Mathf.Max(stopMovementRequests, 0);
+            return;
+        }
+
         if (stopMovementRequests <= 0)
         {
             cameraCanMove = true;
             playerCanMove = true;
             enableHeadBob = true;
             enableJump = true;
-            lockCursor = true;
+            crosshair.gameObject.SetActive(true);
         }
     }
 
@@ -389,7 +373,6 @@ public class FirstPersonController : MonoBehaviour
     void HandleMovement()
     {
         float currentSpeed = shouldSprint ? sprintSpeed : walkSpeed;
-
         Vector3 targetVelocity = transform.TransformDirection(input) * currentSpeed;
         animator?.SetFloat("Speed", targetVelocity.magnitude);
 
@@ -682,7 +665,6 @@ public class FirstPersonController : MonoBehaviour
         GUI.enabled = true;
         */
 
-        fpc.lockCursor = EditorGUILayout.ToggleLeft(new GUIContent("Lock and Hide Cursor", "Turns off the cursor visibility and locks it to the middle of the screen."), fpc.lockCursor);
         fpc.useCrosshair = EditorGUILayout.ToggleLeft(new GUIContent("Auto Crosshair", "Determines if the basic useCrosshair will be turned on, and sets is to the center of the screen."), fpc.useCrosshair);
 
         // Only displays useCrosshair options if useCrosshair is enabled
