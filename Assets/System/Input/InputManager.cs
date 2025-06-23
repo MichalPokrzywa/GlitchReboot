@@ -153,8 +153,6 @@ public class InputManager : Singleton<InputManager>
             Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
-
-        Debug.LogWarning($"CURSOR: {state.ToString()} {isCursorVisible}");
     }
 
     void RestoreDefaultSettings()
