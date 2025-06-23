@@ -9,13 +9,23 @@ public class CannonController : MonoBehaviour
     public Transform firePoint;
 
     [Header("Ustawienia wystrzału")]
-    public float initialSpeed = 20f;
+    private float initialSpeed = 20f;
     public float launchAngleDegrees = 0.0f;
+    [Header("Ustawienie siły (Low / Medium / High)")]
+    public string selectedStrengthLevel = "Medium";
 
     [Header("Ustawienia animacji przed wystrzałem")]
     public float preLaunchAnimationDuration = 0.5f; // Czas trwania animacji do firePoint
     public float preLaunchJumpPower = 1.0f; // Wysokość "podskoku" (dla DOJump)
     public int preLaunchNumJumps = 1; // Liczba "podskoków" (dla DOJump)
+    
+    private Dictionary<string, float> launchStrengthMap = new Dictionary<string, float>
+    {
+        { "Low", 10f },
+        { "Medium", 20f },
+        { "High", 30f }
+    };
+
 
     private void Update()
     {
@@ -125,7 +135,7 @@ public class CannonController : MonoBehaviour
 
                 // Ustaw rotację obiektu w kierunku wystrzału
                 rb.transform.rotation = Quaternion.LookRotation(GetLaunchDirection());
-
+                SetLaunchStrength(selectedStrengthLevel);
                 // Nadaj prędkość początkową
                 Vector3 velocity = GetLaunchDirection().normalized * initialSpeed;
                 rb.linearVelocity = velocity; // Używamy linearVelocity dla DOTween
@@ -136,5 +146,19 @@ public class CannonController : MonoBehaviour
 
                 Debug.Log($"{rb.name} został wystrzelony z armaty po animacji.");
             });
+    }
+    
+    public void SetLaunchStrength(string strengthLevel)
+    {
+        if (launchStrengthMap.TryGetValue(strengthLevel, out float speed))
+        {
+            initialSpeed = speed;
+            Debug.Log($"Set launch strength to '{strengthLevel}' -> {speed}");
+        }
+        else
+        {
+            Debug.LogWarning($"Unknown strength level: {strengthLevel}. Defaulting to Medium.");
+            initialSpeed = launchStrengthMap["Medium"];
+        }
     }
 }
