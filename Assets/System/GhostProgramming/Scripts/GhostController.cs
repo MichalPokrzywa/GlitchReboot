@@ -37,7 +37,7 @@ public class GhostController : EntityBase
     const float maxStillTime = 2f;
     const float pathCalculationInterval = 0.5f;
     const float actionDelay = 0.25f;
-    [SerializeField] float rotationSpeed = 0.5f;
+    const float rotationSpeed = 270f; // degrees per second
 
     public enum InteractionDistance
     {
@@ -364,14 +364,17 @@ public class GhostController : EntityBase
 
     void RotateTowards(Vector3 targetPos)
     {
-        Vector3 direction = (targetPos - transform.position).normalized;
+        Vector3 direction = targetPos - transform.position;
         direction.y = 0f;
 
-        if (direction == Vector3.zero)
+        if (direction.sqrMagnitude < 0.0001f)
             return;
 
+        direction.Normalize();
+
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        float step = rotationSpeed * Time.deltaTime;
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, step);
     }
 
     void SetColor()

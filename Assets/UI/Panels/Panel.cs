@@ -28,7 +28,7 @@ public class Panel : MonoBehaviour
 
     void OnDestroy()
     {
-        if (InputManager.Instance != null)
+        if (InputManager.IsInstanceShuttingDown)
             InputManager.Instance.onControlsChanged -= UpdateEventSystemSelectedGO;
     }
 

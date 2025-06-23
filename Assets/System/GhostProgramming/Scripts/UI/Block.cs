@@ -97,6 +97,7 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     {
         UpdateInteractability(false);
         OnDragged?.Invoke(this);
+        PanelManager.Instance.canBePaused = false;
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -113,6 +114,7 @@ public class Block : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHan
     public void OnEndDrag(PointerEventData eventData)
     {
         UpdateInteractability(true);
+        PanelManager.Instance.canBePaused = true;
     }
 
     void RaycastTargetActivation(bool active)

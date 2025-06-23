@@ -44,6 +44,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -5
       objectReference: {fileID: 0}
+    - target: {fileID: 1323150945225105901, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_Size
+      value: 0.81333333
+      objectReference: {fileID: 0}
+    - target: {fileID: 1367335397040022378, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 30
+      objectReference: {fileID: 0}
     - target: {fileID: 1426598918959785085, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_Options.m_Options.Array.size
       value: 1
@@ -51,6 +59,26 @@ PrefabInstance:
     - target: {fileID: 1426598918959785085, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_Options.m_Options.Array.data[0].m_Text
       value: Ghost 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1474770670621003566, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1474770670621003566, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1474770670621003566, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -17
+      objectReference: {fileID: 0}
+    - target: {fileID: 1474770670621003566, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1893506678460895268, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1970516163348506700, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_SizeDelta.x
@@ -180,6 +208,14 @@ PrefabInstance:
       propertyPath: m_fontColor32.rgba
       value: 4281586494
       objectReference: {fileID: 0}
+    - target: {fileID: 7846868232055369556, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7846868232055369556, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.81333333
+      objectReference: {fileID: 0}
     - target: {fileID: 8175216458072536835, guid: c2084295b53761249b4f2d5f15da3565, type: 3}
       propertyPath: m_Name
       value: GhostBlock
@@ -234,7 +270,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prevNode: {fileID: 0}
   nextNode: {fileID: 0}
-  isInRunningSequence: 0
   isValid: 1
+  isInRunningSequence: 0
   currentlyExecuting: 0
   dropdown: {fileID: 2013134307582398394}

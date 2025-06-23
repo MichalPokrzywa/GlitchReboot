@@ -38,6 +38,9 @@ public class EntityManager : Singleton<EntityManager>
         entity.entityId = finalId;
         list.Add(entity);
 
+        //sort based on id
+        entityLists[typeof(T)] = list.OrderBy(e => e.entityId).ToList();
+
         Debug.Log($"[EntityManager] Registered {typeof(T).Name} \"{entity.name}\" with ID {finalId} and suffix \"{entity.entityNameSuffix}\"");
     }
 

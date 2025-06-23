@@ -16,25 +16,15 @@ public class SpiderBehaviour : MonoBehaviour
     public class TargetData
     {
         public Transform target;
-        [Range(0, 1.5f)]
-        public float speed = 1f;
-        [Range(0, 15f)]
-        public int animSmoothness;
-        [Range(0, 1f)]
-        public float minBodyHeight;
-
-        public float textDisplayAdditionalTime = 0f;
-        public float waitTimeAtWaypoint = 0f;
         public Emotion emotion;
-        [TextArea(5,10)]
-        public string speech;
-
-        public Scene scene;
-        public int voiceKey;
+        public AudioClip voiceClip;
         public bool teleportToNext = false;
-        [HideInInspector]
-        public bool isDone = false;
         public bool overrideStep = false;
+        [Header("If audio clip not included, use this variable")]
+        public float waitTime = 0f;
+        [TextArea(5, 10)] public string speech;
+
+        [HideInInspector] public bool isDone = false;
     }
 
     [Header("References")]
@@ -49,20 +39,21 @@ public class SpiderBehaviour : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] float rotationSpeed = 5f;
     [SerializeField] float startWaitTime = 3f;
-    [SerializeField] bool loop = false;
     [SerializeField] List<TargetData> targetData = new List<TargetData>();
 
     [Header("Glitch Settings")]
     [SerializeField] float glitchDuration = 0.5f;  // seconds of glitch effect
 
+    public bool isTalking = false;
+
     int currentTargetIndex = 0;
-    bool playAtStart = false;
     bool isWaiting = false;
     bool initialized = false;
     bool isMovementActive = false;
-    public bool isTalking = false;
 
-    const float targetDistThreshold = 0.01f;
+    const float targetDistThreshold = 0.5f;
+    const float spiderSpeed = 1.5f;
+
     void Start()
     {
         if (player == null)
@@ -73,7 +64,7 @@ public class SpiderBehaviour : MonoBehaviour
 
         if (targetData.Count == 0)
         {
-            Debug.LogWarning("No targets assigned to SpiderBehaviour. Staying in Place");
+            Debug.LogWarning("No targets assigned to SpiderBehaviour. Staying in place");
             isWaiting = true;
             return;
         }
@@ -82,7 +73,6 @@ public class SpiderBehaviour : MonoBehaviour
         currentTargetIndex = 0;
         Transform first = targetData[0].target;
         transform.position = first.position;
-        SetAnimationData(targetData[0]);
         SetEmotion(targetData[0].emotion);
 
         // Ensure glitch is off initially
@@ -105,6 +95,7 @@ public class SpiderBehaviour : MonoBehaviour
             trigger.Setup(this, data);
         }
     }
+
     void Update()
     {
         if ((isWaiting || isTalking) && !isMovementActive)
@@ -117,7 +108,9 @@ public class SpiderBehaviour : MonoBehaviour
     public void OnPlayerEnterTarget(TargetData data)
     {
         if (!isTalking)
+        {
             StartCoroutine(HandleTargetReached(data));
+        }
         else if (data.overrideStep)
         {
             data.overrideStep = false;
@@ -139,7 +132,6 @@ public class SpiderBehaviour : MonoBehaviour
         glitchSwitcher.ApplyGlitch(true);
         spiderAnim.enabled = false;
         transform.position = data.target.position;
-        SetAnimationData(data);
         SetEmotion(data.emotion);
         spiderAnim.enabled = true;
         yield return new WaitForSeconds(glitchDuration);
@@ -149,25 +141,39 @@ public class SpiderBehaviour : MonoBehaviour
 
     IEnumerator HandleTargetReached(TargetData data)
     {
+        if (data == null)
+            yield break;
+
         if (!initialized)
         {
             initialized = true;
             yield return new WaitForSeconds(startWaitTime);
         }
 
-        if(data.isDone)
+        if (data.isDone)
             yield break;
-        if(targetData[currentTargetIndex] != data)
+
+        if (targetData[currentTargetIndex] != data)
             yield break;
+
         isWaiting = false;
         data.overrideStep = false;
         isTalking = true;
-        if (!string.IsNullOrEmpty(data.speech))
-            NarrativeSystem.Instance.SetText(data.speech, data.textDisplayAdditionalTime);
-        if (data.voiceKey != 0)
-            NarrativeSystem.Instance.Play(data.scene, data.voiceKey);
 
-        yield return new WaitForSeconds(data.waitTimeAtWaypoint);
+        float waitTime = data.waitTime;
+        if (data.voiceClip != null)
+            waitTime = data.voiceClip.length;
+
+        if (!string.IsNullOrEmpty(data.speech))
+            NarrativeSystem.Instance.SetText(data.speech, waitTime);
+
+        if (data.voiceClip != null)
+            NarrativeSystem.Instance.Play(data.voiceClip);
+
+        if (data.voiceClip != null)
+            yield return new WaitUntil(() => NarrativeSystem.Instance.IsPlaying == false);
+        else
+            yield return new WaitForSeconds(waitTime);
 
         data.isDone = true;
         isMovementActive = true;
@@ -175,14 +181,10 @@ public class SpiderBehaviour : MonoBehaviour
         int nextIndex = currentTargetIndex + 1;
         if (nextIndex >= targetData.Count)
         {
-            if (loop) nextIndex = 0;
-            else
-            {
-                isWaiting = true;
-                isTalking = false;
-                isMovementActive = false;
-                yield break;
-            }
+            isWaiting = true;
+            isTalking = false;
+            isMovementActive = false;
+            yield break;
         }
 
         TargetData nextData = targetData[nextIndex];
@@ -193,7 +195,6 @@ public class SpiderBehaviour : MonoBehaviour
             yield return new WaitForSeconds(glitchDuration);
             spiderAnim.enabled = false;
             transform.position = nextData.target.position;
-            SetAnimationData(nextData);
             SetEmotion(nextData.emotion);
             spiderAnim.enabled = true;
             yield return new WaitForSeconds(glitchDuration);
@@ -202,15 +203,12 @@ public class SpiderBehaviour : MonoBehaviour
         else
         {
             // Walk towards the next target
-            while (Vector3.Distance(transform.position, nextData.target.position) > targetDistThreshold * 50f)
+            while (Vector3.Distance(transform.position, nextData.target.position) > targetDistThreshold)
             {
-                MoveTowards(nextData.target.position, nextData.speed);
+                MoveTowards(nextData.target.position, spiderSpeed);
                 RotateTowards(nextData.target.position);
-
                 yield return null;
             }
-
-            SetAnimationData(nextData);
             SetEmotion(nextData.emotion);
         }
 
@@ -218,6 +216,7 @@ public class SpiderBehaviour : MonoBehaviour
         isWaiting = true;
         isTalking = false;
         isMovementActive = false;
+
         if (targetData[nextIndex].target.TryGetComponent(out BoxCollider box) == false)
         {
             StartCoroutine(HandleTargetReached(targetData[nextIndex]));
@@ -227,7 +226,7 @@ public class SpiderBehaviour : MonoBehaviour
 
     void MoveTowards(Vector3 targetPos, float speed)
     {
-        float step = speed * Time.deltaTime;
+        float step = spiderSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
     }
 
@@ -270,11 +269,5 @@ public class SpiderBehaviour : MonoBehaviour
                 smile.transform.localRotation = Quaternion.Euler(0, 0, 180);
             }
         }
-    }
-
-    void SetAnimationData(TargetData data)
-    {
-        spiderAnim.smoothness = data.animSmoothness;
-        spiderAnim.minBodyHeight = data.minBodyHeight;
     }
 }
