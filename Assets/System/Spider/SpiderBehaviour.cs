@@ -109,16 +109,16 @@ public class SpiderBehaviour : MonoBehaviour
 
     public void OnPlayerEnterTarget(TargetData data)
     {
-        if (!isTalking)
-        {
-            StartCoroutine(HandleTargetReached(data));
-        }
-        else if (data.overrideStep)
+        if (data.overrideStep)
         {
             TriggerMechanicIfNeeded(currentTargetIndex);
             data.overrideStep = false;
             StopAllCoroutines();
             StartCoroutine(SkipToSteps(data));
+        }
+        else if (!isTalking)
+        {
+            StartCoroutine(HandleTargetReached(data));
         }
     }
 
