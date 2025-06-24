@@ -137,7 +137,7 @@ PrefabInstance:
       objectReference: {fileID: 11400000, guid: b4996652f43e34d4ba2ab5d08a29fc22, type: 2}
     - target: {fileID: 7528634406053254415, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -37.23
+      value: -44.194
       objectReference: {fileID: 0}
     - target: {fileID: 7528634406053254415, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
       propertyPath: m_LocalPosition.y
@@ -145,7 +145,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7528634406053254415, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -39.71
+      value: -46.168
       objectReference: {fileID: 0}
     - target: {fileID: 7528634406053254415, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1692,7 +1692,7 @@ PrefabInstance:
       objectReference: {fileID: 1486780052}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].speech
-      value: A angry speech
+      value: 'It was so easy to drag you here '
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].target
@@ -1712,7 +1712,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].waitTime
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[0].overrideStep
@@ -1809,6 +1809,17 @@ MonoBehaviour:
   strenght: -0.15
   checkerBoxes: 1
   glitchColor: 1
+--- !u!114 &485328078 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+  m_PrefabInstance: {fileID: 485328074}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 485328075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e411dc2348fda894bb968c98b20ab317, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &504196863
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5716,6 +5727,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cage: {fileID: 1118124711}
+  spider: {fileID: 485328078}
+  material: {fileID: 2100000, guid: 14e7cc919c06f764da44eeaa4e6371fb, type: 2}
+  controller: {fileID: 1844060683}
 --- !u!65 &1828433776
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -5757,6 +5771,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7528634406053254403, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
   m_PrefabInstance: {fileID: 55917688}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1844060683 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7528634406053254409, guid: ed44ebe4d0fa6bb4ca759464d4039b44, type: 3}
+  m_PrefabInstance: {fileID: 55917688}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844060679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d90ba6530d9bfda47abb4610956b2f44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1872146103
 PrefabInstance:
   m_ObjectHideFlags: 0

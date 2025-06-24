@@ -14,7 +14,7 @@ public class GlitchEffectFeature : ScriptableRendererFeature
 
     public Settings settings = new Settings();
     DigitalGlitchPass renderPass;
-
+    public static GlitchEffectFeature Instance { get; private set; }
     public override void Create()
     {
         if (settings.material == null)
@@ -26,6 +26,7 @@ public class GlitchEffectFeature : ScriptableRendererFeature
         {
             renderPassEvent = settings.renderPassEvent
         };
+        Instance = this;
     }
 
     public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
