@@ -1,46 +1,58 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Door2 : MonoBehaviour
 {
-    [SerializeField] GameObject player;
-    [SerializeField] GameObject startPosition;
+    [SerializeField] private GameObject leftDoor;
+    [SerializeField] private GameObject rightDoor;
 
-    private BoxCollider boxCollider;
-    private Condition condition;
-    void Start()
+    private Vector3 baseLeftDoorPosition;
+    private Vector3 baseRightDoorPosition;
+    private Vector3 leftTargetPosition;
+    private Vector3 rightTargetPosition;
+
+    private bool isOpening = false;
+    private bool isClosing = false;
+
+    private void Start()
     {
-        boxCollider = GetComponent<BoxCollider>();
-        condition = GetComponent<Condition>();
+        baseLeftDoorPosition = leftDoor.transform.position;
+        baseRightDoorPosition = rightDoor.transform.position;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Kolizja!");
-        reset();
-    }
-
-    public bool reset()
-    {
-        if (condition.returnCondition())
+        if (other.CompareTag("Player"))
         {
-            Debug.Log(SceneManager.GetActiveScene().name);
-            //end level
-            if (SceneManager.GetActiveScene().name.ToString() == "level1") SceneManager.LoadScene("level2");
-            if (SceneManager.GetActiveScene().name.ToString() == "level2") SceneManager.LoadScene("level3");
-            if (SceneManager.GetActiveScene().name.ToString() == "level3") SceneManager.LoadScene("EndScreen");
-            return true;
-        }
-        else
-        {
-            resetPlayerPosition();
-            return false;
+            isOpening = true;
+            isClosing = false;
         }
     }
 
-    public void resetPlayerPosition()
+    private void OnTriggerExit(Collider other)
     {
-        Debug.Log("Reset!");
-        player.transform.position = startPosition.transform.position;
+        if (other.CompareTag("Player"))
+        {
+            isOpening = false;
+            isClosing = true;
+        }
+    }
+
+    private void Update()
+    {
+        if (isOpening)
+        {
+            // Ustaw pozycje docelowe
+            leftTargetPosition = baseLeftDoorPosition + Vector3.left * 1.5f;
+            rightTargetPosition = baseRightDoorPosition + Vector3.right * 1.5f;
+
+            // Przesuwanie drzwi
+            leftDoor.transform.position = Vector3.MoveTowards(leftDoor.transform.position, leftTargetPosition, Time.deltaTime);
+            rightDoor.transform.position = Vector3.MoveTowards(rightDoor.transform.position, rightTargetPosition, Time.deltaTime);
+        }
+        else if (isClosing)
+        {
+            leftDoor.transform.position = Vector3.MoveTowards(leftDoor.transform.position, baseLeftDoorPosition, Time.deltaTime);
+            rightDoor.transform.position = Vector3.MoveTowards(rightDoor.transform.position, baseRightDoorPosition, Time.deltaTime);
+        }
     }
 }
