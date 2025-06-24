@@ -52,19 +52,10 @@ public class ChessLevelScript1 : PuzzleBase
 
         float delta = (destPos.x - platform.transform.position.x) / platforms;
 
-        float punish = 10.0f;
-        if (platforms > minimalVal)
-        {
-            speed++;
-            punish = 10.0f;
-            if (platforms > optimalVal) 
-            {
-                punish -= (platforms - optimalVal) - 0.7f;
-                speed += 0.2f;
-            }
-            if (punish < 2)
-                punish = 1.8f;
-        }
+        float speedChange = platforms > optimalVal ? (platforms - minimalVal) * 0.18f : (platforms - minimalVal) * 0.15f;
+        if(speedChange < 0) speedChange = 0;
+
+        speed += speedChange;
 
         for (int i = 1; i < platforms; i++)
         {
@@ -77,7 +68,8 @@ public class ChessLevelScript1 : PuzzleBase
             //nextPlatform.transform.position = platform.transform.position;
             nextPlatform.SetActive(true);
 
-            nextPlatform.GetComponentInChildren<MovingPlatform>().maxZOscilation = ((platforms / 2) - Math.Abs(i - platforms / 2)) / punish;
+            nextPlatform.GetComponentInChildren<MovingPlatform>().maxZOscilation = ((platforms / 2) - Math.Abs(i - platforms / 2)) * 0.6f <= 2.5f ? ((platforms / 2) - Math.Abs(i - platforms / 2)) * 0.6f : 2.5f;
+
             nextPlatform.GetComponentInChildren<MovingPlatform>().zOscillationSpeed = speed;
 
             speed = -speed;
