@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GlitchSwitcher : MonoBehaviour
 {
@@ -8,6 +9,9 @@ public class GlitchSwitcher : MonoBehaviour
     public float strenght = -0.15f;
     public bool checkerBoxes = true;
     public bool glitchColor = true;
+    public bool setInterval = true;
+    public float baseOnInterval = 1.0f;
+    public float baseOffInterval = 1.0f;
     private class RendererInfo
     {
         public Renderer renderer;
@@ -22,6 +26,19 @@ public class GlitchSwitcher : MonoBehaviour
         ApplyGlitch(glitchOnStart);
     }
 
+    void Update()
+    {
+        if (glitchOnStart)
+        {
+            foreach (var rend in renderers)
+            {
+                if (rend.renderer.material.HasProperty("_MultiTime"))
+                    rend.renderer.material.SetFloat("_MultiTime", glitchMaterial.GetFloat("_MultiTime"));
+
+            }
+
+        }
+    }
     private void CacheOriginalMaterials()
     {
         renderers.Clear();
@@ -63,8 +80,17 @@ public class GlitchSwitcher : MonoBehaviour
                     if(glitchCopy.HasProperty("_GlitchInvertedStrength"))
                         glitchCopy.SetFloat("_GlitchInvertedStrength", strenght);
 
+                    if (glitchCopy.HasProperty("_IntervalOnTime"))
+                        glitchCopy.SetFloat("_IntervalOnTime", baseOnInterval);
+
+                    if (glitchCopy.HasProperty("_IntervalOffTime"))
+                        glitchCopy.SetFloat("_IntervalOffTime", baseOffInterval);
+
                     if (glitchCopy.HasProperty("_CheckerBoardGlitchBool"))
-                        glitchCopy.SetInt("_CheckerBoardGlitchBool", checkerBoxes ? 1 : 0);
+                        glitchCopy.SetInt("_CheckerBoardGlitchBool", checkerBoxes ? 1 : 0);                    
+                    
+                    if (glitchCopy.HasProperty("_ShouldInterval"))
+                        glitchCopy.SetInt("_ShouldInterval", setInterval ? 1 : 0);
 
                     if (glitchCopy.HasProperty("_GlitchColor"))
                         glitchCopy.SetInt("_GlitchColor", glitchColor ? 1 : 0);
