@@ -16,7 +16,7 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
     AudioSource audioSource;
     Color startColor;
 
-    public bool IsPlaying => audioSource.isPlaying;
+    public bool IsPlaying => audioSource.isPlaying || AudioListener.pause == true;
 
     void Start()
     {

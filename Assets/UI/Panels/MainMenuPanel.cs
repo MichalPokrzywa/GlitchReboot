@@ -51,7 +51,7 @@ public class MainMenuPanel : MonoBehaviour
         creditsButton?.onClick.RemoveAllListeners();
         exitButton?.onClick.RemoveListener(ExitGame);
 
-        if (InputManager.IsInstanceShuttingDown)
+        if (!InputManager.IsInstanceShuttingDown)
             InputManager.Instance.onControlsChanged -= UpdateEventSystemSelectedGO;
     }
 

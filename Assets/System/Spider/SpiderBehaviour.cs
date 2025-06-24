@@ -18,6 +18,8 @@ public class SpiderBehaviour : MonoBehaviour
         public Transform target;
         public Emotion emotion;
         public AudioClip voiceClip;
+        [Header("Reaching this target results in activating a game mechanic")]
+        public MechanicType activateMechanic;
         public bool teleportToNext = false;
         public bool overrideStep = false;
         [Header("If audio clip not included, use this variable")]
@@ -57,7 +59,7 @@ public class SpiderBehaviour : MonoBehaviour
     void Start()
     {
         if (player == null)
-            player = FindObjectOfType<FirstPersonController>().gameObject;
+            player = FindFirstObjectByType<FirstPersonController>().gameObject;
 
         if (eyes.target == null)
             eyes.target = player.transform;
@@ -113,6 +115,7 @@ public class SpiderBehaviour : MonoBehaviour
         }
         else if (data.overrideStep)
         {
+            TriggerMechanicIfNeeded(currentTargetIndex);
             data.overrideStep = false;
             StopAllCoroutines();
             StartCoroutine(SkipToSteps(data));
@@ -125,7 +128,9 @@ public class SpiderBehaviour : MonoBehaviour
         for (int i = currentTargetIndex-1; i > 0; i--)
         {
             targetData[i].isDone = true;
+            TriggerMechanicIfNeeded(i);
         }
+
         isWaiting = true;
         isTalking = false;
         isMovementActive = false;
@@ -141,7 +146,8 @@ public class SpiderBehaviour : MonoBehaviour
 
     IEnumerator HandleTargetReached(TargetData data)
     {
-        if (data == null)
+        // Check if the data is valid and not already done
+        if (data == null || data.isDone || targetData[currentTargetIndex] != data)
             yield break;
 
         if (!initialized)
@@ -150,40 +156,35 @@ public class SpiderBehaviour : MonoBehaviour
             yield return new WaitForSeconds(startWaitTime);
         }
 
-        if (data.isDone)
-            yield break;
-
-        if (targetData[currentTargetIndex] != data)
-            yield break;
-
         isWaiting = false;
         data.overrideStep = false;
         isTalking = true;
 
-        float waitTime = data.waitTime;
-        if (data.voiceClip != null)
-            waitTime = data.voiceClip.length;
+        // Set wait time based on voice clip or specified wait time
+        float waitTime = data.voiceClip ? data.voiceClip.length : data.waitTime;
 
         if (!string.IsNullOrEmpty(data.speech))
             NarrativeSystem.Instance.SetText(data.speech, waitTime);
 
-        if (data.voiceClip != null)
+        if (data.voiceClip)
+        {
             NarrativeSystem.Instance.Play(data.voiceClip);
-
-        if (data.voiceClip != null)
-            yield return new WaitUntil(() => NarrativeSystem.Instance.IsPlaying == false);
+            yield return new WaitUntil(() => !NarrativeSystem.Instance.IsPlaying);
+        }
         else
+        {
             yield return new WaitForSeconds(waitTime);
+        }
 
         data.isDone = true;
         isMovementActive = true;
+        TriggerMechanicIfNeeded(currentTargetIndex);
 
+        // Check if there is a next target
         int nextIndex = currentTargetIndex + 1;
         if (nextIndex >= targetData.Count)
         {
-            isWaiting = true;
-            isTalking = false;
-            isMovementActive = false;
+            ResetStates();
             yield break;
         }
 
@@ -213,15 +214,25 @@ public class SpiderBehaviour : MonoBehaviour
         }
 
         currentTargetIndex = nextIndex;
+        ResetStates();
+
+        if (!nextData.target.TryGetComponent(out BoxCollider box))
+        {
+            StartCoroutine(HandleTargetReached(nextData));
+        }
+    }
+
+    void TriggerMechanicIfNeeded(int index)
+    {
+        if (targetData[index].activateMechanic != MechanicType.None)
+            MechanicsManager.Instance.Enable(targetData[index].activateMechanic);
+    }
+
+    void ResetStates()
+    {
         isWaiting = true;
         isTalking = false;
         isMovementActive = false;
-
-        if (targetData[nextIndex].target.TryGetComponent(out BoxCollider box) == false)
-        {
-            StartCoroutine(HandleTargetReached(targetData[nextIndex]));
-        }
-
     }
 
     void MoveTowards(Vector3 targetPos, float speed)
@@ -248,6 +259,7 @@ public class SpiderBehaviour : MonoBehaviour
         {
             foreach (var eyebrow in eyebrowsHappy)
                 eyebrow.SetActive(false);
+
             foreach (var eyebrow in eyebrowsAngry)
                 eyebrow.SetActive(true);
 
@@ -257,17 +269,14 @@ public class SpiderBehaviour : MonoBehaviour
         {
             foreach (var eyebrow in eyebrowsHappy)
                 eyebrow.SetActive(true);
+
             foreach (var eyebrow in eyebrowsAngry)
                 eyebrow.SetActive(false);
 
             if (emotion == Emotion.Happy)
-            {
                 smile.transform.localRotation = Quaternion.Euler(0, 0, 0);
-            }
             else if (emotion == Emotion.Sad)
-            {
                 smile.transform.localRotation = Quaternion.Euler(0, 0, 180);
-            }
         }
     }
 }

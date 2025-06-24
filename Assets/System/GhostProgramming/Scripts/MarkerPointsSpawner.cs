@@ -37,7 +37,7 @@ public class MarkerPointsSpawner : MonoBehaviour
 
     void Update()
     {
-        if (!active)
+        if (!active || !MechanicsManager.Instance.IsEnabled(MechanicType.MarkerSpawn))
             return;
 
         for (int i = 0; i < markerPoints.Count; i++)

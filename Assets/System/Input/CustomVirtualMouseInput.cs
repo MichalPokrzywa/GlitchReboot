@@ -240,7 +240,7 @@ namespace UnityEngine.InputSystem.UI
 
         protected void OnDisable()
         {
-            if (InputManager.IsInstanceShuttingDown)
+            if (!InputManager.IsInstanceShuttingDown)
                 InputManager.Instance.onControlsChanged -= OnControlsChanged;
 
             // Remove mouse device.

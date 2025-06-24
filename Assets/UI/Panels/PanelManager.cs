@@ -38,7 +38,7 @@ public class PanelManager : Singleton<PanelManager>
     void Update()
     {
         if (InputManager.Instance.IsPausePressed() && canBePaused
-            && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
+            && DependencyManager.sceneLoader.CurrentScene != Scene.MainMenu)
         {
             pausePanel.TogglePanel();
 
@@ -101,7 +101,7 @@ public class PanelManager : Singleton<PanelManager>
     void OnSceneLoaded(UnityEngine.SceneManagement.Scene arg0, LoadSceneMode arg1)
     {
         ResetPanels();
-        pausePanel.gameObject.SetActive(DependencyManager.sceneLoader.currentScene != Scene.MainMenu);
+        pausePanel.gameObject.SetActive(DependencyManager.sceneLoader.CurrentScene != Scene.MainMenu);
     }
 
     void RegisterToEvents()
