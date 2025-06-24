@@ -111,14 +111,14 @@ public class SpiderBehaviour : MonoBehaviour
         int dataIndex = targetData.IndexOf(data);
         if (dataIndex < currentTargetIndex)
         {
-            Debug.LogError($"Próbujesz wejœæ w {data.target.name} ale to juz stare dzieje");
+            //Debug.LogError($"Próbujesz wejœæ w {data.target.name} ale to juz stare dzieje");
             return;
         }
         TargetData current = targetData[currentTargetIndex];
 
         if (!current.isDone && !isInStepRoutine && current == data)
         {
-            Debug.LogError($"Lecimy z tematem");
+            //Debug.LogError($"Lecimy z tematem");
             StartCoroutine(HandleTargetReached(data));
             return;
         }
@@ -126,14 +126,14 @@ public class SpiderBehaviour : MonoBehaviour
         // If the current target is the same as the one entered, do nothing
         if (!current.isDone && isInStepRoutine && current == data)
         {
-            Debug.LogError($"W³aœnie to przetwarzam ({data.target.name}) wiec nie bede 2 raz");
+            //Debug.LogError($"W³aœnie to przetwarzam ({data.target.name}) wiec nie bede 2 raz");
             return;
         }
 
         // If the current target is the same as the one entered, and we are not in a step routine, start handling it
         if (current.isDone && !isInStepRoutine && current == data)
         {
-            Debug.LogError($"Podszed³eœ wiêc kontynuujê z dialogiem w {data.target.name}");
+            //Debug.LogError($"Podszed³eœ wiêc kontynuujê z dialogiem w {data.target.name}");
             StartCoroutine(HandleTargetReached(data));
             return;
         }
@@ -141,30 +141,12 @@ public class SpiderBehaviour : MonoBehaviour
         // If entered target is next and can override current target
         if (dataIndex > currentTargetIndex && data.overrideStep)
         {
-            Debug.LogError($"Ok mogê skipn¹æ do {data.target.name}");
+            //Debug.LogError($"Ok mogê skipn¹æ do {data.target.name}");
             StopAllCoroutines();
             isInStepRoutine = false;
             StartCoroutine(SkipToSteps(data));
             return;
         }
-
-        //if (!isTalking)
-        //{
-        //    Debug.LogError($"Normalny flow: {data.target.name}");
-        //    StartCoroutine(HandleTargetReached(data));
-        //}
-        //else if (data.overrideStep)
-        //{
-        //    TriggerMechanicIfNeeded(currentTargetIndex);
-        //    data.overrideStep = false;
-        //    StopAllCoroutines();
-        //    Debug.LogError($"Skip flow: {data.target.name}");
-        //    StartCoroutine(SkipToSteps(data));
-        //}
-        //else
-        //{
-        //    Debug.LogError($"Coœ posz³o nie tak flow: {data.target.name}");
-        //}
     }
 
     IEnumerator SkipToSteps(TargetData data)
@@ -188,7 +170,7 @@ public class SpiderBehaviour : MonoBehaviour
         yield return new WaitForSeconds(glitchDuration);
 
         glitchSwitcher.ApplyGlitch(false);
-        Debug.LogError($"Po skipie lecê normalnie z: {data.target.name}");
+        //Debug.LogError($"Po skipie lecê normalnie z: {data.target.name}");
 
         StartCoroutine(HandleTargetReached(data));
     }
@@ -210,7 +192,7 @@ public class SpiderBehaviour : MonoBehaviour
         // Set wait time based on voice clip or specified wait time
         float waitTime = data.voiceClip ? data.voiceClip.length : data.waitTime;
 
-        Debug.LogError("Mówiê kwestiê i czekam...");
+        //Debug.LogError("Mówiê kwestiê i czekam...");
 
         if (!string.IsNullOrEmpty(data.speech))
             NarrativeSystem.Instance.SetText(data.speech, waitTime);
@@ -232,12 +214,12 @@ public class SpiderBehaviour : MonoBehaviour
         int nextIndex = currentTargetIndex + 1;
         if (nextIndex >= targetData.Count)
         {
-            Debug.LogError($"Koniec przechadzek");
+            //Debug.LogError($"Koniec przechadzek");
             isInStepRoutine = false;
             yield break;
         }
 
-        Debug.LogError($"Skoñczy³em czekaæ, teraz idê dalej {targetData[nextIndex].target.name}");
+        //Debug.LogError($"Skoñczy³em czekaæ, teraz idê dalej {targetData[nextIndex].target.name}");
 
         currentTargetIndex = nextIndex;
         TargetData nextData = targetData[nextIndex];
@@ -256,7 +238,7 @@ public class SpiderBehaviour : MonoBehaviour
             yield return new WaitForSeconds(glitchDuration);
 
             glitchSwitcher.ApplyGlitch(false);
-            Debug.LogError($"Teleport do: {nextData.target.name}");
+            //Debug.LogError($"Teleport do: {nextData.target.name}");
         }
         // Walk towards the next target
         else
@@ -267,7 +249,7 @@ public class SpiderBehaviour : MonoBehaviour
                 RotateTowards(nextData.target.position);
                 yield return null;
             }
-            Debug.LogError($"Docz³apa³em do: {nextData.target.name}");
+            //Debug.LogError($"Docz³apa³em do: {nextData.target.name}");
             SetEmotion(nextData.emotion);
         }
 
@@ -279,7 +261,7 @@ public class SpiderBehaviour : MonoBehaviour
         if (!nextData.target.TryGetComponent(out BoxCollider box))
         {
             StartCoroutine(HandleTargetReached(nextData));
-            Debug.LogError($"Lecê NATYCHMIAST do: {nextData.target.name}");
+            //Debug.LogError($"Lecê NATYCHMIAST do: {nextData.target.name}");
         }
     }
 
