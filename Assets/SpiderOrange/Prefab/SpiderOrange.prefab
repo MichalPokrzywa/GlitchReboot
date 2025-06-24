@@ -488,7 +488,6 @@ GameObject:
   - component: {fileID: 95204184301125184}
   - component: {fileID: 7802181612315830020}
   - component: {fileID: 7823907810821697322}
-  - component: {fileID: 2352333432951827100}
   - component: {fileID: 1385848284579447673}
   - component: {fileID: 5782878653313444653}
   m_Layer: 0
@@ -620,22 +619,6 @@ MonoBehaviour:
   raycastRange: 4
   minBodyHeight: 0.03
   bodyHeightOffset: 0.1
---- !u!114 &2352333432951827100
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1537008473948126}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c0735acb340ec1e4c951a7059b6a6cb8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 1
-  inputAxis: Horizontal
-  useInput: 1
-  xLimits: {x: -Infinity, y: Infinity}
 --- !u!114 &1385848284579447673
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -661,10 +644,8 @@ MonoBehaviour:
   eyes: {fileID: 5782878653313444653}
   rotationSpeed: 5
   startWaitTime: 3
-  loop: 1
   targetData: []
   glitchDuration: 0.5
-  isTalking: 0
 --- !u!114 &5782878653313444653
 MonoBehaviour:
   m_ObjectHideFlags: 0

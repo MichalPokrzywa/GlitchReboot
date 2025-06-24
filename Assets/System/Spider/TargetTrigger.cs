@@ -4,7 +4,7 @@ public class TargetTrigger : MonoBehaviour
 {
     private SpiderBehaviour spider;
     private SpiderBehaviour.TargetData data;
-    private bool isEntered = false;
+
     public void Setup(SpiderBehaviour spider, SpiderBehaviour.TargetData data)
     {
         this.spider = spider;
@@ -13,9 +13,8 @@ public class TargetTrigger : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.CompareTag("Player") && !isEntered && (!spider.isTalking || data.overrideStep))
+        if (other.CompareTag("Player"))
         {
-            isEntered = true;
             spider.OnPlayerEnterTarget(data);
         }
     }
