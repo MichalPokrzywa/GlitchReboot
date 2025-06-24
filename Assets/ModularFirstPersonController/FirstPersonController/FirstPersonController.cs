@@ -211,6 +211,7 @@ public class FirstPersonController : MonoBehaviour
             rb.linearVelocity = Vector3.zero;
             enableJump = false;
             crosshair.gameObject.SetActive(false);
+            animator.SetFloat("Speed",0.0f);
         }
     }
 
