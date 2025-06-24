@@ -2400,7 +2400,7 @@ MonoBehaviour:
   entityNameSuffix: 
   entityTooltipInteraction: {fileID: 6163873940432924853}
   holdPoint: {fileID: 3878772361652324436}
-  rotationSpeed: 0.5
+  rotationSpeed: 270
 --- !u!114 &9202886219243994077
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2437,9 +2437,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIHoverObject: {fileID: 0}
   UIHoverText: {fileID: 0}
+  actionSuffix: 
+  mainCamera: {fileID: 0}
   floatDistanceX: 100
   floatDistanceY: 100
-  mainCamera: {fileID: 0}
 --- !u!1 &3748396559580559326
 GameObject:
   m_ObjectHideFlags: 0

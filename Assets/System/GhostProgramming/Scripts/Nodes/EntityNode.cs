@@ -90,7 +90,14 @@ namespace GhostProgramming
 
             RefreshDropdownIfChanged();
 
-            // check if selected object is active in hierarchy and set interactability accordingly
+            // check if current value is valid
+            if (dropdown.value < 0 || dropdown.value >= list.Count)
+            {
+                dropdown.value = 0;
+                dropdown.RefreshShownValue();
+            }
+
+            // check if selected object is active in hierarchy and set interact ability accordingly
             if (list[dropdown.value].gameObject.activeSelf)
             {
                 UpdateDropdownState(true);

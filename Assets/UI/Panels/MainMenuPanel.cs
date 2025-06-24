@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static InputManager;
 
 public class MainMenuPanel : MonoBehaviour
 {
@@ -15,6 +17,8 @@ public class MainMenuPanel : MonoBehaviour
     [SerializeField] GameObject creditsPanel;
 
     GameObject activePanel;
+    GameObject firstItemToSelect;
+    List<Button> allButtons = new List<Button>();
 
     void Start()
     {
@@ -24,7 +28,19 @@ public class MainMenuPanel : MonoBehaviour
         creditsButton?.onClick.AddListener(() => TogglePanel(creditsPanel));
         exitButton?.onClick.AddListener(ExitGame);
 
-        EventSystem.current.SetSelectedGameObject(playButton.gameObject);
+        allButtons = new List<Button>() { playButton, settingsButton, controlsButton, creditsButton, exitButton };
+
+        firstItemToSelect = playButton.gameObject;
+        UpdateEventSystemSelectedGO(InputManager.Instance.CurrentDevice);
+        InputManager.Instance.onControlsChanged += UpdateEventSystemSelectedGO;
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.MENU, true);
+
+        settingsPanel?.SetActive(false);
+        controlsPanel?.SetActive(false);
+        creditsPanel?.SetActive(false);
+
+        foreach (var button in allButtons)
+            button.interactable = true;
     }
 
     void OnDestroy()
@@ -34,11 +50,17 @@ public class MainMenuPanel : MonoBehaviour
         controlsButton?.onClick.RemoveAllListeners();
         creditsButton?.onClick.RemoveAllListeners();
         exitButton?.onClick.RemoveListener(ExitGame);
+
+        if (!InputManager.IsInstanceShuttingDown)
+            InputManager.Instance.onControlsChanged -= UpdateEventSystemSelectedGO;
     }
 
     void Play()
     {
         DependencyManager.sceneLoader.LoadScene(Scene.Tutorial);
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.MENU, null);
+        foreach (var button in allButtons)
+            button.interactable = false;
     }
 
     void TogglePanel(GameObject panelToShow)
@@ -58,6 +80,15 @@ public class MainMenuPanel : MonoBehaviour
         else
         {
             activePanel = null;
+        }
+    }
+
+    void UpdateEventSystemSelectedGO(InputManager.DeviceType deviceType)
+    {
+        if (deviceType == InputManager.DeviceType.Gamepad)
+        {
+            if (firstItemToSelect != null)
+                EventSystem.current.SetSelectedGameObject(firstItemToSelect);
         }
     }
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.SceneManagement;
 using static TipsPanel;
 
@@ -9,6 +10,8 @@ public class PanelManager : Singleton<PanelManager>
 {
     [SerializeField] TipsPanel tipsPanel;
     [SerializeField] PausePanel pausePanel;
+
+    public bool canBePaused = true;
 
     HashSet<eTipType> shownTips = new HashSet<eTipType>();
     Coroutine closeTipCoroutine;
@@ -34,9 +37,16 @@ public class PanelManager : Singleton<PanelManager>
 
     void Update()
     {
-        if (InputManager.Instance.IsPausePressed() && DependencyManager.sceneLoader.currentScene != Scene.MainMenu)
+        if (InputManager.Instance.IsPausePressed() && canBePaused
+            && DependencyManager.sceneLoader.CurrentScene != Scene.MainMenu)
         {
             pausePanel.TogglePanel();
+
+            var virtualMouse = FindFirstObjectByType<CustomVirtualMouseInput>(FindObjectsInactive.Include);
+            if (pausePanel.isOpen && virtualMouse != null)
+                virtualMouse.gameObject.SetActive(false);
+            else if (!pausePanel.isOpen && virtualMouse != null)
+                virtualMouse.gameObject.SetActive(true);
         }
     }
 
@@ -91,7 +101,7 @@ public class PanelManager : Singleton<PanelManager>
     void OnSceneLoaded(UnityEngine.SceneManagement.Scene arg0, LoadSceneMode arg1)
     {
         ResetPanels();
-        pausePanel.gameObject.SetActive(DependencyManager.sceneLoader.currentScene != Scene.MainMenu);
+        pausePanel.gameObject.SetActive(DependencyManager.sceneLoader.CurrentScene != Scene.MainMenu);
     }
 
     void RegisterToEvents()

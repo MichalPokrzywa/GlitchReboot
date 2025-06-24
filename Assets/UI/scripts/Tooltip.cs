@@ -16,7 +16,7 @@ public class Tooltip : MonoBehaviour
     {
         if (target == null)
         {
-            target = FindObjectOfType<FirstPersonController>();
+            target = FindFirstObjectByType<FirstPersonController>();
             if (target == null)
                 Debug.LogWarning("Tooltip: No FirstPersonController found in the scene.");
         }

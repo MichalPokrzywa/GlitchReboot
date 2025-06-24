@@ -171,6 +171,7 @@ Transform:
   - {fileID: 1749089275}
   - {fileID: 1154075603}
   - {fileID: 1172352008}
+  - {fileID: 1006041802}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &709559897
@@ -506,6 +507,51 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &1006041801
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1006041802}
+  - component: {fileID: 1006041803}
+  m_Layer: 0
+  m_Name: MechanicsManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1006041802
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006041801}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 468737653}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1006041803
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1006041801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65890c92e96eb7e41806d6c8d10acb3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  config: {fileID: 11400000, guid: 0883c1b82d161b54c9dd672bd96bf92c, type: 2}
 --- !u!1 &1154075602
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,7 +799,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ec7184a9b9c0814a9100e591a652c0e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentScene: 0
   loadingCanvas: {fileID: 1977780434}
   sceneLoaded:
     m_PersistentCalls:
@@ -876,6 +921,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tipsPanel: {fileID: 709559900}
   pausePanel: {fileID: 709559899}
+  canBePaused: 1
 --- !u!1 &1843481127
 GameObject:
   m_ObjectHideFlags: 0
