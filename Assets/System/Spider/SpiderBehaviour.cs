@@ -46,12 +46,11 @@ public class SpiderBehaviour : MonoBehaviour
     [Header("Glitch Settings")]
     [SerializeField] float glitchDuration = 0.5f;  // seconds of glitch effect
 
-    public bool isTalking = false;
-
     int currentTargetIndex = 0;
-    bool isWaiting = false;
+
     bool initialized = false;
-    bool isMovementActive = false;
+    bool isCurrentlyMoving = false;
+    bool isInStepRoutine = false; // HandleTargetReached() is running
 
     const float targetDistThreshold = 0.5f;
     const float spiderSpeed = 1.5f;
@@ -67,7 +66,6 @@ public class SpiderBehaviour : MonoBehaviour
         if (targetData.Count == 0)
         {
             Debug.LogWarning("No targets assigned to SpiderBehaviour. Staying in place");
-            isWaiting = true;
             return;
         }
 
@@ -100,7 +98,8 @@ public class SpiderBehaviour : MonoBehaviour
 
     void Update()
     {
-        if ((isWaiting || isTalking) && !isMovementActive)
+        // Rotate towards player if not moving
+        if (!isCurrentlyMoving)
         {
             RotateTowards(player.transform.position);
             return;
@@ -109,46 +108,80 @@ public class SpiderBehaviour : MonoBehaviour
 
     public void OnPlayerEnterTarget(TargetData data)
     {
-        if (data.overrideStep)
+        int dataIndex = targetData.IndexOf(data);
+        if (dataIndex < currentTargetIndex)
         {
-            TriggerMechanicIfNeeded(currentTargetIndex);
-            data.overrideStep = false;
-            StopAllCoroutines();
-            StartCoroutine(SkipToSteps(data));
+            //Debug.LogError($"Próbujesz wejœæ w {data.target.name} ale to juz stare dzieje");
+            return;
         }
-        else if (!isTalking)
+        TargetData current = targetData[currentTargetIndex];
+
+        if (!current.isDone && !isInStepRoutine && current == data)
         {
+            //Debug.LogError($"Lecimy z tematem");
             StartCoroutine(HandleTargetReached(data));
+            return;
+        }
+
+        // If the current target is the same as the one entered, do nothing
+        if (!current.isDone && isInStepRoutine && current == data)
+        {
+            //Debug.LogError($"W³aœnie to przetwarzam ({data.target.name}) wiec nie bede 2 raz");
+            return;
+        }
+
+        // If the current target is the same as the one entered, and we are not in a step routine, start handling it
+        if (current.isDone && !isInStepRoutine && current == data)
+        {
+            //Debug.LogError($"Podszed³eœ wiêc kontynuujê z dialogiem w {data.target.name}");
+            StartCoroutine(HandleTargetReached(data));
+            return;
+        }
+
+        // If entered target is next and can override current target
+        if (dataIndex > currentTargetIndex && data.overrideStep)
+        {
+            //Debug.LogError($"Ok mogê skipn¹æ do {data.target.name}");
+            StopAllCoroutines();
+            isInStepRoutine = false;
+            StartCoroutine(SkipToSteps(data));
+            return;
         }
     }
 
     IEnumerator SkipToSteps(TargetData data)
     {
         currentTargetIndex = targetData.FindIndex(td => td == data);
-        for (int i = currentTargetIndex-1; i > 0; i--)
+        for (int i = currentTargetIndex - 1; i > 0; i--)
         {
+            if (targetData[i].isDone)
+                continue;
+
             targetData[i].isDone = true;
             TriggerMechanicIfNeeded(i);
         }
 
-        isWaiting = true;
-        isTalking = false;
-        isMovementActive = false;
         glitchSwitcher.ApplyGlitch(true);
         spiderAnim.enabled = false;
         transform.position = data.target.position;
         SetEmotion(data.emotion);
         spiderAnim.enabled = true;
+
         yield return new WaitForSeconds(glitchDuration);
+
         glitchSwitcher.ApplyGlitch(false);
+        //Debug.LogError($"Po skipie lecê normalnie z: {data.target.name}");
+
         StartCoroutine(HandleTargetReached(data));
     }
 
     IEnumerator HandleTargetReached(TargetData data)
     {
         // Check if the data is valid and not already done
-        if (data == null || data.isDone || targetData[currentTargetIndex] != data)
+        if (data == null || data.isDone || targetData[currentTargetIndex] != data || isInStepRoutine)
             yield break;
+
+        isInStepRoutine = true;
 
         if (!initialized)
         {
@@ -156,12 +189,10 @@ public class SpiderBehaviour : MonoBehaviour
             yield return new WaitForSeconds(startWaitTime);
         }
 
-        isWaiting = false;
-        data.overrideStep = false;
-        isTalking = true;
-
         // Set wait time based on voice clip or specified wait time
         float waitTime = data.voiceClip ? data.voiceClip.length : data.waitTime;
+
+        //Debug.LogError("Mówiê kwestiê i czekam...");
 
         if (!string.IsNullOrEmpty(data.speech))
             NarrativeSystem.Instance.SetText(data.speech, waitTime);
@@ -177,48 +208,60 @@ public class SpiderBehaviour : MonoBehaviour
         }
 
         data.isDone = true;
-        isMovementActive = true;
         TriggerMechanicIfNeeded(currentTargetIndex);
 
         // Check if there is a next target
         int nextIndex = currentTargetIndex + 1;
         if (nextIndex >= targetData.Count)
         {
-            ResetStates();
+            //Debug.LogError($"Koniec przechadzek");
+            isInStepRoutine = false;
             yield break;
         }
 
-        TargetData nextData = targetData[nextIndex];
+        //Debug.LogError($"Skoñczy³em czekaæ, teraz idê dalej {targetData[nextIndex].target.name}");
 
+        currentTargetIndex = nextIndex;
+        TargetData nextData = targetData[nextIndex];
+        isCurrentlyMoving = true;
+
+        // Teleport to the next target
         if (data.teleportToNext)
         {
             glitchSwitcher.ApplyGlitch(true);
             yield return new WaitForSeconds(glitchDuration);
+
             spiderAnim.enabled = false;
             transform.position = nextData.target.position;
             SetEmotion(nextData.emotion);
             spiderAnim.enabled = true;
             yield return new WaitForSeconds(glitchDuration);
+
             glitchSwitcher.ApplyGlitch(false);
+            //Debug.LogError($"Teleport do: {nextData.target.name}");
         }
+        // Walk towards the next target
         else
         {
-            // Walk towards the next target
             while (Vector3.Distance(transform.position, nextData.target.position) > targetDistThreshold)
             {
                 MoveTowards(nextData.target.position, spiderSpeed);
                 RotateTowards(nextData.target.position);
                 yield return null;
             }
+            //Debug.LogError($"Docz³apa³em do: {nextData.target.name}");
             SetEmotion(nextData.emotion);
         }
 
         currentTargetIndex = nextIndex;
-        ResetStates();
+        isInStepRoutine = false;
+        isCurrentlyMoving = false;
 
+        // If nextTarget has no BoxCollider, go there immediately
         if (!nextData.target.TryGetComponent(out BoxCollider box))
         {
             StartCoroutine(HandleTargetReached(nextData));
+            //Debug.LogError($"Lecê NATYCHMIAST do: {nextData.target.name}");
         }
     }
 
@@ -226,13 +269,6 @@ public class SpiderBehaviour : MonoBehaviour
     {
         if (targetData[index].activateMechanic != MechanicType.None)
             MechanicsManager.Instance.Enable(targetData[index].activateMechanic);
-    }
-
-    void ResetStates()
-    {
-        isWaiting = true;
-        isTalking = false;
-        isMovementActive = false;
     }
 
     void MoveTowards(Vector3 targetPos, float speed)

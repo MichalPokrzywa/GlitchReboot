@@ -83,7 +83,6 @@ public class TabletInteractor : MonoBehaviour
             .OnStart(() => {
                 firstPersonController.StopMovement();
                 InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.TABLET, true);
-                firstPersonController.Zoom(false);
                 markerSpawner.active = false;
                 interactor.canInteract = false;
                 interactor.HideLastUI();
