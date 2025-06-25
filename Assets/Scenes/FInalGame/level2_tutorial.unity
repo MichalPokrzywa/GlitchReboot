@@ -17943,36 +17943,19 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1537008473948126, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 762476728}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
---- !u!1 &762476727 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1537008473948126, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+--- !u!114 &762476728 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8137516803866713442, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
   m_PrefabInstance: {fileID: 762476726}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &762476728
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 762476727}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dec6a22c87a5cd54191f225e79bfa5da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  glitchMaterial: {fileID: -876546973899608171, guid: 69bf0ea30a1c7de47a008176c77763f3, type: 3}
-  glitchOnStart: 0
-  strenght: -0.15
-  checkerBoxes: 1
-  glitchColor: 1
-  setInterval: 1
-  baseOnInterval: 1
-  baseOffInterval: 1
 --- !u!54 &768514467
 Rigidbody:
   m_ObjectHideFlags: 0
