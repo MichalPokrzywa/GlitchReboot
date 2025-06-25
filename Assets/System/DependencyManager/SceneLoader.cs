@@ -53,9 +53,23 @@ public class SceneLoader : MonoBehaviour
 
         TVCloseRenderFeature.Instance.PlayCloseEffect(2f, () =>
         {
-            loadingCanvas.ShowLoadingCanvas();
-            StartCoroutine(LoadSceneAsyncWithUI());
+            if (CurrentScene == Scene.Tutorial)
+            {
+                loadingCanvas.ShowLoadingCanvasWithEpilepsyInfo();
+                StartCoroutine(DelayedStartSceneLoad(3f));
+            }
+            else
+            {
+                loadingCanvas.ShowLoadingCanvas();
+                StartCoroutine(LoadSceneAsyncWithUI());
+            }
         });
+    }
+
+    private IEnumerator DelayedStartSceneLoad(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StartCoroutine(LoadSceneAsyncWithUI());
     }
 
     private IEnumerator LoadSceneAsyncWithUI()

@@ -22,6 +22,12 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
     {
         startColor = textDisplay.color;
         audioSource = DependencyManager.audioManager.soundsAudioSource;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
     }
 
     public void SetText(string text, float displayTimeInSeconds = 3f, Color? color = null)
@@ -112,6 +118,11 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
         SetAlpha(0f);
         textDisplay.text = "";
         runningCoroutine = null;
+    }
+
+    void OnSceneUnloaded(UnityEngine.SceneManagement.Scene arg0)
+    {
+        ResetNarrative();
     }
 
     public void ResetNarrative()

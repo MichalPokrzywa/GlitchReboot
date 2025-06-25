@@ -83,7 +83,6 @@ public class PanelManager : Singleton<PanelManager>
     public void ReturnToMenu()
     {
         DependencyManager.sceneLoader.LoadScene(Scene.MainMenu);
-        NarrativeSystem.Instance.ResetNarrative();
     }
 
     void EnsureEventSystemRef()
