@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using DG.Tweening;
 
 public class Level_Train_Maze : PuzzleBase
 {
@@ -7,7 +8,7 @@ public class Level_Train_Maze : PuzzleBase
     public GameObject waypoint;
 
     public GameObject mazeParrent;
-    public float lowerBy = 3.0f;
+    public float lowerBy = 3.2f;
 
     private bool isRed;
     private Vector3 mazeBasicTransform;
@@ -19,15 +20,12 @@ public class Level_Train_Maze : PuzzleBase
     }
     public override void DoTerminalCode()
     {
-        Debug.Log("This is Empty");
         isRed = GetVariableValue<bool>("isRed");
-        if (isRed)
-        {
-            mazeParrent.transform.position -= new Vector3(0, lowerBy, 0);
-        }
-        if (!isRed)
-        {
-            mazeParrent.transform.position = mazeBasicTransform;
-        }
+
+        float targetY = isRed ? mazeBasicTransform.y : mazeBasicTransform.y - lowerBy;
+
+        mazeParrent.transform.DOMoveY(targetY, 0.5f) // czas animacji: 0.5s
+            .SetEase(Ease.InOutSine);
     }
+
 }
