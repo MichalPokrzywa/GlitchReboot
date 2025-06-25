@@ -8,6 +8,8 @@ public class LoadingCanvas : MonoBehaviour
     [SerializeField] private GameObject background;
     [SerializeField] private GameObject loadingText;
     [SerializeField] private Transform loadingSpinner;
+    [SerializeField] GameObject epilepsyInfoPanel;
+
     private Tween spinnerTween;
 
     public void ShowLoadingCanvas()
@@ -25,11 +27,18 @@ public class LoadingCanvas : MonoBehaviour
             .SetEase(Ease.Linear);
     }
 
+    public void ShowLoadingCanvasWithEpilepsyInfo()
+    {
+        ShowLoadingCanvas();
+        epilepsyInfoPanel.SetActive(true);
+    }
+
     public void HideLoadingCanvas()
     {
         spinnerTween?.Kill();
         loadingSpinner.gameObject.SetActive(false);
         loadingText.SetActive(false);
         background.SetActive(false);
+        epilepsyInfoPanel.SetActive(false);
     }
 }

@@ -16,17 +16,21 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
     AudioSource audioSource;
     Color startColor;
 
-    const float constDisplayTime = 3f;
-
-    public bool IsPlaying => audioSource.isPlaying;
+    public bool IsPlaying => audioSource.isPlaying || AudioListener.pause == true;
 
     void Start()
     {
         startColor = textDisplay.color;
         audioSource = DependencyManager.audioManager.soundsAudioSource;
+        SceneManager.sceneUnloaded += OnSceneUnloaded;
     }
 
-    public void SetText(string text, float additionalDisplayTime = 0f, Color? color = null)
+    void OnDestroy()
+    {
+        SceneManager.sceneUnloaded -= OnSceneUnloaded;
+    }
+
+    public void SetText(string text, float displayTimeInSeconds = 3f, Color? color = null)
     {
         // Stop any in-progress type/fade
         if (runningCoroutine != null)
@@ -37,17 +41,15 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
         SetAlpha(1f);
 
         // Start the new typewriter+fade coroutine
-        runningCoroutine = StartCoroutine(TypeAndFade(text, typeSpeed, constDisplayTime + additionalDisplayTime));
+        runningCoroutine = StartCoroutine(TypeAndFade(text, typeSpeed, displayTimeInSeconds));
     }
 
-    public void Play(Scene scene, int id)
+    public void Play(AudioClip clip)
     {
-        var audio = DependencyManager.audioManager.audioStorage.GetSpiderVoiceOver(scene, id - 1);
-
         if (audioSource.isPlaying)
             audioSource.Stop();
 
-        audioSource.clip = audio;
+        audioSource.clip = clip;
         audioSource.Play();
     }
 
@@ -116,6 +118,11 @@ public class NarrativeSystem : Singleton<NarrativeSystem>
         SetAlpha(0f);
         textDisplay.text = "";
         runningCoroutine = null;
+    }
+
+    void OnSceneUnloaded(UnityEngine.SceneManagement.Scene arg0)
+    {
+        ResetNarrative();
     }
 
     public void ResetNarrative()

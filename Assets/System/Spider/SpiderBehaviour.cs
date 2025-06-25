@@ -16,25 +16,17 @@ public class SpiderBehaviour : MonoBehaviour
     public class TargetData
     {
         public Transform target;
-        [Range(0, 1.5f)]
-        public float speed = 1f;
-        [Range(0, 15f)]
-        public int animSmoothness;
-        [Range(0, 1f)]
-        public float minBodyHeight;
-
-        public float textDisplayAdditionalTime = 0f;
-        public float waitTimeAtWaypoint = 0f;
         public Emotion emotion;
-        [TextArea(5,10)]
-        public string speech;
-
-        public Scene scene;
-        public int voiceKey;
+        public AudioClip voiceClip;
+        [Header("Reaching this target results in activating a game mechanic")]
+        public MechanicType activateMechanic;
         public bool teleportToNext = false;
-        [HideInInspector]
-        public bool isDone = false;
         public bool overrideStep = false;
+        [Header("If audio clip not included, use this variable")]
+        public float waitTime = 0f;
+        [TextArea(5, 10)] public string speech;
+
+        [HideInInspector] public bool isDone = false;
     }
 
     [Header("References")]
@@ -49,32 +41,31 @@ public class SpiderBehaviour : MonoBehaviour
     [Header("Movement Settings")]
     [SerializeField] float rotationSpeed = 5f;
     [SerializeField] float startWaitTime = 3f;
-    [SerializeField] bool loop = false;
     [SerializeField] List<TargetData> targetData = new List<TargetData>();
 
     [Header("Glitch Settings")]
     [SerializeField] float glitchDuration = 0.5f;  // seconds of glitch effect
 
     int currentTargetIndex = 0;
-    bool playAtStart = false;
-    bool isWaiting = false;
-    bool initialized = false;
-    bool isMovementActive = false;
-    public bool isTalking = false;
 
-    const float targetDistThreshold = 0.01f;
+    bool initialized = false;
+    bool isCurrentlyMoving = false;
+    bool isInStepRoutine = false; // HandleTargetReached() is running
+
+    const float targetDistThreshold = 0.5f;
+    const float spiderSpeed = 1.5f;
+
     void Start()
     {
         if (player == null)
-            player = FindObjectOfType<FirstPersonController>().gameObject;
+            player = FindFirstObjectByType<FirstPersonController>().gameObject;
 
         if (eyes.target == null)
             eyes.target = player.transform;
 
         if (targetData.Count == 0)
         {
-            Debug.LogWarning("No targets assigned to SpiderBehaviour. Staying in Place");
-            isWaiting = true;
+            Debug.LogWarning("No targets assigned to SpiderBehaviour. Staying in place");
             return;
         }
 
@@ -82,7 +73,6 @@ public class SpiderBehaviour : MonoBehaviour
         currentTargetIndex = 0;
         Transform first = targetData[0].target;
         transform.position = first.position;
-        SetAnimationData(targetData[0]);
         SetEmotion(targetData[0].emotion);
 
         // Ensure glitch is off initially
@@ -105,9 +95,11 @@ public class SpiderBehaviour : MonoBehaviour
             trigger.Setup(this, data);
         }
     }
+
     void Update()
     {
-        if ((isWaiting || isTalking) && !isMovementActive)
+        // Rotate towards player if not moving
+        if (!isCurrentlyMoving)
         {
             RotateTowards(player.transform.position);
             return;
@@ -116,118 +108,173 @@ public class SpiderBehaviour : MonoBehaviour
 
     public void OnPlayerEnterTarget(TargetData data)
     {
-        if (!isTalking)
-            StartCoroutine(HandleTargetReached(data));
-        else if (data.overrideStep)
+        int dataIndex = targetData.IndexOf(data);
+        if (dataIndex < currentTargetIndex)
         {
-            data.overrideStep = false;
+            //Debug.LogError($"Próbujesz wejœæ w {data.target.name} ale to juz stare dzieje");
+            return;
+        }
+        TargetData current = targetData[currentTargetIndex];
+
+        if (!current.isDone && !isInStepRoutine && current == data)
+        {
+            //Debug.LogError($"Lecimy z tematem");
+            StartCoroutine(HandleTargetReached(data));
+            return;
+        }
+
+        // If the current target is the same as the one entered, do nothing
+        if (!current.isDone && isInStepRoutine && current == data)
+        {
+            //Debug.LogError($"W³aœnie to przetwarzam ({data.target.name}) wiec nie bede 2 raz");
+            return;
+        }
+
+        // If the current target is the same as the one entered, and we are not in a step routine, start handling it
+        if (current.isDone && !isInStepRoutine && current == data)
+        {
+            //Debug.LogError($"Podszed³eœ wiêc kontynuujê z dialogiem w {data.target.name}");
+            StartCoroutine(HandleTargetReached(data));
+            return;
+        }
+
+        // If entered target is next and can override current target
+        if (dataIndex > currentTargetIndex && data.overrideStep)
+        {
+            //Debug.LogError($"Ok mogê skipn¹æ do {data.target.name}");
             StopAllCoroutines();
+            isInStepRoutine = false;
             StartCoroutine(SkipToSteps(data));
+            return;
         }
     }
 
     IEnumerator SkipToSteps(TargetData data)
     {
         currentTargetIndex = targetData.FindIndex(td => td == data);
-        for (int i = currentTargetIndex-1; i > 0; i--)
+        for (int i = currentTargetIndex - 1; i > 0; i--)
         {
+            if (targetData[i].isDone)
+                continue;
+
             targetData[i].isDone = true;
+            TriggerMechanicIfNeeded(i);
         }
-        isWaiting = true;
-        isTalking = false;
-        isMovementActive = false;
+
         glitchSwitcher.ApplyGlitch(true);
         spiderAnim.enabled = false;
         transform.position = data.target.position;
-        SetAnimationData(data);
         SetEmotion(data.emotion);
         spiderAnim.enabled = true;
+
         yield return new WaitForSeconds(glitchDuration);
+
         glitchSwitcher.ApplyGlitch(false);
+        //Debug.LogError($"Po skipie lecê normalnie z: {data.target.name}");
+
         StartCoroutine(HandleTargetReached(data));
     }
 
     IEnumerator HandleTargetReached(TargetData data)
     {
+        // Check if the data is valid and not already done
+        if (data == null || data.isDone || targetData[currentTargetIndex] != data || isInStepRoutine)
+            yield break;
+
+        isInStepRoutine = true;
+
         if (!initialized)
         {
             initialized = true;
             yield return new WaitForSeconds(startWaitTime);
         }
 
-        if(data.isDone)
-            yield break;
-        if(targetData[currentTargetIndex] != data)
-            yield break;
-        isWaiting = false;
-        data.overrideStep = false;
-        isTalking = true;
-        if (!string.IsNullOrEmpty(data.speech))
-            NarrativeSystem.Instance.SetText(data.speech, data.textDisplayAdditionalTime);
-        if (data.voiceKey != 0)
-            NarrativeSystem.Instance.Play(data.scene, data.voiceKey);
+        // Set wait time based on voice clip or specified wait time
+        float waitTime = data.voiceClip ? data.voiceClip.length : data.waitTime;
+        float textDisplayTimeFactor = 0.5f;
 
-        yield return new WaitForSeconds(data.waitTimeAtWaypoint);
+        //Debug.LogError("Mówiê kwestiê i czekam...");
+
+        if (!string.IsNullOrEmpty(data.speech))
+            NarrativeSystem.Instance.SetText(data.speech, waitTime * textDisplayTimeFactor);
+
+        if (data.voiceClip)
+        {
+            NarrativeSystem.Instance.Play(data.voiceClip);
+            yield return new WaitUntil(() => !NarrativeSystem.Instance.IsPlaying);
+        }
+        else
+        {
+            yield return new WaitForSeconds(waitTime);
+        }
 
         data.isDone = true;
-        isMovementActive = true;
+        TriggerMechanicIfNeeded(currentTargetIndex);
 
+        // Check if there is a next target
         int nextIndex = currentTargetIndex + 1;
         if (nextIndex >= targetData.Count)
         {
-            if (loop) nextIndex = 0;
-            else
-            {
-                isWaiting = true;
-                isTalking = false;
-                isMovementActive = false;
-                yield break;
-            }
+            //Debug.LogError($"Koniec przechadzek");
+            isInStepRoutine = false;
+            yield break;
         }
 
-        TargetData nextData = targetData[nextIndex];
+        //Debug.LogError($"Skoñczy³em czekaæ, teraz idê dalej {targetData[nextIndex].target.name}");
 
+        currentTargetIndex = nextIndex;
+        TargetData nextData = targetData[nextIndex];
+        isCurrentlyMoving = true;
+
+        // Teleport to the next target
         if (data.teleportToNext)
         {
             glitchSwitcher.ApplyGlitch(true);
             yield return new WaitForSeconds(glitchDuration);
+
             spiderAnim.enabled = false;
             transform.position = nextData.target.position;
-            SetAnimationData(nextData);
             SetEmotion(nextData.emotion);
             spiderAnim.enabled = true;
             yield return new WaitForSeconds(glitchDuration);
+
             glitchSwitcher.ApplyGlitch(false);
+            //Debug.LogError($"Teleport do: {nextData.target.name}");
         }
+        // Walk towards the next target
         else
         {
-            // Walk towards the next target
-            while (Vector3.Distance(transform.position, nextData.target.position) > targetDistThreshold * 50f)
+            while (Vector3.Distance(transform.position, nextData.target.position) > targetDistThreshold)
             {
-                MoveTowards(nextData.target.position, nextData.speed);
+                MoveTowards(nextData.target.position, spiderSpeed);
                 RotateTowards(nextData.target.position);
-
                 yield return null;
             }
-
-            SetAnimationData(nextData);
+            //Debug.LogError($"Docz³apa³em do: {nextData.target.name}");
             SetEmotion(nextData.emotion);
         }
 
         currentTargetIndex = nextIndex;
-        isWaiting = true;
-        isTalking = false;
-        isMovementActive = false;
-        if (targetData[nextIndex].target.TryGetComponent(out BoxCollider box) == false)
-        {
-            StartCoroutine(HandleTargetReached(targetData[nextIndex]));
-        }
+        isInStepRoutine = false;
+        isCurrentlyMoving = false;
 
+        // If nextTarget has no BoxCollider, go there immediately
+        if (!nextData.target.TryGetComponent(out BoxCollider box))
+        {
+            StartCoroutine(HandleTargetReached(nextData));
+            //Debug.LogError($"Lecê NATYCHMIAST do: {nextData.target.name}");
+        }
+    }
+
+    void TriggerMechanicIfNeeded(int index)
+    {
+        if (targetData[index].activateMechanic != MechanicType.None)
+            MechanicsManager.Instance.Enable(targetData[index].activateMechanic);
     }
 
     void MoveTowards(Vector3 targetPos, float speed)
     {
-        float step = speed * Time.deltaTime;
+        float step = spiderSpeed * Time.deltaTime;
         transform.position = Vector3.MoveTowards(transform.position, targetPos, step);
     }
 
@@ -249,6 +296,7 @@ public class SpiderBehaviour : MonoBehaviour
         {
             foreach (var eyebrow in eyebrowsHappy)
                 eyebrow.SetActive(false);
+
             foreach (var eyebrow in eyebrowsAngry)
                 eyebrow.SetActive(true);
 
@@ -258,23 +306,14 @@ public class SpiderBehaviour : MonoBehaviour
         {
             foreach (var eyebrow in eyebrowsHappy)
                 eyebrow.SetActive(true);
+
             foreach (var eyebrow in eyebrowsAngry)
                 eyebrow.SetActive(false);
 
             if (emotion == Emotion.Happy)
-            {
                 smile.transform.localRotation = Quaternion.Euler(0, 0, 0);
-            }
             else if (emotion == Emotion.Sad)
-            {
                 smile.transform.localRotation = Quaternion.Euler(0, 0, 180);
-            }
         }
-    }
-
-    void SetAnimationData(TargetData data)
-    {
-        spiderAnim.smoothness = data.animSmoothness;
-        spiderAnim.minBodyHeight = data.minBodyHeight;
     }
 }

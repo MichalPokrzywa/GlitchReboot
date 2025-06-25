@@ -6,18 +6,36 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    public Scene currentScene;
     public LoadingCanvas loadingCanvas;
     public UnityEvent sceneLoaded;
+
+    public Scene CurrentScene
+    {
+        get
+        {
+            if (currentScene == null)
+            {
+                var currScene = SceneManager.GetActiveScene();
+                currentScene = (Scene)currScene.buildIndex;
+            }
+
+            return currentScene.Value;
+        }
+        set => currentScene = value;
+    }
+
+    Scene? currentScene;
+
     public void LoadScene(Scene scene)
     {
         currentScene = scene;
+        Debug.Log($"SCENE: {CurrentScene}");
         StartCoroutine(PlayTransitionAndLoad());
     }
 
     public void LoadSceneAdditive(Scene scene)
     {
-        SceneManager.LoadSceneAsync((int)currentScene,LoadSceneMode.Additive);
+        SceneManager.LoadSceneAsync((int)CurrentScene,LoadSceneMode.Additive);
     }
 
     public void UnloadSceneAdditive(Scene scene)
@@ -35,14 +53,28 @@ public class SceneLoader : MonoBehaviour
 
         TVCloseRenderFeature.Instance.PlayCloseEffect(2f, () =>
         {
-            loadingCanvas.ShowLoadingCanvas();
-            StartCoroutine(LoadSceneAsyncWithUI());
+            if (CurrentScene == Scene.Tutorial)
+            {
+                loadingCanvas.ShowLoadingCanvasWithEpilepsyInfo();
+                StartCoroutine(DelayedStartSceneLoad(3f));
+            }
+            else
+            {
+                loadingCanvas.ShowLoadingCanvas();
+                StartCoroutine(LoadSceneAsyncWithUI());
+            }
         });
+    }
+
+    private IEnumerator DelayedStartSceneLoad(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        StartCoroutine(LoadSceneAsyncWithUI());
     }
 
     private IEnumerator LoadSceneAsyncWithUI()
     {
-        AsyncOperation operation = SceneManager.LoadSceneAsync((int)currentScene);
+        AsyncOperation operation = SceneManager.LoadSceneAsync((int)CurrentScene);
         while (!operation.isDone)
         {
             float progress = Mathf.Clamp01(operation.progress / 0.9f);
@@ -56,7 +88,6 @@ public class SceneLoader : MonoBehaviour
         loadingCanvas.HideLoadingCanvas();
         TVCloseRenderFeature.Instance.PlayOpenEffect(2f);
     }
-
 }
 
 public enum Scene
@@ -68,7 +99,7 @@ public enum Scene
     Level2 = 4,
     Level3Ghost = 5,
     level4Chess = 6,
-    None = 100
+    levelCore = 7,
 
     //Add another scene like this ^
 }

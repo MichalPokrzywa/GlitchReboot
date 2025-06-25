@@ -90,9 +90,11 @@ public class Interactor : MonoBehaviour
         if (!InputManager.Instance.IsInteractPressed() || hit.distance > InteractionRange)
             return;
 
+        bool canPickup = heldObject == null && animator.GetBool("CanPickup") &&
+                         MechanicsManager.Instance.IsEnabled(MechanicType.PickUp);
+
         // logic for pickup object
-        if (interactObj is PickUpObjectInteraction pickup
-            && pickup.IsDropped && heldObject == null && animator.GetBool("CanPickup"))
+        if (interactObj is PickUpObjectInteraction pickup && canPickup)
         {
             gameObject.layer = LayerMask.NameToLayer("PlayerWithObject");
             pickup.MoveToHand(handPoint, holdPoint, this);
@@ -110,7 +112,7 @@ public class Interactor : MonoBehaviour
     // ugly garbage, please fix me some day
     void HandleHoverUI(IInteractable interactObj, RaycastHit hit)
     {
-        bool canPickup = animator.GetBool("CanPickup");
+        bool canPickup = animator.GetBool("CanPickup") && MechanicsManager.Instance.IsEnabled(MechanicType.PickUp);
         ClearLastInteractor();
 
         switch (interactObj)
@@ -135,7 +137,9 @@ public class Interactor : MonoBehaviour
                 break;
 
             default:
-                if (hit.distance <= InteractionRange)
+                if (interactObj is not EntityTooltipInteraction
+                    && interactObj is not PickUpObjectInteraction
+                    && hit.distance <= InteractionRange)
                 {
                     interactObj.ShowUI();
                     lastInteractor = interactObj;

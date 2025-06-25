@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7698221387988736933}
   - component: {fileID: 2923549808789550066}
   m_Layer: 5
-  m_Name: Control (9)
+  m_Name: Pause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -148,7 +148,7 @@ GameObject:
   - component: {fileID: 8775793789682159109}
   - component: {fileID: 2498189570261180066}
   m_Layer: 5
-  m_Name: Control (4)
+  m_Name: Throw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 4190702561116181897}
   - component: {fileID: 4779992521638198917}
   m_Layer: 5
-  m_Name: Control (3)
+  m_Name: Interact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 1949533171992352112}
   - component: {fileID: 1422360860078822963}
   m_Layer: 5
-  m_Name: Key (2)
+  m_Name: Sprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -593,7 +593,7 @@ GameObject:
   - component: {fileID: 693455192756991428}
   - component: {fileID: 156596999986803525}
   m_Layer: 5
-  m_Name: Control (1)
+  m_Name: Jump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -753,7 +753,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -30, y: -45}
+  m_AnchoredPosition: {x: -60, y: -45}
   m_SizeDelta: {x: 470, y: -150}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!1 &2318839892813708681
@@ -904,7 +904,7 @@ GameObject:
   - component: {fileID: 6918300402094532881}
   - component: {fileID: 7163172514673473993}
   m_Layer: 5
-  m_Name: Key (7)
+  m_Name: Pause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1040,7 +1040,7 @@ GameObject:
   - component: {fileID: 4189553374503508515}
   - component: {fileID: 6213359262709911637}
   m_Layer: 5
-  m_Name: Key
+  m_Name: Crouch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1176,7 +1176,7 @@ GameObject:
   - component: {fileID: 7924575861543015643}
   - component: {fileID: 537876073613403695}
   m_Layer: 5
-  m_Name: Control (5)
+  m_Name: Zoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1329,17 +1329,17 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1238681206880678167}
-  - {fileID: 6904099543704040038}
-  - {fileID: 8591930557475520040}
+  - {fileID: 6971918661573263001}
   - {fileID: 4308372716098262509}
-  - {fileID: 8421393025790571742}
+  - {fileID: 1238681206880678167}
+  - {fileID: 1695609339200139989}
+  - {fileID: 6904099543704040038}
   - {fileID: 6853282943028555785}
+  - {fileID: 8591930557475520040}
   - {fileID: 4240947199127248808}
+  - {fileID: 8421393025790571742}
   - {fileID: 8908778304287884962}
   - {fileID: 6569030476867911662}
-  - {fileID: 6971918661573263001}
-  - {fileID: 1695609339200139989}
   m_Father: {fileID: 661135414909328269}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1385,7 +1385,7 @@ GameObject:
   - component: {fileID: 878661366174972402}
   - component: {fileID: 2601298049911626146}
   m_Layer: 5
-  m_Name: Key
+  m_Name: Crouch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1521,7 +1521,7 @@ GameObject:
   - component: {fileID: 390880567413125902}
   - component: {fileID: 5008709452180621665}
   m_Layer: 5
-  m_Name: Key (6)
+  m_Name: SpawnMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1657,7 +1657,7 @@ GameObject:
   - component: {fileID: 3444051928085142941}
   - component: {fileID: 2555756364953199399}
   m_Layer: 5
-  m_Name: Control (2)
+  m_Name: Sprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1929,7 +1929,7 @@ GameObject:
   - component: {fileID: 8127021514112481084}
   - component: {fileID: 2358309457155062381}
   m_Layer: 5
-  m_Name: Key (7)
+  m_Name: NextMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2065,7 +2065,7 @@ GameObject:
   - component: {fileID: 2351315634475385979}
   - component: {fileID: 641775537267518319}
   m_Layer: 5
-  m_Name: Key (4)
+  m_Name: Throw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2201,7 +2201,7 @@ GameObject:
   - component: {fileID: 7241309677121371581}
   - component: {fileID: 68403536750624542}
   m_Layer: 5
-  m_Name: Key (8)
+  m_Name: NextMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2337,7 +2337,7 @@ GameObject:
   - component: {fileID: 4627568580020589022}
   - component: {fileID: 5898686526647569658}
   m_Layer: 5
-  m_Name: Key (5)
+  m_Name: Zoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2473,7 +2473,7 @@ GameObject:
   - component: {fileID: 3773515320352314080}
   - component: {fileID: 7016213919972863743}
   m_Layer: 5
-  m_Name: Key (3)
+  m_Name: Interact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2609,7 +2609,7 @@ GameObject:
   - component: {fileID: 445481005757314818}
   - component: {fileID: 6868549907938155620}
   m_Layer: 5
-  m_Name: Key (5)
+  m_Name: Zoom
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2745,7 +2745,7 @@ GameObject:
   - component: {fileID: 8294837396290743124}
   - component: {fileID: 8045607056721345704}
   m_Layer: 5
-  m_Name: Control (8)
+  m_Name: PrevMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2881,7 +2881,7 @@ GameObject:
   - component: {fileID: 1815048520411117849}
   - component: {fileID: 1241977679535887480}
   m_Layer: 5
-  m_Name: Key (10)
+  m_Name: Tablet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3017,7 +3017,7 @@ GameObject:
   - component: {fileID: 7216358239507247555}
   - component: {fileID: 8210807832385343714}
   m_Layer: 5
-  m_Name: Key (4)
+  m_Name: Throw
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3153,7 +3153,7 @@ GameObject:
   - component: {fileID: 2304175204158383310}
   - component: {fileID: 4894369659505882813}
   m_Layer: 5
-  m_Name: Key (1)
+  m_Name: Jump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3289,7 +3289,7 @@ GameObject:
   - component: {fileID: 2868784070198621761}
   - component: {fileID: 9057312397221449250}
   m_Layer: 5
-  m_Name: Control (6)
+  m_Name: SpawnMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3578,17 +3578,17 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1792434949655593407}
-  - {fileID: 2406161781905489061}
-  - {fileID: 7257187316196561628}
+  - {fileID: 8098026266815017119}
   - {fileID: 5990605762414540586}
-  - {fileID: 4839695465514985697}
+  - {fileID: 1792434949655593407}
+  - {fileID: 3849512182253775866}
+  - {fileID: 2406161781905489061}
   - {fileID: 4725171736353764134}
+  - {fileID: 7257187316196561628}
   - {fileID: 1817436506561661662}
+  - {fileID: 4839695465514985697}
   - {fileID: 1311380727072814068}
   - {fileID: 2410514413416418153}
-  - {fileID: 8098026266815017119}
-  - {fileID: 3849512182253775866}
   m_Father: {fileID: 6730327621549742217}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
@@ -3770,7 +3770,7 @@ GameObject:
   - component: {fileID: 4974477772693045388}
   - component: {fileID: 6530556304346852589}
   m_Layer: 5
-  m_Name: Key (2)
+  m_Name: Sprint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3906,7 +3906,7 @@ GameObject:
   - component: {fileID: 7338162514387260243}
   - component: {fileID: 2296215939150673204}
   m_Layer: 5
-  m_Name: Control (7)
+  m_Name: NextMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4042,7 +4042,7 @@ GameObject:
   - component: {fileID: 2104229852479642861}
   - component: {fileID: 3960161556828125479}
   m_Layer: 5
-  m_Name: Key (3)
+  m_Name: Interact
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4178,7 +4178,7 @@ GameObject:
   - component: {fileID: 5152357077090341471}
   - component: {fileID: 2939845437310621162}
   m_Layer: 5
-  m_Name: Key (9)
+  m_Name: PrevMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4314,7 +4314,7 @@ GameObject:
   - component: {fileID: 540061442449298197}
   - component: {fileID: 6257850590520693169}
   m_Layer: 5
-  m_Name: Control
+  m_Name: Crouch
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4467,17 +4467,17 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 5134779812399439709}
-  - {fileID: 7803017592869346314}
-  - {fileID: 7589548745999598614}
+  - {fileID: 2897870759015894760}
   - {fileID: 3154015421395975809}
-  - {fileID: 8095084501338888533}
+  - {fileID: 5134779812399439709}
+  - {fileID: 5728964114015019435}
+  - {fileID: 7803017592869346314}
   - {fileID: 5731888616007847552}
+  - {fileID: 7589548745999598614}
   - {fileID: 3220831682361547159}
+  - {fileID: 8095084501338888533}
   - {fileID: 1082610384008774380}
   - {fileID: 1144204275918732473}
-  - {fileID: 2897870759015894760}
-  - {fileID: 5728964114015019435}
   m_Father: {fileID: 6730327621549742217}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4523,7 +4523,7 @@ GameObject:
   - component: {fileID: 561181085120655579}
   - component: {fileID: 5049647472470860880}
   m_Layer: 5
-  m_Name: Key (8)
+  m_Name: PrevMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4659,7 +4659,7 @@ GameObject:
   - component: {fileID: 1838929128383249946}
   - component: {fileID: 6761828126171413234}
   m_Layer: 5
-  m_Name: Key (10)
+  m_Name: Tablet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4795,7 +4795,7 @@ GameObject:
   - component: {fileID: 3661443832839084392}
   - component: {fileID: 6863144164267497792}
   m_Layer: 5
-  m_Name: Key (9)
+  m_Name: Pause
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4931,7 +4931,7 @@ GameObject:
   - component: {fileID: 3158045336741494337}
   - component: {fileID: 2795625403782929704}
   m_Layer: 5
-  m_Name: Control (10)
+  m_Name: Tablet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5067,7 +5067,7 @@ GameObject:
   - component: {fileID: 1607667384957974618}
   - component: {fileID: 4388751063008295100}
   m_Layer: 5
-  m_Name: Key (6)
+  m_Name: SpawnMarker
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5203,7 +5203,7 @@ GameObject:
   - component: {fileID: 9142432217924968252}
   - component: {fileID: 6799340942014594613}
   m_Layer: 5
-  m_Name: Key (1)
+  m_Name: Jump
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -32,7 +32,6 @@ public class FirstPersonController : MonoBehaviour
     float maxLookAngle = 50f;
 
     // Crosshair
-    public bool lockCursor = true;
     public bool useCrosshair = true;
     public GameObject crosshair;
 
@@ -45,7 +44,6 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
     #endregion
-
     #region Movement Variables
 
     bool playerCanMove = true;
@@ -57,6 +55,8 @@ public class FirstPersonController : MonoBehaviour
     // Internal Variables
     bool isWalking = false;
     float defaultWalkSpeed;
+    Vector3 input;
+    bool isMoving;
 
     #region Sprint
 
@@ -84,9 +84,9 @@ public class FirstPersonController : MonoBehaviour
     float sprintBarHeight;
     bool isSprintCooldown = false;
     float sprintCooldownReset;
+    bool shouldSprint;
 
     #endregion
-
     #region Jump
 
     bool enableJump = true;
@@ -96,7 +96,6 @@ public class FirstPersonController : MonoBehaviour
     bool isGrounded = false;
 
     #endregion
-
     #region Crouch
 
     bool enableCrouch = true;
@@ -110,7 +109,6 @@ public class FirstPersonController : MonoBehaviour
 
     #endregion
     #endregion
-
     #region Head Bob
 
     public Transform joint;
@@ -123,15 +121,15 @@ public class FirstPersonController : MonoBehaviour
     float timer = 0;
 
     #endregion
-
     #region Animations
 
     public Animator animator;
     float speed;
 
     #endregion
-
     #endregion
+
+    int stopMovementRequests = 0;
 
     void Awake()
     {
@@ -149,6 +147,8 @@ public class FirstPersonController : MonoBehaviour
         defaultWalkSpeed = walkSpeed;
         sprintRemaining = sprintDuration;
         sprintCooldownReset = sprintCooldown;
+
+        stopMovementRequests = 0;
     }
 
     void Start()
@@ -159,9 +159,7 @@ public class FirstPersonController : MonoBehaviour
 
     void Update()
     {
-        HandleCursor();
-
-        if (enableZoom && cameraCanMove)
+        if (enableZoom)
             HandleZoom();
 
         if (cameraCanMove)
@@ -174,6 +172,13 @@ public class FirstPersonController : MonoBehaviour
 
         if (enableHeadBob)
             HeadBob();
+
+        input = new Vector3(InputManager.Instance.GetMoveHorizontal(), 0, InputManager.Instance.GetMoveVertical());
+        isMoving = (input.x != 0 || input.z != 0);
+        isWalking = isMoving && isGrounded;
+
+        shouldSprint = enableSprint && InputManager.Instance.IsSprintHeld()
+                                         && sprintRemaining > 0f && !isSprintCooldown;
 
         // Gets input and calls jump method
         if (enableJump && InputManager.Instance.IsJumpPressed() && isGrounded)
@@ -195,32 +200,39 @@ public class FirstPersonController : MonoBehaviour
         Gizmos.DrawRay(transform.position, transform.forward * 2);
     }
 
-    void HandleCursor()
-    {
-        if (playerCamera == null)
-            return;
-
-        Cursor.lockState = lockCursor ? CursorLockMode.Locked : CursorLockMode.None;
-
-        if (useCrosshair)
-            crosshair.gameObject.SetActive(lockCursor);
-    }
-
     public void StopMovement()
     {
-        cameraCanMove = false;
-        playerCanMove = false;
-        enableHeadBob = false;
-        rb.linearVelocity = Vector3.zero;
-        enableJump = false;
+        stopMovementRequests++;
+        if (stopMovementRequests > 0)
+        {
+            cameraCanMove = false;
+            playerCanMove = false;
+            enableHeadBob = false;
+            rb.linearVelocity = Vector3.zero;
+            enableJump = false;
+            crosshair.gameObject.SetActive(false);
+            animator.SetFloat("Speed",0.0f);
+        }
     }
 
     public void StartMovement()
     {
-        cameraCanMove = true;
-        playerCanMove = true;
-        enableHeadBob = true;
-        enableJump = true;
+        stopMovementRequests--;
+        if (stopMovementRequests < 0)
+        {
+            // Ensure it doesn't go negative
+            stopMovementRequests = Mathf.Max(stopMovementRequests, 0);
+            return;
+        }
+
+        if (stopMovementRequests <= 0)
+        {
+            cameraCanMove = true;
+            playerCanMove = true;
+            enableHeadBob = true;
+            enableJump = true;
+            crosshair.gameObject.SetActive(true);
+        }
     }
 
     public void Rotate(float pitch, float yaw)
@@ -361,15 +373,7 @@ public class FirstPersonController : MonoBehaviour
 
     void HandleMovement()
     {
-        Vector3 input = new Vector3(InputManager.Instance.GetMoveHorizontal(), 0, InputManager.Instance.GetMoveVertical());
-        bool isMoving = (input.x != 0 || input.z != 0);
-        isWalking = isMoving && isGrounded;
-
-        bool shouldSprint = enableSprint && InputManager.Instance.IsSprintHeld()
-                                         && sprintRemaining > 0f && !isSprintCooldown;
-
         float currentSpeed = shouldSprint ? sprintSpeed : walkSpeed;
-
         Vector3 targetVelocity = transform.TransformDirection(input) * currentSpeed;
         animator?.SetFloat("Speed", targetVelocity.magnitude);
 
@@ -433,9 +437,14 @@ public class FirstPersonController : MonoBehaviour
         {
             // Changes isZoomed when key is pressed
             // Behavior for hold to zoom
-            if (!isSprinting)
+            if (!isSprinting && cameraCanMove)
             {
-                isZoomed = InputManager.Instance.IsZoomPressed();
+                isZoomed = InputManager.Instance.IsZoomHeld();
+            }
+
+            if (isSprinting || !cameraCanMove)
+            {
+                isZoomed = false;
             }
 
             Zoom(isZoomed);
@@ -473,17 +482,14 @@ public class FirstPersonController : MonoBehaviour
     {
         Vector3 origin = new Vector3(transform.position.x, transform.position.y - (transform.localScale.y * .5f), transform.position.z);
         Vector3 direction = transform.TransformDirection(Vector3.down);
-        float distance = .75f;
+        float distance = 0.85f;
 
         if (Physics.Raycast(origin, direction, out RaycastHit hit, distance))
-        {
-            Debug.DrawRay(origin, direction * distance, Color.red);
             isGrounded = true;
-        }
         else
-        {
             isGrounded = false;
-        }
+
+        Debug.DrawRay(origin, direction * distance, Color.red);
     }
 
     void Jump()
@@ -665,7 +671,6 @@ public class FirstPersonController : MonoBehaviour
         GUI.enabled = true;
         */
 
-        fpc.lockCursor = EditorGUILayout.ToggleLeft(new GUIContent("Lock and Hide Cursor", "Turns off the cursor visibility and locks it to the middle of the screen."), fpc.lockCursor);
         fpc.useCrosshair = EditorGUILayout.ToggleLeft(new GUIContent("Auto Crosshair", "Determines if the basic useCrosshair will be turned on, and sets is to the center of the screen."), fpc.useCrosshair);
 
         // Only displays useCrosshair options if useCrosshair is enabled

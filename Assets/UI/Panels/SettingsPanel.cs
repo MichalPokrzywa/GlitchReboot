@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class SettingsPanel : MonoBehaviour
 {
@@ -9,10 +10,17 @@ public class SettingsPanel : MonoBehaviour
     [SerializeField] Slider volumeSlider;
     [SerializeField] Slider mouseSensitivitySlider;
     [SerializeField] Slider gamepadSensitivitySlider;
+    [SerializeField] TMP_Dropdown glitchIntensityDropdown;
 
     [SerializeField] TMP_Text volumeValue;
     [SerializeField] TMP_Text mouseSensitivityText;
     [SerializeField] TMP_Text gamepadSensitivityText;
+
+    [SerializeField] Material glitchMaterialReference;
+
+    const float VOLUME_MULTIPLIER = 50f;
+    const float MOUSE_SENSITIVITY_MULTIPLIER = 50f;
+    const float GAMEPAD_SENSITIVITY_MULTIPLIER = 10f;
 
     void Start()
     {
@@ -20,11 +28,13 @@ public class SettingsPanel : MonoBehaviour
         volumeSlider?.onValueChanged.AddListener(ChangeVolume);
         mouseSensitivitySlider?.onValueChanged.AddListener(ChangeMouseSensitivity);
         gamepadSensitivitySlider?.onValueChanged.AddListener(ChangeGamepadSensitivity);
+        glitchIntensityDropdown?.onValueChanged.AddListener(ChangeGlitchIntensivity);
 
-        volumeSlider.value = DependencyManager.audioManager.soundsVolume * 100f;
-        mouseSensitivitySlider.value = InputManager.Instance.mouseSensitivity * 100f;
-        gamepadSensitivitySlider.value = InputManager.Instance.gamepadSensitivity * 100f;
+        volumeSlider.value = DependencyManager.audioManager.soundsVolume * VOLUME_MULTIPLIER;
+        mouseSensitivitySlider.value = InputManager.Instance.mouseSensitivity * MOUSE_SENSITIVITY_MULTIPLIER;
+        gamepadSensitivitySlider.value = InputManager.Instance.gamepadSensitivity * GAMEPAD_SENSITIVITY_MULTIPLIER;
         inverseMouseYToggle.isOn = InputManager.Instance.invertInputY;
+        glitchIntensityDropdown.value = (int)glitchMaterialReference.GetFloat("_MultiTime");
 
         volumeValue.text = volumeSlider.value.ToString("F0");
         mouseSensitivityText.text = mouseSensitivitySlider.value.ToString("F0");
@@ -33,25 +43,29 @@ public class SettingsPanel : MonoBehaviour
 
     void ChangeVolume(float value)
     {
-        DependencyManager.audioManager.SetMusicVolume(value / 100f);
-        DependencyManager.audioManager.SetSoundVolume(value / 100f);
+        float normalized = value / 100f;
+        DependencyManager.audioManager.SetMusicVolume(normalized);
+        DependencyManager.audioManager.SetSoundVolume(normalized);
         volumeValue.text = volumeSlider.value.ToString("F0");
     }
 
-    void ChangeMouseSensitivity(float value)
+    void ChangeMouseSensitivity(float sliderValue)
     {
-        float defaultSensitivity = InputManager.Instance.mouseSensitivity;
-        value = Mathf.Clamp(value / mouseSensitivitySlider.maxValue, mouseSensitivitySlider.minValue, 1f);
-        InputManager.Instance.mouseSensitivity = value;
-        mouseSensitivityText.text = mouseSensitivitySlider.value.ToString("F0");
+        float sensitivity = sliderValue / MOUSE_SENSITIVITY_MULTIPLIER;
+        InputManager.Instance.mouseSensitivity = sensitivity;
+        mouseSensitivityText.text = sliderValue.ToString("F0");
     }
 
-    void ChangeGamepadSensitivity(float value)
+    void ChangeGamepadSensitivity(float sliderValue)
     {
-        float defaultSensitivity = InputManager.Instance.gamepadSensitivity;
-        value = Mathf.Clamp(value / gamepadSensitivitySlider.maxValue, gamepadSensitivitySlider.minValue, 1f);
-        InputManager.Instance.gamepadSensitivity = value;
-        gamepadSensitivityText.text = gamepadSensitivitySlider.value.ToString("F0");
+        float sensitivity = sliderValue / GAMEPAD_SENSITIVITY_MULTIPLIER;
+        InputManager.Instance.gamepadSensitivity = sensitivity;
+        gamepadSensitivityText.text = sliderValue.ToString("F0");
+    }
+
+    void ChangeGlitchIntensivity(int value)
+    {
+        glitchMaterialReference.SetFloat("_MultiTime",value);
     }
 
     void ToggleInverseMouseY(bool isOn)

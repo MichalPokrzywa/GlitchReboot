@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Rendering;
@@ -10,6 +10,7 @@ public class PausePanel : Panel
     [SerializeField] Button settingsButton;
     [SerializeField] Button returnToMenuButton;
     [SerializeField] Button backButton;
+    [SerializeField] Button restartScene;
 
     [SerializeField] GameObject controlsPanel;
     [SerializeField] GameObject settingsPanel;
@@ -17,8 +18,10 @@ public class PausePanel : Panel
     [SerializeField] Camera mainCamera;
     [SerializeField] Volume depthOfField;
     [SerializeField] FirstPersonController firstPersonController;
+    [SerializeField] Image raycastBlocker;
 
     GameObject activePanel;
+    List<Button> allButtons = new List<Button>();
 
     void Awake()
     {
@@ -26,6 +29,9 @@ public class PausePanel : Panel
         settingsButton?.onClick.AddListener(() => TogglePanel(settingsPanel));
         returnToMenuButton?.onClick.AddListener(ReturnToMenu);
         backButton?.onClick.AddListener(() => TogglePanel(null));
+        restartScene?.onClick.AddListener(RestartLevel);
+
+        allButtons = new List<Button>() { controlsButton, settingsButton, returnToMenuButton, backButton };
 
         firstItemToSelect = controlsButton.gameObject;
 
@@ -39,6 +45,7 @@ public class PausePanel : Panel
         settingsButton?.onClick.RemoveAllListeners();
         returnToMenuButton.onClick.RemoveListener(ReturnToMenu);
         backButton?.onClick.RemoveListener(() => TogglePanel(null));
+        restartScene?.onClick.RemoveListener(RestartLevel);
 
         onPanelOpen -= RestoreTime;
         onPanelClose -= StopTime;
@@ -85,28 +92,35 @@ public class PausePanel : Panel
     {
         base.Close();
 
+        foreach (var button in allButtons)
+            button.interactable = true;
+
+        raycastBlocker.enabled = false;
         AudioListener.pause = false;
 
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.PAUSE, null);
+
         if (EnsurePlayerRef())
-        {
-            firstPersonController.lockCursor = true;
             firstPersonController.StartMovement();
-        }
+
         if (EnsureCameraRef())
             depthOfField.enabled = false;
+
+        TogglePanel(null);
     }
 
     public override void Open()
     {
         base.Open();
 
+        raycastBlocker.enabled = true;
         AudioListener.pause = true;
 
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.PAUSE, true);
+
         if (EnsurePlayerRef())
-        {
-            firstPersonController.lockCursor = false;
             firstPersonController.StopMovement();
-        }
+
         if (EnsureCameraRef())
             depthOfField.enabled = true;
     }
@@ -115,19 +129,30 @@ public class PausePanel : Panel
     {
         base.ResetState();
         Time.timeScale = 1f;
-        if (firstPersonController != null)
-        {
-            firstPersonController.lockCursor = true;
-            firstPersonController.StartMovement();
-        }
         AudioListener.pause = false;
+
+        if (firstPersonController != null)
+            firstPersonController.StartMovement();
+
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.PAUSE, null);
+
         if (depthOfField != null)
             depthOfField.enabled = false;
+
+        foreach (var button in allButtons)
+            button.interactable = true;
     }
 
     void ReturnToMenu()
     {
         PanelManager.Instance.ReturnToMenu();
+        foreach (var button in allButtons)
+            button.interactable = false;
+    }
+
+    void RestartLevel()
+    {
+        DependencyManager.sceneLoader.LoadScene(DependencyManager.sceneLoader.CurrentScene);
     }
 
     void TogglePanel(GameObject panelToShow)

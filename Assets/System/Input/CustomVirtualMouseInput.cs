@@ -158,7 +158,6 @@ namespace UnityEngine.InputSystem.UI
 
         void Awake()
         {
-            InputManager.Instance.onControlsChanged += OnControlsChanged;
             OnControlsChanged(InputManager.Instance.CurrentDevice);
         }
 
@@ -166,16 +165,11 @@ namespace UnityEngine.InputSystem.UI
         {
             if (device == InputManager.DeviceType.Gamepad)
             {
-                // Hide system cursor
-                Cursor.visible = false;
-
                 if (m_CursorTransform != null)
                     m_CursorTransform.gameObject.SetActive(true);
             }
             else
             {
-                Cursor.visible = true;
-
                 if (m_CursorTransform != null)
                     m_CursorTransform.gameObject.SetActive(false);
             }
@@ -183,6 +177,8 @@ namespace UnityEngine.InputSystem.UI
 
         protected void OnEnable()
         {
+            InputManager.Instance.onControlsChanged += OnControlsChanged;
+
             // Hijack system mouse, if enabled.
             if (m_CursorMode == CursorMode.HardwareCursorIfAvailable)
                 TryEnableHardwareCursor();
@@ -192,6 +188,8 @@ namespace UnityEngine.InputSystem.UI
                 m_VirtualMouse = (Mouse)InputSystem.AddDevice("VirtualMouse");
             else if (!m_VirtualMouse.added)
                 InputSystem.AddDevice(m_VirtualMouse);
+
+            InputSystem.EnableDevice(m_VirtualMouse);
 
             if (m_Canvas == null)
                 TryFindCanvas();
@@ -242,9 +240,12 @@ namespace UnityEngine.InputSystem.UI
 
         protected void OnDisable()
         {
+            if (!InputManager.IsInstanceShuttingDown)
+                InputManager.Instance.onControlsChanged -= OnControlsChanged;
+
             // Remove mouse device.
             if (m_VirtualMouse != null && m_VirtualMouse.added)
-                InputSystem.RemoveDevice(m_VirtualMouse);
+                InputSystem.DisableDevice(m_VirtualMouse);
 
             // Let go of system mouse.
             if (m_SystemMouse != null)

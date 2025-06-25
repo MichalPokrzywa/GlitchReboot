@@ -11,8 +11,6 @@ public class AudioStorage : ScriptableObject
     [Header("Sounds")]
     [SerializeField] private List<SoundClip> sounds;
 
-    [SerializeField] List<SpiderVoiceOver> spiderVoiceOvers;
-
     [Header("Menu music")]
     [SerializeField] private List<AudioClip> menuMusicClips;
 
@@ -21,13 +19,6 @@ public class AudioStorage : ScriptableObject
 
     private AudioClip lastMenuMusicClip = null;
     private AudioClip lastGameplayMusicClip = null;
-
-    [Serializable]
-    class SpiderVoiceOver
-    {
-        public Scene scene;
-        public List<AudioClip> clips;
-    }
 
     public AudioClip GetSoundByType(Sound sound)
     {
@@ -90,21 +81,6 @@ public class AudioStorage : ScriptableObject
 
         lastGameplayMusicClip = newClip;
         return newClip;
-    }
-
-    public AudioClip GetSpiderVoiceOver(Scene scene, int id)
-    {
-        if (spiderVoiceOvers == null || spiderVoiceOvers.Count == 0)
-            return null;
-
-        SpiderVoiceOver voiceOver = spiderVoiceOvers.Find(vo => vo.scene == scene);
-        if (voiceOver == null || voiceOver.clips.Count == 0)
-            return null;
-
-        if (id < 0 || id >= voiceOver.clips.Count)
-            return null;
-
-        return voiceOver.clips[id];
     }
 }
 

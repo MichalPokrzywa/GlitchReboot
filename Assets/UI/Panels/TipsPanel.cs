@@ -31,7 +31,7 @@ public class TipsPanel : Panel
             { eTipType.DiceDrop, (p => p.Interact, " to drop the dice") },
             { eTipType.Tablet, (p => p.TabletInteract, " to open the tablet") },
             { eTipType.TabletLanguage, (p => p.Interact, " to change language in the terminal") },
-            { eTipType.Zoom,  (p => p.Zoom, " to zoom")},
+            { eTipType.Zoom,  (p => p.Zoom, " to zoom — names will show up above objects that are used in the ghost programming panel.")},
             { eTipType.SpawnMarker, (p => p.SpawnMarker, " to spawn a marker") },
             { eTipType.NextMarker, (p => p.NextMarker, " to select next marker") },
             { eTipType.PrevMarker, (p => p.PrevMarker, " to select previous marker") }
@@ -61,7 +61,7 @@ public class TipsPanel : Panel
             }
 
             string binding = InputManager.Instance.GetBinding(tip.actionSelector(currentControls));
-            combinedText += $"{binding}{tip.tipSuffix}\n";
+            combinedText += $"<b>{binding}</b>{tip.tipSuffix}\n";
         }
 
         text.text = combinedText.TrimEnd('\n');

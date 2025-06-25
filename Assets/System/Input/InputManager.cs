@@ -1,10 +1,24 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using static Cinemachine.DocumentationSortingAttribute;
 
 public class InputManager : Singleton<InputManager>
 {
-    public enum DeviceType { KeyboardMouse, Gamepad }
+    public enum DeviceType
+    {
+        KeyboardMouse,
+        Gamepad
+    }
+
+    public enum CursorVisibilityRequestSource
+    {
+        GAMEPAD,
+        PAUSE,
+        MENU,
+        TABLET
+    }
 
     public DeviceType CurrentDevice { get; private set; }
     public InputSystem_Actions CurrentControls => currentControls;
@@ -16,18 +30,23 @@ public class InputManager : Singleton<InputManager>
     public bool invertInputY = false;
 
     PlayerInput playerInput;
-    InputSystem_Actions defaultControls;
     InputSystem_Actions currentControls;
+    List<bool?> cursorVisibilityRequests = new List<bool?>();
+
+    bool isCursorVisible = false;
 
     const string GamepadScheme = "Gamepad";
-
     const float defaultMouseSensitivity = 0.4f;
-    const float defaultGamepadSensitivity = 1f;
+    const float defaultGamepadSensitivity = 2f;
     const bool defaultInvertInputY = false;
-
 
     void Awake()
     {
+        foreach (var item in Enum.GetNames(typeof(CursorVisibilityRequestSource)))
+        {
+            cursorVisibilityRequests.Add(null);
+        }
+
         playerInput = GetComponent<PlayerInput>();
         playerInput.onControlsChanged += OnControlsChanged;
 
@@ -36,15 +55,14 @@ public class InputManager : Singleton<InputManager>
             : DeviceType.KeyboardMouse;
 
         RestoreDefaultSettings();
+        Cursor.lockState = CursorLockMode.Locked;
 
-        defaultControls = new InputSystem_Actions();
-        currentControls = defaultControls;
+        currentControls = new InputSystem_Actions();
         currentControls.Enable();
     }
 
     #region ControlGetters
     public float GetMoveHorizontal() => currentControls.Player.Move.ReadValue<Vector2>().x;
-
     public float GetMoveVertical() => currentControls.Player.Move.ReadValue<Vector2>().y;
     public float GetLookHorizontal()
     {
@@ -59,16 +77,15 @@ public class InputManager : Singleton<InputManager>
     }
     public bool IsCrouchHeld() => currentControls.Player.Crouch.IsPressed();
     public bool IsSprintHeld() => currentControls.Player.Sprint.IsPressed();
-    public bool IsZoomPressed() => currentControls.Player.Zoom.IsPressed();
-    public bool IsJumpPressed() => currentControls.Player.Jump.triggered;
-    public bool IsFirePressed() => currentControls.Player.Fire.triggered;
-    public bool IsInteractPressed() => currentControls.Player.Interact.triggered;
-    public bool IsInteractWithTabletPressed() => currentControls.Player.TabletInteract.triggered;
-    public bool IsPausePressed() => currentControls.Player.Pause.triggered;
-    public bool IsSpawnMarkerPressed() => currentControls.Player.SpawnMarker.triggered;
-    public bool IsNextMarkerPressed() => currentControls.Player.NextMarker.triggered;
-    public bool IsPreviousMarkerPressed() => currentControls.Player.PrevMarker.triggered;
-
+    public bool IsZoomHeld() => currentControls.Player.Zoom.IsPressed();
+    public bool IsJumpPressed() => currentControls.Player.Jump.WasPerformedThisFrame();
+    public bool IsFirePressed() => currentControls.Player.Fire.WasPerformedThisFrame();
+    public bool IsInteractPressed() => currentControls.Player.Interact.WasPerformedThisFrame();
+    public bool IsInteractWithTabletPressed() => currentControls.Player.TabletInteract.WasPerformedThisFrame();
+    public bool IsPausePressed() => currentControls.Player.Pause.WasPerformedThisFrame();
+    public bool IsSpawnMarkerPressed() => currentControls.Player.SpawnMarker.WasPerformedThisFrame();
+    public bool IsNextMarkerPressed() => currentControls.Player.NextMarker.WasPerformedThisFrame();
+    public bool IsPreviousMarkerPressed() => currentControls.Player.PrevMarker.WasPerformedThisFrame();
     #endregion
 
     public string GetBinding(InputAction action)
@@ -108,6 +125,36 @@ public class InputManager : Singleton<InputManager>
             return mouseSensitivity;
     }
 
+    public void CursorVisibilityState(CursorVisibilityRequestSource source, bool? state)
+    {
+        isCursorVisible = false;
+        cursorVisibilityRequests[(int)source] = state;
+
+        foreach (var item in cursorVisibilityRequests)
+        {
+            if (item == true)
+            {
+                isCursorVisible = true;
+                break;
+            }
+            if (item == false)
+            {
+                break;
+            }
+        }
+
+        if (isCursorVisible)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
+    }
+
     void RestoreDefaultSettings()
     {
         mouseSensitivity = defaultMouseSensitivity;
@@ -122,5 +169,10 @@ public class InputManager : Singleton<InputManager>
             : DeviceType.KeyboardMouse;
 
         onControlsChanged?.Invoke(CurrentDevice);
+
+        if (CurrentDevice == DeviceType.Gamepad)
+            CursorVisibilityState(CursorVisibilityRequestSource.GAMEPAD, false);
+        else
+            CursorVisibilityState(CursorVisibilityRequestSource.GAMEPAD, null);
     }
 }

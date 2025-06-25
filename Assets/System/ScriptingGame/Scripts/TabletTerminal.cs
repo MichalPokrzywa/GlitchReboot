@@ -87,6 +87,9 @@ public class TabletTerminal : Singleton<TabletTerminal>
 
     public void OnSwitchButtonClicked()
     {
+        if (!MechanicsManager.Instance.IsEnabled(MechanicType.GhostProgram))
+            return;
+
         blocksPanelOn = !blocksPanelOn;
         blocksPanel.SetActive(blocksPanelOn);
     }
