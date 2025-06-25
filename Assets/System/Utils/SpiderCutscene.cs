@@ -19,6 +19,8 @@ public class SpiderCutscene : MonoBehaviour
 
     IEnumerator CutsceneTime()
     {
+        if (material.HasProperty("_GlitchInvertedStrength"))
+            material.SetFloat("_GlitchInvertedStrength", 0.01f);
         Camera.main.DOShakePosition(0.4f, 0.3f, randomnessMode: ShakeRandomnessMode.Harmonic);
         yield return new WaitForSeconds(0.3f);
         controller.StopMovement();
@@ -28,11 +30,11 @@ public class SpiderCutscene : MonoBehaviour
         yield return new WaitForSeconds(17.5f);
         GlitchEffectFeature.Instance.UpdateIntensity(0.2f);
         spider.GetComponent<GlitchSwitcher>().ApplyGlitch(true);
-        yield return new WaitForSeconds(9.5f);
+        yield return new WaitForSeconds(8.5f);
         controller.transform.DOLocalRotate(new Vector3(0, 0, 90), 1.5f).SetEase(Ease.InQuart);
-        yield return new WaitForSeconds(7.5f);
+        yield return new WaitForSeconds(6.5f);
         if (material.HasProperty("_GlitchInvertedStrength"))
-            material.SetFloat("_GlitchInvertedStrength", 0.1f);
+            material.SetFloat("_GlitchInvertedStrength", 0.1f);        
         GlitchEffectFeature.Instance.UpdateIntensity(0.4f);
         yield return new WaitForSeconds(2.5f);
         DependencyManager.sceneLoader.LoadScene(Scene.MainMenu);

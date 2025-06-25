@@ -58,9 +58,13 @@ Material:
     - _CheckerBoardGlitchBool: 0
     - _GlitchActivationBool: 1
     - _GlitchColor: 1
-    - _GlitchInvertedStrength: 0.1
+    - _GlitchInvertedStrength: 0.01
+    - _IntervalOffTime: 1
+    - _IntervalOnTime: 1
+    - _MultiTime: 1
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _ShouldInterval: 1
     m_Colors:
     - _EmisionColor: {r: 5.3403134, g: 3.3831306, b: 0, a: 1}
   m_BuildTextureStacks: []

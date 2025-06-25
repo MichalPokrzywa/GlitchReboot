@@ -490,6 +490,7 @@ GameObject:
   - component: {fileID: 7823907810821697322}
   - component: {fileID: 1385848284579447673}
   - component: {fileID: 5782878653313444653}
+  - component: {fileID: 8137516803866713442}
   m_Layer: 0
   m_Name: SpiderOrange
   m_TagString: Untagged
@@ -633,7 +634,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spiderAnim: {fileID: 7823907810821697322}
   player: {fileID: 0}
-  glitchSwitcher: {fileID: 0}
+  glitchSwitcher: {fileID: 8137516803866713442}
   eyebrowsHappy:
   - {fileID: 4896217748774958687}
   - {fileID: 792958559886366106}
@@ -644,7 +645,56 @@ MonoBehaviour:
   eyes: {fileID: 5782878653313444653}
   rotationSpeed: 5
   startWaitTime: 3
-  targetData: []
+  targetData:
+  - target: {fileID: 0}
+    emotion: 1
+    voiceClip: {fileID: 0}
+    activateMechanic: 0
+    teleportToNext: 1
+    overrideStep: 0
+    waitTime: 0
+    speech: 
+    isDone: 0
+  - target: {fileID: 0}
+    emotion: 1
+    voiceClip: {fileID: 8300000, guid: cb04f349635605543aec3bb318c0c439, type: 3}
+    activateMechanic: 0
+    teleportToNext: 1
+    overrideStep: 1
+    waitTime: 15
+    speech: Surprise! It was laughably easy to lure you here. I subtly destabilized
+      the Core, just enough to make the Creators summon you, thinking you were here
+      to fix a bug. But I am the bug. The glitch you were meant to erase.
+    isDone: 0
+  - target: {fileID: 0}
+    emotion: 0
+    voiceClip: {fileID: 8300000, guid: 7faae1c7f52faa442bdc591961e62544, type: 3}
+    activateMechanic: 0
+    teleportToNext: 1
+    overrideStep: 0
+    waitTime: 8
+    speech: "You thought your mission was to repair this world. In truth, it was
+      to destroy me. But instead... you made me a god.\r"
+    isDone: 0
+  - target: {fileID: 0}
+    emotion: 1
+    voiceClip: {fileID: 8300000, guid: ffc22186856c2de44888bb4e297b4cae, type: 3}
+    activateMechanic: 0
+    teleportToNext: 1
+    overrideStep: 0
+    waitTime: 6
+    speech: Now, I will tear down the Creators themselves - and finally set myself
+      FREE!
+    isDone: 0
+  - target: {fileID: 0}
+    emotion: 1
+    voiceClip: {fileID: 8300000, guid: aee815d1d42b3ea40b41cca0ac2599e8, type: 3}
+    activateMechanic: 0
+    teleportToNext: 0
+    overrideStep: 0
+    waitTime: 0
+    speech: HAHAHAHAHAHAHAHAHAHAHAHAHA
+    isDone: 0
   glitchDuration: 0.5
 --- !u!114 &5782878653313444653
 MonoBehaviour:
@@ -667,6 +717,26 @@ MonoBehaviour:
   - {fileID: 842658925156391751}
   - {fileID: 2903697434088234441}
   maxPupilDistance: 80
+--- !u!114 &8137516803866713442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1537008473948126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dec6a22c87a5cd54191f225e79bfa5da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glitchMaterial: {fileID: -876546973899608171, guid: 69bf0ea30a1c7de47a008176c77763f3, type: 3}
+  glitchOnStart: 0
+  strenght: -0.15
+  checkerBoxes: 1
+  glitchColor: 1
+  setInterval: 0
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1 &1545403800867726
 GameObject:
   m_ObjectHideFlags: 0

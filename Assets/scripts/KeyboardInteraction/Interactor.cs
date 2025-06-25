@@ -50,7 +50,7 @@ public class Interactor : MonoBehaviour
             return;
         }
 
-        int layerToIgnore = LayerMask.NameToLayer("IgnoreInteractor");
+        int layerToIgnore = LayerMask.NameToLayer("Ignore Raycast");
         int layerMask = ~(1 << layerToIgnore);
 
         if (!Physics.Raycast(r, out RaycastHit hit, Mathf.Infinity, layerMask))
