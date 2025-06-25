@@ -131,9 +131,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIHoverObject: {fileID: 0}
   UIHoverText: {fileID: 0}
+  actionSuffix: 
+  mainCamera: {fileID: 0}
   floatDistanceX: 100
   floatDistanceY: 100
-  mainCamera: {fileID: 0}
 --- !u!1 &7432581105304316425
 GameObject:
   m_ObjectHideFlags: 0
@@ -722,9 +723,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIHoverObject: {fileID: 0}
   UIHoverText: {fileID: 0}
+  actionSuffix: to decrease value
+  mainCamera: {fileID: 0}
   floatDistanceX: 100
   floatDistanceY: 100
-  mainCamera: {fileID: 0}
   onButtonPressed:
     m_PersistentCalls:
       m_Calls:
@@ -740,7 +742,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  buttonActionName: Down Value
 --- !u!1001 &4113446248416511162
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -832,9 +833,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIHoverObject: {fileID: 0}
   UIHoverText: {fileID: 0}
+  actionSuffix: to swap value
+  mainCamera: {fileID: 0}
   floatDistanceX: 100
   floatDistanceY: 100
-  mainCamera: {fileID: 0}
   onButtonPressed:
     m_PersistentCalls:
       m_Calls:
@@ -850,7 +852,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  buttonActionName: Flip Value
 --- !u!65 &3604917686449684535
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -977,9 +978,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   UIHoverObject: {fileID: 0}
   UIHoverText: {fileID: 0}
+  actionSuffix: to increase value
+  mainCamera: {fileID: 0}
   floatDistanceX: 100
   floatDistanceY: 100
-  mainCamera: {fileID: 0}
   onButtonPressed:
     m_PersistentCalls:
       m_Calls:
@@ -995,7 +997,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  buttonActionName: Up Value
 --- !u!65 &6223884373570921733
 BoxCollider:
   m_ObjectHideFlags: 0
