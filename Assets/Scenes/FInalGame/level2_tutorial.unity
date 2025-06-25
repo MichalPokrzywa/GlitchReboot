@@ -17606,8 +17606,8 @@ PrefabInstance:
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].speech
       value: "Whoa! The world glitched and placed a building on top of the roof.
-        You can use <color=#FFFF00>Terminal</color> to move the platforms and reach
-        the next building. I\u2019ll go check what\u2019s up there!"
+        You can use the <color=#FFFF00>Terminal</color> to move the platforms and
+        reach the next building. I\u2019ll go check what\u2019s up there!"
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].target
@@ -17615,8 +17615,8 @@ PrefabInstance:
       objectReference: {fileID: 1462946580}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[2].speech
-      value: Look! Next to <color=#FFFF00>terminal</color> there is a device, that
-        can modify <color=#FFA500>Variable Dice</color>, you should try it out!
+      value: Look! Next to the <color=#FFFF00>Terminal</color> there is a device,
+        that can modify <color=#FFA500>Variable Dice</color>, you should try it out!
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[2].target
@@ -17733,16 +17733,28 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[0].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 08c63c05e9ef5af41a114c46ddb9791c, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[1].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 96198cfbf514b344daa38d158b808a1e, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[2].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: e198dc6df9211ba48a4e5d8396ad6147, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[0].overrideStep
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].overrideStep
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[2].overrideStep
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[4].overrideStep

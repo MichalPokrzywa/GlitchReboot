@@ -10,6 +10,7 @@ public class PausePanel : Panel
     [SerializeField] Button settingsButton;
     [SerializeField] Button returnToMenuButton;
     [SerializeField] Button backButton;
+    [SerializeField] Button restartScene;
 
     [SerializeField] GameObject controlsPanel;
     [SerializeField] GameObject settingsPanel;
@@ -28,6 +29,7 @@ public class PausePanel : Panel
         settingsButton?.onClick.AddListener(() => TogglePanel(settingsPanel));
         returnToMenuButton?.onClick.AddListener(ReturnToMenu);
         backButton?.onClick.AddListener(() => TogglePanel(null));
+        restartScene?.onClick.AddListener(RestartLevel);
 
         allButtons = new List<Button>() { controlsButton, settingsButton, returnToMenuButton, backButton };
 
@@ -43,6 +45,7 @@ public class PausePanel : Panel
         settingsButton?.onClick.RemoveAllListeners();
         returnToMenuButton.onClick.RemoveListener(ReturnToMenu);
         backButton?.onClick.RemoveListener(() => TogglePanel(null));
+        restartScene?.onClick.RemoveListener(RestartLevel);
 
         onPanelOpen -= RestoreTime;
         onPanelClose -= StopTime;
@@ -145,6 +148,11 @@ public class PausePanel : Panel
         PanelManager.Instance.ReturnToMenu();
         foreach (var button in allButtons)
             button.interactable = false;
+    }
+
+    void RestartLevel()
+    {
+        DependencyManager.sceneLoader.LoadScene(DependencyManager.sceneLoader.CurrentScene);
     }
 
     void TogglePanel(GameObject panelToShow)

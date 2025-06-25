@@ -1767,6 +1767,26 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[0].voiceClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[1].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: cb04f349635605543aec3bb318c0c439, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[2].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 7faae1c7f52faa442bdc591961e62544, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[3].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: ffc22186856c2de44888bb4e297b4cae, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[4].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: aee815d1d42b3ea40b41cca0ac2599e8, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[0].overrideStep
       value: 0
       objectReference: {fileID: 0}
@@ -1881,6 +1901,9 @@ MonoBehaviour:
   strenght: -0.15
   checkerBoxes: 1
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!114 &485328078 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}

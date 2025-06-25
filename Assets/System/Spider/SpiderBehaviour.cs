@@ -191,11 +191,12 @@ public class SpiderBehaviour : MonoBehaviour
 
         // Set wait time based on voice clip or specified wait time
         float waitTime = data.voiceClip ? data.voiceClip.length : data.waitTime;
+        float textDisplayTimeFactor = 0.5f;
 
         //Debug.LogError("Mówiê kwestiê i czekam...");
 
         if (!string.IsNullOrEmpty(data.speech))
-            NarrativeSystem.Instance.SetText(data.speech, waitTime);
+            NarrativeSystem.Instance.SetText(data.speech, waitTime * textDisplayTimeFactor);
 
         if (data.voiceClip)
         {

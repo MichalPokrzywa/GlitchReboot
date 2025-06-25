@@ -421,6 +421,9 @@ MonoBehaviour:
   strenght: 0.15
   checkerBoxes: 1
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!64 &3779654
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -916,6 +919,9 @@ MonoBehaviour:
   strenght: 0.03
   checkerBoxes: 0
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1001 &9264275
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2281,6 +2287,9 @@ MonoBehaviour:
   strenght: 0.03
   checkerBoxes: 0
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1 &72433787
 GameObject:
   m_ObjectHideFlags: 0
@@ -3581,6 +3590,9 @@ MonoBehaviour:
   strenght: 0.03
   checkerBoxes: 0
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1001 &106055750
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5787,9 +5799,10 @@ PrefabInstance:
       value: "If you want to guide the ghost to a specific location, you can use
         <color=\"red\">Markers</color>. They're kind of like waypoints the ghost
         will follow.\r\n\r\nOn keyboard, you can place or remove markers using the
-        number keys <color=\"red\">1 through 9</color>. On a gamepad, press <color=\"red\">LB</color>
-        to spawn a marker, and use the <color=\"red\">up</color> and <color=\"red\">down</color>
-        arrows to cycle between them.\r"
+        number keys <color=\"red\">1</color> through <color=\"red\">9</color>. On
+        a gamepad, press <color=\"red\">LB</color> to spawn a marker, and use the
+        <color=\"red\">up</color> and <color=\"red\">down</color> arrows to cycle
+        between them.\r"
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[3].target
@@ -5831,6 +5844,22 @@ PrefabInstance:
       propertyPath: targetData.Array.data[4].waitTime
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[0].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: df8db797896ea594ba56fbcf73d23cef, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[1].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 44413ac9684d38142bdffe44b0becf11, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[2].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 4463c8dead4da2f418337512e625af00, type: 3}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[3].voiceClip
+      value: 
+      objectReference: {fileID: 8300000, guid: ff01d582879a6ed45b17186f158687c2, type: 3}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[0].overrideStep
       value: 0
@@ -8046,6 +8075,9 @@ MonoBehaviour:
   strenght: 0.1
   checkerBoxes: 1
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1001 &276588015
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10621,6 +10653,9 @@ MonoBehaviour:
   strenght: -0.02
   checkerBoxes: 0
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1001 &357243613
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14277,6 +14312,9 @@ MonoBehaviour:
   strenght: 0.1
   checkerBoxes: 1
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1001 &514280178
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -27198,6 +27236,9 @@ MonoBehaviour:
   strenght: -0.15
   checkerBoxes: 1
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!114 &888079531 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8249341823645166126, guid: dea7a0da996109b4b9a4accc94ec5db1, type: 3}
@@ -30593,6 +30634,72 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5a7c22259d0505c4b9a0f62b4f531e3d, type: 3}
+--- !u!1 &996895563
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 996895566}
+  - component: {fileID: 996895565}
+  - component: {fileID: 996895564}
+  m_Layer: 8
+  m_Name: ZoomTipTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &996895564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996895563}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79b7434b1ef98dc44b957b24c103f3c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!65 &996895565
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996895563}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 1
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 8.352571, y: 3.5123575, z: 13.245263}
+  m_Center: {x: -0.55164814, y: 1.2561787, z: 3.3849363}
+--- !u!4 &996895566
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 996895563}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: -0.59, y: 1.22, z: 14.25}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1000861870
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -44451,6 +44558,9 @@ MonoBehaviour:
   strenght: -0.15
   checkerBoxes: 1
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1 &1440429334
 GameObject:
   m_ObjectHideFlags: 0
@@ -50099,6 +50209,9 @@ MonoBehaviour:
   strenght: -0.15
   checkerBoxes: 1
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1 &1590686000
 GameObject:
   m_ObjectHideFlags: 0
@@ -52322,6 +52435,9 @@ MonoBehaviour:
   strenght: 0.03
   checkerBoxes: 0
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1001 &1644078656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -56851,6 +56967,9 @@ MonoBehaviour:
   strenght: 0.03
   checkerBoxes: 0
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1001 &1786950597
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -67255,6 +67374,9 @@ MonoBehaviour:
   strenght: -0.15
   checkerBoxes: 1
   glitchColor: 1
+  setInterval: 1
+  baseOnInterval: 1
+  baseOffInterval: 1
 --- !u!1001 &2099125555
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -69547,6 +69669,7 @@ SceneRoots:
   - {fileID: 185603394}
   - {fileID: 1636447198}
   - {fileID: 1197901854}
+  - {fileID: 996895566}
   - {fileID: 670525277}
   - {fileID: 1942137703}
   - {fileID: 242488129}
