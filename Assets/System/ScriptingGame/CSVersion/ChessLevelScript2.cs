@@ -41,17 +41,19 @@ public class ChessLevelScript2 : PuzzleBase
         Debug.Log("d - " + d);
         Debug.Log("e - " + e);
 
-        /*        bridge1.SetActive(a);   
-                bridge2.SetActive(a && d);  
-                bridge3.SetActive(!e && c && a);
-                bridgeR.SetActive(!a && (b || e));
-                bridgeL.SetActive(a && e);*/
+        
+        //bridge1.SetActive(a);   
+        //bridge2.SetActive(a && d);  
+        //bridge3.SetActive(!e && c && a);
+        bridgeR.SetActive(!a && (b || e));
+        bridgeL.SetActive(a && e);
+        
 
         AnimateBridge(bridge1, a);
         AnimateBridge(bridge2, a && d);
         AnimateBridge(bridge3, !e && c && a);
-        AnimateBridge(bridgeR, !a && (b || e));
-        AnimateBridge(bridgeL, a && e);
+        //AnimateBridge(bridgeR, !a && (b || e));
+        //AnimateBridge(bridgeL, a && e);
 
         navMeshSurface.GetComponent<FilterNavMeshSurface>().ReBuildNavMesh();
         if (once && a && d)
