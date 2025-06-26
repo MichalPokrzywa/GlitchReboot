@@ -17,6 +17,10 @@ public class ChessLevelScript2 : PuzzleBase
     public GameObject pieceToRemove;
     private bool once = true;
 
+    private float bridgeUpY = 37.95f;
+    private float bridgeDownY = 32.90855f; // Adjust as needed
+    private float moveDuration = 0.5f;
+
     public override void DoTerminalCode()
     {
         if (bridge1 == null || bridge2 == null || bridge3 == null || bridgeL == null || bridgeR == null)
@@ -37,11 +41,17 @@ public class ChessLevelScript2 : PuzzleBase
         Debug.Log("d - " + d);
         Debug.Log("e - " + e);
 
-        bridge1.SetActive(a);   
-        bridge2.SetActive(a && d);  
-        bridge3.SetActive(!e && c && a);
-        bridgeR.SetActive(!a && (b || e));
-        bridgeL.SetActive(a && e);
+        /*        bridge1.SetActive(a);   
+                bridge2.SetActive(a && d);  
+                bridge3.SetActive(!e && c && a);
+                bridgeR.SetActive(!a && (b || e));
+                bridgeL.SetActive(a && e);*/
+
+        AnimateBridge(bridge1, a);
+        AnimateBridge(bridge2, a && d);
+        AnimateBridge(bridge3, !e && c && a);
+        AnimateBridge(bridgeR, !a && (b || e));
+        AnimateBridge(bridgeL, a && e);
 
         navMeshSurface.GetComponent<FilterNavMeshSurface>().ReBuildNavMesh();
         if (once && a && d)
@@ -51,6 +61,14 @@ public class ChessLevelScript2 : PuzzleBase
             pieceToMove.transform.DOMove(newPosition, 1, false);
             StartCoroutine(DelayedDeactivate(pieceToRemove, 0.3f));
         }
+    }
+    private void AnimateBridge(GameObject bridge, bool show)
+    {
+        if (bridge == null) return;
+
+        float targetY = show ? bridgeDownY : bridgeUpY;
+
+        bridge.transform.DOLocalMoveY(targetY, moveDuration);
     }
 
     private IEnumerator DelayedDeactivate(GameObject obj, float delay)

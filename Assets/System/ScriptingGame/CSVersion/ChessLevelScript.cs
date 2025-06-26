@@ -22,6 +22,9 @@ public class ChessLevelScript : PuzzleBase
     public GameObject queen;
     [Header("King")]
     public GameObject king;
+
+    public LevelExitElevator exitElevator;
+
     public override void DoTerminalCode()
     {
         if (solved) return;
@@ -49,11 +52,12 @@ public class ChessLevelScript : PuzzleBase
             solved = true;
             Vector3 newPosition = moveableObject.transform.position + new Vector3(-15, 0, 15);
             moveableObject.transform.DOMove(newPosition, 5, false);
+            exitElevator.OpenDoors();
         }
-        else if(actualPiece != "0")
+/*        else if(actualPiece != "0")
         {
             StartCoroutine(DelayedDeactivate(actualPiece, 1.0f));            
-        }
+        }*/
     }
     private IEnumerator DelayedDeactivate(String pieceName, float delay)
     {

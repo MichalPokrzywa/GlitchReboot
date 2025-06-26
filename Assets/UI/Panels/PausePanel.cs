@@ -31,7 +31,7 @@ public class PausePanel : Panel
         backButton?.onClick.AddListener(() => TogglePanel(null));
         restartScene?.onClick.AddListener(RestartLevel);
 
-        allButtons = new List<Button>() { controlsButton, settingsButton, returnToMenuButton, backButton };
+        allButtons = new List<Button>() { controlsButton, settingsButton, returnToMenuButton, backButton, restartScene };
 
         firstItemToSelect = controlsButton.gameObject;
 
@@ -153,6 +153,8 @@ public class PausePanel : Panel
     void RestartLevel()
     {
         DependencyManager.sceneLoader.LoadScene(DependencyManager.sceneLoader.CurrentScene);
+        foreach (var button in allButtons)
+            button.interactable = false;
     }
 
     void TogglePanel(GameObject panelToShow)

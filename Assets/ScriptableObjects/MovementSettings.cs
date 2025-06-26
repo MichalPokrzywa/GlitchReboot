@@ -5,7 +5,7 @@ using UnityEngine;
 public class MovementSettings : ScriptableObject
 {
     [Serializable]
-    public class CameraVariables
+    public class CameraVariables 
     {
         public float FOV = 80;
         public bool enableCameraRotation = true;

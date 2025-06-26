@@ -5730,10 +5730,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
-      propertyPath: glitchSwitcher
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.size
       value: 5
       objectReference: {fileID: 0}
@@ -5809,9 +5805,29 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1596915406}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[4].speech
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[4].target
       value: 
       objectReference: {fileID: 1236859668}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[0].emotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[1].emotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[3].emotion
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[4].emotion
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[0].voiceKey
       value: 1
@@ -5861,7 +5877,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8300000, guid: ff01d582879a6ed45b17186f158687c2, type: 3}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[4].voiceClip
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[0].overrideStep
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[1].overrideStep
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
@@ -5881,12 +5905,16 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[0].teleportToNext
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].animSmoothness
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].teleportToNext
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[2].animSmoothness
