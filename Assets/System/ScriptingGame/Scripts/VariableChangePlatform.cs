@@ -8,7 +8,6 @@ public class VariableChangePlatform : VariablePlatformBase
     public List<GameObject> platformType;
 
     [SerializeField] private Transform dicePosition;
-    [SerializeField] private int changeValue = 1;
 
     private VariableDice dice = null;
 
@@ -57,7 +56,7 @@ public class VariableChangePlatform : VariablePlatformBase
 
         if (dice.type == VariableType.Number)
         {
-            dice.UpdateValue((int)dice.GetCurrentValue() + changeValue);
+            dice.UpdateValue((int)dice.GetCurrentValue() + 1);
         }
         if (dice.type == VariableType.Boolean)
         {
@@ -71,7 +70,7 @@ public class VariableChangePlatform : VariablePlatformBase
 
         if (dice.type == VariableType.Number)
         {
-            dice.UpdateValue((int)dice.GetCurrentValue() - changeValue);
+            dice.UpdateValue((int)dice.GetCurrentValue() - 1);
         }
     }
 
