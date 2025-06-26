@@ -23,7 +23,8 @@ public class CannonController : MonoBehaviour
     {
         { "Low", 15f },
         { "Medium", 20f },
-        { "High", 30f },
+        { "High", 25f },
+        { "High2", 30f },
         {"Extream", 55f }
     };
 
@@ -119,8 +120,8 @@ public class CannonController : MonoBehaviour
         // Upewnij się, że Rigidbody jest wyłączone kinematic na czas animacji,
         // aby fizyka nie przeszkadzała w animacji DOTween.
         // Jeśli obiekt był już kinematic, to tutaj to resetujemy
-        bool wasKinematic = rb.isKinematic;
-        rb.isKinematic = true;
+        // bool wasKinematic = rb.isKinematic;
+        // rb.isKinematic = true;
 
         // Animaacja obiektu do firePoint przed wystrzałem
         rb.transform.DOJump(firePoint.position, preLaunchJumpPower, preLaunchNumJumps, preLaunchAnimationDuration)
@@ -128,11 +129,11 @@ public class CannonController : MonoBehaviour
             .OnComplete(() =>
             {
                 // To wywoła się, gdy animacja DOTween się zakończy
-                rb.isKinematic = wasKinematic; // Przywróć poprzedni stan kinematic
-                if (!wasKinematic) // Jeśli nie było kinematic, ustaw na false, aby fizyka działała
-                {
-                    rb.isKinematic = false;
-                }
+                // rb.isKinematic = wasKinematic; // Przywróć poprzedni stan kinematic
+                // if (!wasKinematic) // Jeśli nie było kinematic, ustaw na false, aby fizyka działała
+                // {
+                //     rb.isKinematic = false;
+                // }
 
                 // Ustaw rotację obiektu w kierunku wystrzału
                 rb.transform.rotation = Quaternion.LookRotation(GetLaunchDirection());

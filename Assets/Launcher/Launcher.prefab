@@ -24406,6 +24406,7 @@ GameObject:
   - component: {fileID: 3518659980972816259}
   - component: {fileID: 903536766404166341}
   - component: {fileID: 8435299360385838429}
+  - component: {fileID: 4875522660319747478}
   m_Layer: 0
   m_Name: Particle System canon
   m_TagString: Untagged
@@ -29232,6 +29233,18 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &4875522660319747478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7672341659948771779}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb7b97b94bcf357459bff2ce679791d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9016133959898961270
 GameObject:
   m_ObjectHideFlags: 0
