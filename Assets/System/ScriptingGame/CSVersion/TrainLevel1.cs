@@ -14,11 +14,11 @@ public class TrainLevel1 : PuzzleBase
             t.GetComponent<CannonController>().selectedStrengthLevel = GetVariableValue<string>("fireForce");
             if (GetVariableValue<int>("angle") == 0)
             {
-                t.transform.GetChild(0).localRotation = Quaternion.Euler(0f, 0f, 0f);
+                t.transform.GetComponentInChildren<LauncherAngle>().transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
             }
             else
             {
-                t.transform.GetChild(0).localRotation = Quaternion.Euler(-GetVariableValue<int>("angle"), 0f, 0f);
+                t.transform.GetComponentInChildren<LauncherAngle>().transform.localRotation = Quaternion.Euler(-GetVariableValue<int>("angle"), -90f, 0f);
             }
         }
     }
