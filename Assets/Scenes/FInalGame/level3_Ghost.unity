@@ -5885,6 +5885,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[1].overrideStep
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[0].minBodyHeight
       value: 0.03
       objectReference: {fileID: 0}
@@ -5901,12 +5905,16 @@ PrefabInstance:
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
+      propertyPath: targetData.Array.data[0].teleportToNext
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].animSmoothness
       value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[1].teleportToNext
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1385848284579447673, guid: 5c7f0950aa535ce4faef155ad244c136, type: 3}
       propertyPath: targetData.Array.data[2].animSmoothness
