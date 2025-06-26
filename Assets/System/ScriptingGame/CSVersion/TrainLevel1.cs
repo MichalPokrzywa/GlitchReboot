@@ -10,6 +10,7 @@ public class TrainLevel1 : PuzzleBase
     {
         foreach (GameObject t in turrets)
         {
+            
             Debug.Log(t.transform.GetChild(0));
             t.GetComponent<CannonController>().selectedStrengthLevel = GetVariableValue<string>("fireForce");
             if (GetVariableValue<int>("angle") == 0)
