@@ -12,6 +12,7 @@ public class VariableDiceEditor : Editor
     SerializedProperty textListProp;
     SerializedProperty entityIdProp;
     SerializedProperty entityTooltipInteraction;
+    SerializedProperty entityName;
 
     void OnEnable()
     {
@@ -24,6 +25,7 @@ public class VariableDiceEditor : Editor
         textListProp = serializedObject.FindProperty("textList");
         entityIdProp = serializedObject.FindProperty("entityId");
         entityTooltipInteraction = serializedObject.FindProperty("entityTooltipInteraction");
+        entityName = serializedObject.FindProperty("entityName");
     }
 
     public override void OnInspectorGUI()
@@ -59,6 +61,9 @@ public class VariableDiceEditor : Editor
 
         // Display the Entity Interaction field
         EditorGUILayout.PropertyField(entityTooltipInteraction, new GUIContent("Entity Tooltip Interaction"));
+
+        // Display the Entity Name field
+        EditorGUILayout.PropertyField(entityName, new GUIContent("Entity Name"));
 
         serializedObject.ApplyModifiedProperties(); // Apply changes to the serialized object
     }

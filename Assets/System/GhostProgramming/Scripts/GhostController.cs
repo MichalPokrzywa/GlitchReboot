@@ -239,7 +239,8 @@ public class GhostController : EntityBase
 
     public override void UpdateEntityDisplayName()
     {
-        entityName = "Ghost";
+        if (string.IsNullOrEmpty(entityName))
+            entityName = "Ghost";
         entityNameSuffix = ghostColor.ToString();
         base.UpdateEntityDisplayName();
     }

@@ -28,7 +28,8 @@ public class VariableDice : EntityBase
 
     public override void UpdateEntityDisplayName()
     {
-        entityName = "Variable Dice";
+        if (string.IsNullOrEmpty(entityName))
+            entityName = "Variable Dice";
         string color = VariableTypeColor.GetHex(type);
         entityNameSuffix = $"<b><color={color}>{GetCurrentValue().ToString()}</color></b>";
         base.UpdateEntityDisplayName();

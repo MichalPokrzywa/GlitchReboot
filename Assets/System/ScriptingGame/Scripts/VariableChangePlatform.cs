@@ -105,7 +105,8 @@ public class VariableChangePlatform : VariablePlatformBase
 
     public override void UpdateEntityDisplayName()
     {
-        entityName = "Platform";
+        if (string.IsNullOrEmpty(entityName))
+            entityName = "Platform";
         string color = VariableTypeColor.GetHex(type);
         entityNameSuffix = $"Value change <b><color={color}>{type.ToString()}</color></b>";
         base.UpdateEntityDisplayName();

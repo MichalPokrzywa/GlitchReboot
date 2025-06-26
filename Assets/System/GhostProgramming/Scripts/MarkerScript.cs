@@ -30,7 +30,8 @@ public class MarkerScript : EntityBase
 
     public override void UpdateEntityDisplayName()
     {
-        entityName = "Marker";
+        if (string.IsNullOrEmpty(entityName))
+            entityName = "Marker";
         base.UpdateEntityDisplayName();
     }
 

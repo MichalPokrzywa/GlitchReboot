@@ -134,7 +134,8 @@ public class VariablePlatform : VariablePlatformBase
     }
     public override void UpdateEntityDisplayName()
     {
-        entityName = "Platform";
+        if (string.IsNullOrEmpty(entityName))
+            entityName = "Platform";
         entityNameSuffix = $"<b>{variableName}</b>";
         base.UpdateEntityDisplayName();
     }
