@@ -24,7 +24,7 @@ public class CannonController : MonoBehaviour
         { "Low", 15f },
         { "Medium", 20f },
         { "High", 30f },
-        {"Extream", 50f }
+        {"Extream", 55f }
     };
 
 

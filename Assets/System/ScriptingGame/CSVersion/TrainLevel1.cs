@@ -18,7 +18,7 @@ public class TrainLevel1 : PuzzleBase
             }
             else
             {
-                t.transform.GetChild(0).localRotation = Quaternion.Euler(-GetVariableValue<int>("angle"), 0f, 0f);
+                t.transform.GetChild(0).localRotation = Quaternion.Euler(-GetVariableValue<int>("angle"), -90f, 0f);
             }
         }
     }
