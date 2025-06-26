@@ -6,7 +6,7 @@ public class TriggerDetector : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        train.GetChild(0).GetComponent<TrainController>().drive = false;
-        Debug.Log("kurwa szmata pierdolona");
+        train.GetComponent<TrainController>().drive = false;
+        gameObject.SetActive(false);
     }
 }
