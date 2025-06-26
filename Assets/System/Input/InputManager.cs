@@ -127,8 +127,17 @@ public class InputManager : Singleton<InputManager>
 
     public void CursorVisibilityState(CursorVisibilityRequestSource source, bool? state)
     {
+        bool CURSOR_BUG = false;
         isCursorVisible = false;
         cursorVisibilityRequests[(int)source] = state;
+
+        // hack
+        if (state == false && source == CursorVisibilityRequestSource.GAMEPAD)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+            CURSOR_BUG = true;
+        }
 
         foreach (var item in cursorVisibilityRequests)
         {
@@ -143,6 +152,9 @@ public class InputManager : Singleton<InputManager>
             }
         }
 
+        if (CURSOR_BUG)
+            return;
+
         if (isCursorVisible)
         {
             Cursor.lockState = CursorLockMode.None;
@@ -150,7 +162,7 @@ public class InputManager : Singleton<InputManager>
         }
         else
         {
-            Cursor.lockState = CursorLockMode.None;
+            Cursor.lockState = CursorLockMode.Locked;
             Cursor.visible = false;
         }
     }
