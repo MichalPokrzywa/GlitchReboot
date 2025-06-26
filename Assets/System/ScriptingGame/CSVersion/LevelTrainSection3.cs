@@ -1,7 +1,5 @@
 using UnityEngine;
 using DG.Tweening;
-using UnityEngine.WSA;
-
 public class LevelTrainSection3 : PuzzleBase
 {
     [Header("PuzzleItems")]
