@@ -11,6 +11,7 @@ public class PausePanel : Panel
     [SerializeField] Button returnToMenuButton;
     [SerializeField] Button backButton;
     [SerializeField] Button restartScene;
+    [SerializeField] Button nextScene;
 
     [SerializeField] GameObject controlsPanel;
     [SerializeField] GameObject settingsPanel;
@@ -30,8 +31,9 @@ public class PausePanel : Panel
         returnToMenuButton?.onClick.AddListener(ReturnToMenu);
         backButton?.onClick.AddListener(() => TogglePanel(null));
         restartScene?.onClick.AddListener(RestartLevel);
+        nextScene?.onClick.AddListener(NextLevel);
 
-        allButtons = new List<Button>() { controlsButton, settingsButton, returnToMenuButton, backButton, restartScene };
+        allButtons = new List<Button>() { controlsButton, settingsButton, returnToMenuButton, backButton, restartScene, nextScene };
 
         firstItemToSelect = controlsButton.gameObject;
 
@@ -46,6 +48,7 @@ public class PausePanel : Panel
         returnToMenuButton.onClick.RemoveListener(ReturnToMenu);
         backButton?.onClick.RemoveListener(() => TogglePanel(null));
         restartScene?.onClick.RemoveListener(RestartLevel);
+        nextScene?.onClick.RemoveListener(NextLevel);
 
         onPanelOpen -= RestoreTime;
         onPanelClose -= StopTime;
@@ -86,6 +89,15 @@ public class PausePanel : Panel
     void StopTime()
     {
         Time.timeScale = 1f;
+    }
+
+    void NextLevel()
+    {
+        LevelExitElevator elevator = FindObjectOfType<LevelExitElevator>();
+        if (elevator == null)
+            return;
+        var scene = elevator.nextScene;
+        DependencyManager.sceneLoader.LoadScene(scene);
     }
 
     public override void Close()
