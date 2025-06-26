@@ -95,7 +95,7 @@ public class LevelExitElevator : MonoBehaviour
                 .Join(rightDoor.DOLocalMove(doorRightOpenPos, doorCloseDuration).SetEase(Ease.InQuad))
                     .OnComplete(() =>
                     {
-                        doorsOpen = false;
+                        doorsOpen = true;
                         Debug.Log("Doors open.");
                     })
         );

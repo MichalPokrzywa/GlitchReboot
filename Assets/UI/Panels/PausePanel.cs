@@ -153,6 +153,8 @@ public class PausePanel : Panel
     void RestartLevel()
     {
         DependencyManager.sceneLoader.LoadScene(DependencyManager.sceneLoader.CurrentScene);
+        foreach (var button in allButtons)
+            button.interactable = false;
     }
 
     void TogglePanel(GameObject panelToShow)
