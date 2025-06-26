@@ -11,6 +11,7 @@ public class MainMenuPanel : MonoBehaviour
     [SerializeField] Button controlsButton;
     [SerializeField] Button creditsButton;
     [SerializeField] Button exitButton;
+    [SerializeField] Button extraButton;
 
     [SerializeField] GameObject settingsPanel;
     [SerializeField] GameObject controlsPanel;
@@ -27,6 +28,7 @@ public class MainMenuPanel : MonoBehaviour
         controlsButton?.onClick.AddListener(() => TogglePanel(controlsPanel));
         creditsButton?.onClick.AddListener(() => TogglePanel(creditsPanel));
         exitButton?.onClick.AddListener(ExitGame);
+        extraButton?.onClick.AddListener(PlayExtra);
 
         allButtons = new List<Button>() { playButton, settingsButton, controlsButton, creditsButton, exitButton };
 
@@ -58,6 +60,14 @@ public class MainMenuPanel : MonoBehaviour
     void Play()
     {
         DependencyManager.sceneLoader.LoadScene(Scene.Tutorial);
+        InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.MENU, null);
+        foreach (var button in allButtons)
+            button.interactable = false;
+    }
+    
+    void PlayExtra()
+    {
+        DependencyManager.sceneLoader.LoadScene(Scene.level4_tutorial);
         InputManager.Instance.CursorVisibilityState(InputManager.CursorVisibilityRequestSource.MENU, null);
         foreach (var button in allButtons)
             button.interactable = false;

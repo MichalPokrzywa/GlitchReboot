@@ -100,6 +100,7 @@ public enum Scene
     Level3Ghost = 5,
     level4Chess = 6,
     levelCore = 7,
+    level4_tutorial = 8,
 
     //Add another scene like this ^
 }
