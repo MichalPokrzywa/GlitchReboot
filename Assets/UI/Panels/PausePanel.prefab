@@ -2092,11 +2092,15 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 417424648396297254, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
       propertyPath: m_text
-      value: Next
+      value: Load Next LVL
       objectReference: {fileID: 0}
     - target: {fileID: 1886916621864299205, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
       propertyPath: m_Name
       value: NextLvl
+      objectReference: {fileID: 0}
+    - target: {fileID: 1886916621864299205, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2963719363693222555, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
       propertyPath: m_Navigation.m_Mode
@@ -2192,7 +2196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8841447194817157450, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -450
+      value: -440
       objectReference: {fileID: 0}
     - target: {fileID: 8841447194817157450, guid: a884aa90a8110af45bf21f60eb49d407, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
